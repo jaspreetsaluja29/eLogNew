@@ -1,0 +1,145 @@
+﻿@{
+    Layout = null;
+}
+
+@{
+    ViewData["Title"] = "DataEntry_CodeA";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter CodeA Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/ORB1/DataEntry_CodeA.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h2 class="text-center mb-4">BALLASTING OR CLEANING OF OIL FUEL TANKS</h2>
+
+    <form id="DataEntryCodeAForm" class="p-4 border rounded bg-light">
+        <div class="mb-3">
+            <label for="date" class="form-label">Date (YYYY-MM-DD):</label>
+            <input type="date" class="form-control" id="date" name="Date" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="ballastingOrCleaning" class="form-label">Ballasting or Cleaning:</label>
+            <select class="form-select" id="ballastingOrCleaning" name="BallastingOrCleaning" required>
+                <option value="Select" selected>Select</option>
+                <option value="Ballasting">Ballasting</option>
+                <option value="Cleaning">Cleaning</option>
+            </select>
+        </div>
+
+        <div id="cleaningFields" style="display:none;">
+            <div class="mb-3">
+                <label for="dateLastCleaning" class="form-label">Date of Last Cleaning:</label>
+                <input type="date" class="form-control" id="dateLastCleaning" name="DateLastCleaning" required>
+            </div>
+            <div class="mb-3">
+                <label for="oilCommercialName" class="form-label">Oil Commercial Name:</label>
+                <input type="text" class="form-control" id="oilCommercialName" name="OilCommercialName" required>
+            </div>
+            <div class="mb-3">
+                <label for="densityViscosity" class="form-label">Density and/or Viscosity:</label>
+                <input type="text" class="form-control" id="densityViscosity" name="DensityViscosity" required>
+            </div>
+            <div class="mb-3">
+                <label for="wasCleaned" class="form-label">Whether cleaned since they last contained oil:</label>
+                <select class="form-select" id="wasCleaned" name="WasCleaned" required>
+                    <option value="Select" selected></option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <!-- Initially hidden -->
+            <div id="wasCleanedFields" style="display: none;">
+                <div class="mb-3">
+                    <label for="PreviousOilType" class="form-label">Type of oil previously carried:</label>
+                    <input type="text" class="form-control" id="PreviousOilType" name="PreviousOilType" required>
+                </div>
+                <div class="mb-3">
+                    <label for="QuantityBallast" class="form-label">Quantity of ballast (m³):</label>
+                    <input type="text" class="form-control" id="QuantityBallast" name="QuantityBallast" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="StartCleaningTime" class="form-label">Start cleaning Time (HH:MM - 24 hrs format):</label>
+                <input type="time" class="form-control" id="StartCleaningTime" name="StartCleaningTime" required>
+            </div>
+            <div class="mb-3">
+                <label for="PositionStart" class="form-label">Position at Start (XX DEG XX MIN N/S, XX DEG XX MIN E/W):</label>
+                <input type="text" class="form-control" id="PositionStart" name="PositionStart" required>
+            </div>
+            <div class="mb-3">
+                <label for="StopCleaningTime" class="form-label">Stop cleaning Time (HHMM- 24 hrs format):</label>
+                <input type="time" class="form-control" id="StopCleaningTime" name="StopCleaningTime" required>
+            </div>
+            <div class="mb-3">
+                <label for="PositionStop" class="form-label">Position at Stop (XX DEG XX MIN N/S, XX DEG XX MIN E/W):</label>
+                <input type="text" class="form-control" id="PositionStop" name="PositionStop" required>
+            </div>
+            <div class="mb-3">
+                <label for="IdentifyTanks" class="form-label">Identify tanks(s):</label>
+                <input type="text" class="form-control" id="IdentifyTanks" name="IdentifyTanks" required>
+            </div>
+            <div class="mb-3">
+                <label for="MethodCleaning" class="form-label">Method of cleaning:</label>
+                <select class="form-select" id="MethodCleaning" name="MethodCleaning" required>
+                    <option value="Select" selected></option>
+                    <option value="Rinsing">Rinsing</option>
+                    <option value="Steaming">Steaming</option>
+                    <option value="Chemicals">Chemicals</option>
+                </select>
+            </div>
+
+            <!-- Initially hidden -->
+            <div id="ChemicalFields" style="display: none;">
+                <div class="mb-3">
+                    <label for="ChemicalType" class="form-label">Type of chemical:</label>
+                    <input type="text" class="form-control" id="ChemicalType" name="ChemicalType" required>
+                </div>
+                <div class="mb-3">
+                    <label for="ChemicalQuantity" class="form-label">Quantity of chemicals(m3):</label>
+                    <input type="text" class="form-control" id="ChemicalQuantity" name="ChemicalQuantity" required>
+                </div>
+            </div>
+        </div>
+
+        <div id="ballastingFields" style="display: none;">
+            <div class="mb-3">
+                <label for="IdentityOfTanksBallasted" class="form-label">Identity of tank(s) ballasted:</label>
+                <input type="text" class="form-control" id="IdentityOfTanksBallasted" name="IdentityOfTanksBallasted" required>
+            </div>
+            <div class="mb-3">
+                <label for="StartBallastingTime" class="form-label">Time at start of Ballasting (HH:MM - 24 hrs format):</label>
+                <input type="time" class="form-control" id="StartBallastingTime" name="StartBallastingTime" required>
+            </div>
+            <div class="mb-3">
+                <label for="BallastingPositionStart" class="form-label">Position of ship at start of Ballasting (XX DEG XX MIN N/S, XX DEG XX MIN E/W):</label>
+                <input type="text" class="form-control" id="BallastingPositionStart" name="BallastingPositionStart" required>
+            </div>
+            <div class="mb-3">
+                <label for="CompletionBallastingTime" class="form-label">Time on completion of Ballasting (HHMM- 24 hrs format):</label>
+                <input type="time" class="form-control" id="CompletionBallastingTime" name="CompletionBallastingTime" required>
+            </div>
+            <div class="mb-3">
+                <label for="BallastingPositionCompletion" class="form-label">Position of ship on completion of Ballasting (XX DEG XX MIN N/S, XX DEG XX MIN E/W):</label>
+                <input type="text" class="form-control" id="BallastingPositionCompletion" name="BallastingPositionCompletion" required>
+            </div>
+        </div>
+        <button type="submit" id="saveButton" class="btn btn-primary">Save</button>
+        <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
+        <button type="button" id="cancelButton" class="btn btn-danger">Cancel</button>
+    </form>
+
+    <p id="message" class="mt-3 text-center"></p>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/ORB1/DataEntry_CodeA.js"></script>
+</body>
+</html>

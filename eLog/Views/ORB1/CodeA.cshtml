@@ -1,0 +1,108 @@
+﻿@model IEnumerable<eLog.ViewModels.ORB1.CodeAViewModel>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Code A Records";
+}
+
+<!-- Include CodeA.css -->
+<link href="~/css/ORB1/CodeA.css" rel="stylesheet" />
+
+<div class="container mt-4 text-center">
+    <!-- Row with header and controls (Add and Search) aligned -->
+    <h2 class="mb-4">Code A Records</h2>
+    <div class="row justify-content-between align-items-center mb-3">
+        <div class="col-auto">
+            <button class="btn btn-primary" onclick="openAddWindow()">Add</button>
+        </div>
+        <div class="col-auto">
+            <input type="text" id="searchInput" class="form-control" style="width: 200px;" placeholder="Search..." onkeyup="filterTable()" />
+        </div>
+    </div>
+
+    <!-- Row count display -->
+    <div class="d-flex justify-content-start mb-3">Total Records: @(Model != null ? Model.Count() : 0)</div>
+
+    <!-- Table container -->
+    <div class="table-container">
+        <table id="codeATable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Entered By</th>
+                    <th onclick="sortTable(1)">Entry Date</th>
+                    <th onclick="sortTable(2)">Ballasting/Cleaning</th>
+                    <th onclick="sortTable(3)">Last Cleaning Date</th>
+                    <th onclick="sortTable(4)">Oil Commercial Name</th>
+                    <th onclick="sortTable(5)">Density/Viscosity</th>
+                    <th onclick="sortTable(6)">Identity of Tanks Ballasted</th>
+                    <th onclick="sortTable(7)">Cleaned Last Contained Oil</th>
+                    <th onclick="sortTable(8)">Previous Oil Type</th>
+                    <th onclick="sortTable(9)">Quantity Ballast</th>
+                    <th onclick="sortTable(10)">Start Cleaning Time</th>
+                    <th onclick="sortTable(11)">Position Start</th>
+                    <th onclick="sortTable(12)">Stop Cleaning Time</th>
+                    <th onclick="sortTable(13)">Position Stop</th>
+                    <th onclick="sortTable(14)">Identify Tanks</th>
+                    <th onclick="sortTable(15)">Method Cleaning</th>
+                    <th onclick="sortTable(16)">Chemical Type</th>
+                    <th onclick="sortTable(17)">Chemical Quantity</th>
+                    <th onclick="sortTable(18)">Start Ballasting Time</th>
+                    <th onclick="sortTable(19)">Ballasting Position Start</th>
+                    <th onclick="sortTable(20)">Completion Ballasting Time</th>
+                    <th onclick="sortTable(21)">Ballasting Position Completion</th>
+                    <th onclick="sortTable(22)">Status Name</th>
+                    <th onclick="sortTable(23)">Approved By</th>
+                    <th onclick="sortTable(24)">Comments</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.EnteredBy.Trim()</td>
+                            <td>@item.EntryDate.ToShortDateString()</td>
+                            <td>@item.BallastingOrCleaning</td>
+                            <td>@(item.LastCleaningDate?.ToShortDateString() ?? "N/A")</td>
+                            <td>@item.OilCommercialName</td>
+                            <td>@item.DensityViscosity</td>
+                            <td>@item.IdentityOfTanksBallasted</td>
+                            <td>@item.CleanedLastContainedOil</td>
+                            <td>@item.PreviousOilType</td>
+                            <td>@item.QuantityBallast</td>
+                            <td>@(item.StartCleaningTime?.ToString(@"hh\:mm") ?? "N/A")</td>
+                            <td>@item.PositionStart</td>
+                            <td>@(item.StopCleaningTime?.ToString(@"hh\:mm") ?? "N/A")</td>
+                            <td>@item.PositionStop</td>
+                            <td>@item.IdentifyTanks</td>
+                            <td>@item.MethodCleaning</td>
+                            <td>@item.ChemicalType</td>
+                            <td>@item.ChemicalQuantity</td>
+                            <td>@(item.StartBallastingTime?.ToString(@"hh\:mm") ?? "N/A")</td>
+                            <td>@item.BallastingPositionStart</td>
+                            <td>@(item.CompletionBallastingTime?.ToString(@"hh\:mm") ?? "N/A")</td>
+                            <td>@item.BallastingPositionCompletion</td>
+                            <td>@item.StatusName</td>
+                            <td>@item.ApprovedBy</td>
+                            <td>@item.Comments</td>
+                            <td>
+                                <button class="btn btn-info btn-sm" onclick="editRecord(@item.Id)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="25" class="text-center">No records found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Reference to CodeA.js -->
+<script src="~/js/ORB1/CodeA.js"></script>
