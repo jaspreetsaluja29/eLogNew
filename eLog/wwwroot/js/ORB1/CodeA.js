@@ -69,7 +69,22 @@ function filterTable() {
 
 // Update the row count dynamically based on visible rows
 function updateRowCount() {
+    var rowCountElement = document.getElementById("rowCount");
+
+    if (!rowCountElement) {
+        console.error("Element with ID 'rowCount' not found!");
+        return;
+    }
+
     var rows = document.querySelectorAll("#codeATable tbody tr");
     var visibleRows = Array.from(rows).filter(row => row.style.display !== "none").length;
-    document.getElementById("rowCount").textContent = `Total Records: ${visibleRows}`;
+    rowCountElement.textContent = `Total Records: ${visibleRows}`;
 }
+
+// Open the edit window for a record
+function editRecord(id) {
+    // Open the edit page for the selected record
+    window.open(`/CodeA/Edit/${id}`, 'EditRecord');
+}
+
+

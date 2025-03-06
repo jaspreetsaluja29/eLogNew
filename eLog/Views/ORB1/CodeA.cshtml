@@ -21,7 +21,9 @@
     </div>
 
     <!-- Row count display -->
-    <div class="d-flex justify-content-start mb-3">Total Records: @(Model != null ? Model.Count() : 0)</div>
+    <div class="d-flex justify-content-start mb-3" style="font-weight: 600;">
+        Total Records: @(Model != null ? Model.Count() : 0)
+    </div>
 
     <!-- Table container -->
     <div class="table-container">
@@ -62,7 +64,7 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.EnteredBy.Trim()</td>
+                            <td>@item.UserId.Trim()</td>
                             <td>@item.EntryDate.ToShortDateString()</td>
                             <td>@item.BallastingOrCleaning</td>
                             <td>@(item.LastCleaningDate?.ToShortDateString() ?? "N/A")</td>
@@ -88,7 +90,17 @@
                             <td>@item.ApprovedBy</td>
                             <td>@item.Comments</td>
                             <td>
-                                <button class="btn btn-info btn-sm" onclick="editRecord(@item.Id)">Edit</button>
+                                <button class="btn btn-info btn-sm @if (item.StatusName != "Pending") {
+                        <text>disabled btn-secondary</text>
+ } else {
+                        <text>btn-info</text>
+ }"
+                                        onclick="editRecord(@item.Id)" @if (item.StatusName != "Pending")
+                                {
+                                    <text>disabled</text>
+                                }>
+                Edit
+            </button>
                             </td>
                         </tr>
                     }

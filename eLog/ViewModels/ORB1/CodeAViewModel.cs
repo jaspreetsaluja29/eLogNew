@@ -3,7 +3,7 @@
     public class CodeAViewModel
     {
         public int Id { get; set; }
-        public string EnteredBy { get; set; }
+        public string UserId { get; set; }
         public DateTime EntryDate { get; set; }
         public string BallastingOrCleaning { get; set; }
         public DateTime? LastCleaningDate { get; set; }

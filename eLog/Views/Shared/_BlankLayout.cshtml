@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+    <script>
+        var userId = '@(Context.Session.GetInt32("UserID") ?? 0)'; // Default to 0 if null
+        var userName = '@(Context.Session.GetString("UserName") ?? "Guest")'; // Default to "Guest" if null
+    </script>
+</body>
+</html>

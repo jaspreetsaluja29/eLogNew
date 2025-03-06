@@ -53,3 +53,11 @@
 .table tbody tr:hover {
     background-color: #f1f1f1;
 }
+
+/* Custom style for the disabled button */
+.btn-disabled {
+    background-color: lightgrey !important;
+    border-color: lightgrey !important;
+    color: #6c757d; /* Optional: light grey text */
+    pointer-events: none;
+}

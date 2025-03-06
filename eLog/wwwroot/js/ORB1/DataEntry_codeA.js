@@ -1,10 +1,12 @@
 ﻿$(document).ready(function () {
-    // Set default date
+    // Set default date in the format YYYY-MM-DD
     let today = new Date();
     let formattedDate = today.getFullYear() + '-' +
         String(today.getMonth() + 1).padStart(2, '0') + '-' +
         String(today.getDate()).padStart(2, '0');
-    $('#date').val(formattedDate);
+
+    // Set the formatted date as the value of the input
+    $('#EntryDate').val(formattedDate);
 
     // Hide all fields except Date & Ballasting or Cleaning at the start
     $('#cleaningFields, #ballastingFields').hide();
@@ -28,12 +30,13 @@
         event.preventDefault();
 
         var formData = {
-            Date: $('#date').val(),
+            UserId: userId,  // Include the UserID
+            EntryDate: $('#EntryDate').val(),
             BallastingOrCleaning: $('#ballastingOrCleaning').val(),
-            DateLastCleaning: $('#dateLastCleaning').val() || null,
+            LastCleaningDate: $('#dateLastCleaning').val() || null,
             OilCommercialName: $('#oilCommercialName').val() || null,
             DensityViscosity: $('#densityViscosity').val() || null,
-            WasCleaned: $('#wasCleaned').is(":checked"), // Convert checkbox to boolean
+            CleanedLastContainedOil: $('#wasCleaned').val() === "Yes" ? true : false,
             PreviousOilType: $('#PreviousOilType').val() || null,
             QuantityBallast: parseFloat($('#QuantityBallast').val()) || null,
             IdentityOfTanksBallasted: $('#IdentityOfTanksBallasted').val() || null,
@@ -52,12 +55,25 @@
         };
 
         $.ajax({
-            url: "/ORB1/CodeA/CreateCodeA",  // Ensure this matches the controller route
+            url: "/ORB1/CodeA/CreateCodeA",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
                 $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
+
+                // Reset form fields after successful save
+                $('#DataEntryCodeAForm')[0].reset();
+
+                // Reset date field with today's date
+                let today = new Date();
+                let formattedDate = today.getFullYear() + '-' +
+                    String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(today.getDate()).padStart(2, '0');
+                $('#EntryDate').val(formattedDate);
+
+                // Hide dependent fields
+                $('#cleaningFields, #wasCleanedFields, #ChemicalFields, #ballastingFields').hide();
             },
             error: function (xhr, status, error) {
                 console.log(xhr.responseText);
@@ -65,7 +81,6 @@
             }
         });
     });
-
 
     // Reset form fields
     $('#resetButton').click(function () {
