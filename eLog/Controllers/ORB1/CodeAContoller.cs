@@ -17,10 +17,14 @@ namespace eLog.Controllers.ORB1
             _db = db;
         }
 
-        // Fetch data using stored procedure
-        public async Task<IActionResult> GetCodeAData()
+        // Fetch data using stored procedure        
+        [Route("ORB1/CodeA/GetCodeAData")]
+        [HttpGet]
+        public async Task<IActionResult> GetCodeAData(int pageNumber = 1, int pageSize = 10)
         {
             List<CodeAViewModel> records = new List<CodeAViewModel>();
+            int totalRecords = 0;
+
             using (SqlConnection connection = _db.CreateConnection()) // Ensure this method exists in DatabaseHelper
             {
                 await connection.OpenAsync();
@@ -34,12 +38,12 @@ namespace eLog.Controllers.ORB1
                             records.Add(new CodeAViewModel
                             {
                                 Id = reader.GetInt32(0),
-                                UserId = reader.IsDBNull(1) ? null : reader.GetString(1), // Null check for EnteredBy
+                                UserId = reader.IsDBNull(1) ? null : reader.GetString(1),
                                 EntryDate = reader.GetDateTime(2),
                                 BallastingOrCleaning = reader.GetString(3),
                                 LastCleaningDate = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
                                 OilCommercialName = reader.IsDBNull(5) ? null : reader.GetString(5),
-                                DensityViscosity = reader.IsDBNull(6) ? null : reader.GetString(6), // Null check for DensityViscosity
+                                DensityViscosity = reader.IsDBNull(6) ? null : reader.GetString(6),
                                 IdentityOfTanksBallasted = reader.IsDBNull(7) ? null : reader.GetString(7),
                                 CleanedLastContainedOil = reader.IsDBNull(8) ? (bool?)null : reader.GetBoolean(8),
                                 PreviousOilType = reader.IsDBNull(9) ? null : reader.GetString(9),
@@ -56,17 +60,25 @@ namespace eLog.Controllers.ORB1
                                 BallastingPositionStart = reader.IsDBNull(20) ? null : reader.GetString(20),
                                 CompletionBallastingTime = reader.IsDBNull(21) ? (TimeSpan?)null : reader.GetTimeSpan(21),
                                 BallastingPositionCompletion = reader.IsDBNull(22) ? null : reader.GetString(22),
-                                StatusName = reader.IsDBNull(23) ? null : reader.GetString(23), // Null check for StatusName
-                                ApprovedBy = reader.IsDBNull(24) ? null : reader.GetString(24), // Null check for ApprovedBy
-                                Comments = reader.IsDBNull(25) ? null : reader.GetString(25) // Null check for Comments
+                                StatusName = reader.IsDBNull(23) ? null : reader.GetString(23),
+                                ApprovedBy = reader.IsDBNull(24) ? null : reader.GetString(24),
+                                Comments = reader.IsDBNull(25) ? null : reader.GetString(25)
                             });
                         }
                     }
                 }
             }
-            return View("~/Views/ORB1/CodeA.cshtml", records);
-        }
 
+            totalRecords = records.Count;
+            var paginatedRecords = records.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+            ViewBag.TotalRecords = totalRecords;
+            ViewBag.PageNumber = pageNumber;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+            return View("~/Views/ORB1/CodeA.cshtml", paginatedRecords);
+        }
 
 
         // Data Entry Page

@@ -14,7 +14,9 @@ function setupEventListeners() {
     $("#MethodCleaning").change(toggleChemicalFields);
 
     $("#cancelButton").click(function () {
-        window.location.href = '/CodeA/GetCodeAData';
+        const { pageNumber, pageSize } = getQueryParams();
+        // Redirect only after the user clicks "OK"
+        window.location.href = `/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     });
 
     $("#EditCodeAForm").submit(function (event) {
@@ -110,8 +112,9 @@ function submitForm() {
             // Show message in an alert popup and redirect when the user clicks "OK"
             alert(response.message);
 
+            const { pageNumber, pageSize } = getQueryParams();
             // Redirect only after the user clicks "OK"
-            window.location.href = "/CodeA/GetCodeAData";
+            window.location.href = `/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
         },
         error: function (xhr) {
             $('#message').html('<div class="alert alert-danger">Error: ' + xhr.responseText + '</div>');
@@ -129,4 +132,13 @@ function resetFormDate() {
 
 function hideDependentFields() {
     $('#cleaningFields, #wasCleanedFields, #ChemicalFields, #ballastingFields').hide();
+}
+
+// Function to get query parameters from the URL
+function getQueryParams() {
+    const urlParams = new URLSearchParams(window.location.search); // Get the query string from the URL
+    const pageNumber = urlParams.get('pageNumber') || 1; // Default to 1 if not provided
+    const pageSize = urlParams.get('pageSize') || 10; // Default to 10 if not provided
+
+    return { pageNumber, pageSize };
 }
