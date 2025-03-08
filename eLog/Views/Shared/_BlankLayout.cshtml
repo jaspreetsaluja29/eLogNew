@@ -12,6 +12,7 @@
     <script>
         var userId = '@(Context.Session.GetInt32("UserID") ?? 0)'; // Default to 0 if null
         var userName = '@(Context.Session.GetString("UserName") ?? "Guest")'; // Default to "Guest" if null
+        var UserRoleName = '@(Context.Session.GetString("UserRoleName") ?? "Anonymous")'; // Default to "Anonymous" if null
     </script>
 </body>
 </html>

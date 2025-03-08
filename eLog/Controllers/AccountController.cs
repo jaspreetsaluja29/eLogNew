@@ -20,8 +20,9 @@ namespace eLog.Controllers
         {
             var userId = HttpContext.Session.GetInt32("UserID");
             var userName = HttpContext.Session.GetString("UserName");
+            var userRoleName = HttpContext.Session.GetString("UserRoleName");
 
-            return Content($"UserID: {userId}, UserName: {userName}");
+            return Content($"UserID: {userId}, UserName: {userName}, UserRoleName: {userRoleName}");
         }
 
         public IActionResult Login()
@@ -50,16 +51,30 @@ namespace eLog.Controllers
 
             // Fetch UserID and Role from the database
             int userId = Convert.ToInt32(dt.Rows[0]["UserID"]);
-            string role = dt.Rows[0]["UserRoleId"].ToString();
+            int userRoleId = Convert.ToInt32(dt.Rows[0]["UserRoleId"]);
+            string userRoleName = string.Empty;
+            if (userRoleId == 1)
+            {
+                userRoleName = "SuperAdmin";
+            }
+            if (userRoleId == 2)
+            {
+                userRoleName = "Approver";
+            }
+            if (userRoleId == 3)
+            {
+                userRoleName = "User";
+            }
 
             // Set session values
             HttpContext.Session.SetInt32("UserID", userId);
             HttpContext.Session.SetString("UserName", username);
+            HttpContext.Session.SetString("UserRoleName", userRoleName);
 
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, userRoleName)
             };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
