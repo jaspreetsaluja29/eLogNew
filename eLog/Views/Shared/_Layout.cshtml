@@ -8,6 +8,33 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/eLog.styles.css" asp-append-version="true" />
+    <style>
+        .notification-sidebar {
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 300px;
+        height: 100%;
+        background-color: #f8f9fa;
+        box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+        padding: 20px;
+        transition: right 0.3s ease-in-out;
+        z-index: 1050;
+        }
+
+        .notification-sidebar.show {
+        right: 0;
+        }
+
+        .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -15,7 +42,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">eLog</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -32,6 +59,18 @@
                             </ul>
                         </li>
                     </ul>
+
+                    <!-- Notification Icon -->
+                    @if (Context.Session.GetString("UserRoleName") == "Approver" || Context.Session.GetString("UserRoleName") == "SuperAdmin")
+                    {
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark" href="#" id="notificationIcon" role="button">
+                                    🔔 <span id="notificationCount" class="badge bg-danger">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    }
 
                     <!-- User Profile Section -->
                     <ul class="navbar-nav">
@@ -57,25 +96,87 @@
             </div>
         </nav>
     </header>
+
+    <!-- Notification Sidebar -->
+    <div id="notificationSidebar" class="notification-sidebar">
+        <div class="sidebar-header">
+            <h5>Notifications</h5>
+            <button id="closeSidebar" class="btn-close"></button>
+        </div>
+        <ul id="notificationList" class="list-group"></ul>
+    </div>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - eLog - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
-        var userId = '@(Context.Session.GetInt32("UserID") ?? 0)'; // Default to 0 if null
-        var userName = '@(Context.Session.GetString("UserName") ?? "Guest")'; // Default to "Guest" if null
-        var UserRoleName = '@(Context.Session.GetString("UserRoleName") ?? "Anonymous")'; // Default to "Anonymous" if null
+        var userId = '@(Context.Session.GetInt32("UserID") ?? 0)';
+        var userName = '@(Context.Session.GetString("UserName") ?? "Guest")';
+        var UserRoleName = '@(Context.Session.GetString("UserRoleName") ?? "Anonymous")';
+
+            $(document).ready(function () {
+            // Load notification count on page load
+            loadNotificationCount();
+
+            // Show/hide notification sidebar
+            $('#notificationIcon').click(function () {
+                $('#notificationSidebar').toggleClass('show');
+                loadNotifications();
+            });
+
+            $('#closeSidebar').click(function () {
+                $('#notificationSidebar').removeClass('show');
+            });
+        });
+
+        function loadNotificationCount() {
+            $.ajax({
+                url: '/Notification/GetNotificationCount',
+                method: 'GET',
+                data: { userId: userId },
+                success: function (data) {
+                    let count = data.count || 0;
+                    $('#notificationCount').text(count);
+                    $('#notificationCount').toggle(count > 0); // Hide badge if count is 0
+                }
+            });
+        }
+
+        function loadNotifications() {
+            $.ajax({
+                url: '/Notification/GetNotifications',
+                method: 'GET',
+                success: function (data) {
+                    let notifications = data.notifications || [];
+                    let list = $('#notificationList');
+                    list.empty();
+
+                    if (notifications.length === 0) {
+                        list.append('<li class="list-group-item">No new notifications</li>');
+                    } else {
+                        notifications.forEach(n => {
+                            list.append(`<li class="list-group-item">${n.message}</li>`);
+                        });
+                    }
+
+                    $('#notificationCount').text(notifications.length);
+                }
+            });
+        }
     </script>
 </body>
 </html>
