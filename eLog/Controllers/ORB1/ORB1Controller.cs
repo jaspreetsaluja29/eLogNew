@@ -124,5 +124,38 @@ namespace eLog.Controllers.ORB1
         {
             return RedirectToAction("GetCodeCData", "CodeC");
         }
+
+        [Route("ORB1/CodeC/CreateCodeC")]
+        [HttpPost]
+        public async Task<IActionResult> CreateCodeC([FromBody] CodeCModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeAController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeC/Create", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeAController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

@@ -94,24 +94,24 @@
                             <td>@item.UserId.Trim()</td>
                             <td>@item.EntryDate.ToShortDateString()</td>
                             <td>@item.BallastingOrCleaning</td>
-                            <td>@(item.LastCleaningDate?.ToShortDateString() ?? "N/A")</td>
+                            <td>@(item.LastCleaningDate?.ToShortDateString())</td>
                             <td>@item.OilCommercialName</td>
                             <td>@item.DensityViscosity</td>
                             <td>@item.IdentityOfTanksBallasted</td>
                             <td>@item.CleanedLastContainedOil</td>
                             <td>@item.PreviousOilType</td>
                             <td>@item.QuantityBallast</td>
-                            <td>@(item.StartCleaningTime?.ToString(@"hh\:mm") ?? "N/A")</td>
+                            <td>@(item.StartCleaningTime?.ToString(@"hh\:mm"))</td>
                             <td>@item.PositionStart</td>
-                            <td>@(item.StopCleaningTime?.ToString(@"hh\:mm") ?? "N/A")</td>
+                            <td>@(item.StopCleaningTime?.ToString(@"hh\:mm"))</td>
                             <td>@item.PositionStop</td>
                             <td>@item.IdentifyTanks</td>
                             <td>@item.MethodCleaning</td>
                             <td>@item.ChemicalType</td>
                             <td>@item.ChemicalQuantity</td>
-                            <td>@(item.StartBallastingTime?.ToString(@"hh\:mm") ?? "N/A")</td>
+                            <td>@(item.StartBallastingTime?.ToString(@"hh\:mm"))</td>
                             <td>@item.BallastingPositionStart</td>
-                            <td>@(item.CompletionBallastingTime?.ToString(@"hh\:mm") ?? "N/A")</td>
+                            <td>@(item.CompletionBallastingTime?.ToString(@"hh\:mm"))</td>
                             <td>@item.BallastingPositionCompletion</td>
                             <td>@item.StatusName</td>
                             <td>@item.ApprovedBy</td>

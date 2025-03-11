@@ -135,182 +135,252 @@ namespace eLog.Controllers.ORB1
         }
 
         // Edit data entry page (fetch record by Id)
-        //public async Task<IActionResult> Edit(int id)
-        //{
-        //    var userRoleName = HttpContext.Session.GetString("UserRoleName");
-        //    CodeCViewModel recordToEdit = null;
+        public async Task<IActionResult> Edit(int id)
+        {
+            var userRoleName = HttpContext.Session.GetString("UserRoleName");
+            CodeCViewModel recordToEdit = null;
 
-        //    using (SqlConnection connection = _db.CreateConnection())
-        //    {
-        //        await connection.OpenAsync();
-        //        using (var command = new SqlCommand("proc_GetCodeAById", connection))
-        //        {
-        //            command.CommandType = CommandType.StoredProcedure;
-        //            command.Parameters.AddWithValue("@Id", id);
+            try
+            {
+                using (SqlConnection connection = _db.CreateConnection())
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand("proc_GetCodeCById", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", id);
 
-        //            using (var reader = await command.ExecuteReaderAsync())
-        //            {
-        //                if (await reader.ReadAsync()) // Ensure data exists before reading
-        //                {
-        //                    recordToEdit = new CodeCViewModel
-        //                    {
-        //                        Id = reader.GetInt32(0),
-        //                        UserId = reader.IsDBNull(1) ? null : reader.GetValue(1).ToString(),
-        //                        EntryDate = reader.GetDateTime(2),
-        //                        BallastingOrCleaning = reader.IsDBNull(3) ? null : reader.GetValue(3).ToString(),
-        //                        LastCleaningDate = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
-        //                        OilCommercialName = reader.IsDBNull(5) ? null : reader.GetValue(5).ToString(),
-        //                        DensityViscosity = reader.IsDBNull(6) ? null : reader.GetValue(6).ToString(),
-        //                        IdentityOfTanksBallasted = reader.IsDBNull(7) ? null : reader.GetValue(7).ToString(),
-        //                        CleanedLastContainedOil = reader.IsDBNull(8) ? (bool?)null : reader.GetBoolean(8),
-        //                        PreviousOilType = reader.IsDBNull(9) ? null : reader.GetValue(9).ToString(),
-        //                        QuantityBallast = reader.IsDBNull(10) ? (decimal?)null : reader.GetDecimal(10),
-        //                        StartCleaningTime = reader.IsDBNull(11) ? (TimeSpan?)null : reader.GetTimeSpan(11),
-        //                        PositionStart = reader.IsDBNull(12) ? null : reader.GetValue(12).ToString(),
-        //                        StopCleaningTime = reader.IsDBNull(13) ? (TimeSpan?)null : reader.GetTimeSpan(13),
-        //                        PositionStop = reader.IsDBNull(14) ? null : reader.GetValue(14).ToString(),
-        //                        IdentifyTanks = reader.IsDBNull(15) ? null : reader.GetValue(15).ToString(),
-        //                        MethodCleaning = reader.IsDBNull(16) ? null : reader.GetValue(16).ToString(),
-        //                        ChemicalType = reader.IsDBNull(17) ? null : reader.GetValue(17).ToString(),
-        //                        ChemicalQuantity = reader.IsDBNull(18) ? (decimal?)null : reader.GetDecimal(18),
-        //                        StartBallastingTime = reader.IsDBNull(19) ? (TimeSpan?)null : reader.GetTimeSpan(19),
-        //                        BallastingPositionStart = reader.IsDBNull(20) ? null : reader.GetValue(20).ToString(),
-        //                        CompletionBallastingTime = reader.IsDBNull(21) ? (TimeSpan?)null : reader.GetTimeSpan(21),
-        //                        BallastingPositionCompletion = reader.IsDBNull(22) ? null : reader.GetValue(22).ToString(),
-        //                        StatusName = reader.IsDBNull(23) ? null : reader.GetValue(23).ToString(),
-        //                        ApprovedBy = reader.IsDBNull(24) ? null : reader.GetValue(24).ToString(),
-        //                        Comments = reader.IsDBNull(25) ? null : reader.GetValue(25).ToString()
-        //                    };
-        //                }
-        //            }
-        //        }
-        //    }
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync()) // Ensure data exists before reading
+                            {
+                                recordToEdit = new CodeCViewModel
+                                {
+                                    Id = reader.GetInt32(0),
+                                    UserId = reader.IsDBNull(1) ? null : reader.GetString(1),
+                                    EntryDate = reader.GetDateTime(2),
+                                    CollectionType = reader.IsDBNull(3) ? null : reader.GetString(3),
+                                    WeeklyIdentityOfTanks = reader.IsDBNull(4) ? null : reader.GetString(4),
+                                    WeeklyCapacityOfTanks = reader.IsDBNull(5) ? (decimal?)null : reader.GetDecimal(5),
+                                    WeeklyTotalQuantityOfRetention = reader.IsDBNull(6) ? (decimal?)null : reader.GetDecimal(6),
+                                    CollectionIdentityOfTanks = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                    CollectionCapacityOfTanks = reader.IsDBNull(8) ? (decimal?)null : reader.GetDecimal(8),
+                                    CollectionTotalQuantityOfRetention = reader.IsDBNull(9) ? (decimal?)null : reader.GetDecimal(9),
+                                    CollectionManualResidueQuantity = reader.IsDBNull(10) ? (decimal?)null : reader.GetDecimal(10),
+                                    CollectionCollectedFromTank = reader.IsDBNull(11) ? null : reader.GetString(11),
+                                    TransferOperationType = reader.IsDBNull(12) ? null : reader.GetString(12),
+                                    TransferQuantity = reader.IsDBNull(13) ? (decimal?)null : reader.GetDecimal(13),
+                                    TransferTanksFrom = reader.IsDBNull(14) ? null : reader.GetString(14),
+                                    TransferRetainedIn = reader.IsDBNull(15) ? null : reader.GetString(15),
+                                    TransferTanksTo = reader.IsDBNull(16) ? null : reader.GetString(16),
+                                    IncineratorOperationType = reader.IsDBNull(17) ? null : reader.GetString(17),
+                                    IncineratorQuantity = reader.IsDBNull(18) ? (decimal?)null : reader.GetDecimal(18),
+                                    IncineratorTanksFrom = reader.IsDBNull(19) ? null : reader.GetString(19),
+                                    IncineratorRetainedIn = reader.IsDBNull(20) ? null : reader.GetString(20),
+                                    IncineratorTotalRetainedContent = reader.IsDBNull(21) ? (decimal?)null : reader.GetDecimal(21),
+                                    IncineratorStartTime = reader.IsDBNull(22) ? (TimeSpan?)null : reader.GetTimeSpan(22),
+                                    IncineratorStopTime = reader.IsDBNull(23) ? (TimeSpan?)null : reader.GetTimeSpan(23),
+                                    IncineratorTotalOperationTime = reader.IsDBNull(24) ? (decimal?)null : reader.GetDecimal(24),
+                                    DisposalShipQuantity = reader.IsDBNull(25) ? (decimal?)null : reader.GetDecimal(25),
+                                    DisposalShipTanksFrom = reader.IsDBNull(26) ? null : reader.GetString(26),
+                                    DisposalShipRetainedIn = reader.IsDBNull(27) ? null : reader.GetString(27),
+                                    DisposalShipTanksTo = reader.IsDBNull(28) ? null : reader.GetString(28),
+                                    DisposalShipRetainedTo = reader.IsDBNull(29) ? null : reader.GetString(29),
+                                    DisposalShoreQuantity = reader.IsDBNull(30) ? (decimal?)null : reader.GetDecimal(30),
+                                    DisposalShoreTanksFrom = reader.IsDBNull(31) ? null : reader.GetString(31),
+                                    DisposalShoreRetainedInDischargeTanks = reader.IsDBNull(32) ? null : reader.GetString(32),
+                                    DisposalShoreBargeName = reader.IsDBNull(33) ? null : reader.GetString(33),
+                                    DisposalShoreReceptionFacility = reader.IsDBNull(34) ? null : reader.GetString(34),
+                                    DisposalShoreReceiptNo = reader.IsDBNull(35) ? null : reader.GetString(35),
+                                    StatusName = reader.IsDBNull(36) ? null : reader.GetValue(36).ToString(),
+                                    ApprovedBy = reader.IsDBNull(37) ? null : reader.GetValue(37).ToString(),
+                                    Comments = reader.IsDBNull(38) ? null : reader.GetValue(38).ToString()
+                                };
+                            }
+                        }
+                    }
+                }
+                if (recordToEdit == null)
+                {
+                    return NotFound(); // Return 404 if no record is found
+                }
 
-        //    if (recordToEdit == null)
-        //    {
-        //        return NotFound(); // Return 404 if no record is found
-        //    }
+                return userRoleName switch
+                {
+                    "User" => View("~/Views/ORB1/DataEdit_CodeC.cshtml", recordToEdit),
+                    "Approver" => View("~/Views/ORB1/Approver_DataEdit_CodeC.cshtml", recordToEdit),
+                    "SuperAdmin" => View("~/Views/ORB1/Approver_DataEdit_CodeC.cshtml", recordToEdit),
+                    _ => Forbid() // Handle unexpected roles
+                };
+            }
+            catch (Exception ex)
+            {
+                // Include a detailed error message with stack trace for debugging
+                string errorDetails = $"Error: {ex.Message}\nStack Trace: {ex.StackTrace}";
+                // Log the error details
+                // _logger.LogError(errorDetails);
 
-        //    return userRoleName switch
-        //    {
-        //        "User" => View("~/Views/ORB1/DataEdit_CodeC.cshtml", recordToEdit),
-        //        "Approver" => View("~/Views/ORB1/Approver_DataEdit_CodeC.cshtml", recordToEdit),
-        //        "SuperAdmin" => View("~/Views/ORB1/Approver_DataEdit_CodeC.cshtml", recordToEdit),
-        //        _ => Forbid() // Handle unexpected roles
-        //    };
-        //}
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
 
-        //[Route("ORB1/CodeC/Create")]
-        //[HttpPost]
-        //public IActionResult Create([FromBody] CodeCModel model)
-        //{
-        //    if (model == null)
-        //    {
-        //        return BadRequest("Invalid data received.");
-        //    }
+        [Route("ORB1/CodeC/Create")]
+        [HttpPost]
+        public IActionResult Create([FromBody] CodeCModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+            try
+            {
+                string storedProcedure = "proc_InsertORB1CodeC";
+                var parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@UserId", model.UserId),
+                    new SqlParameter("@EntryDate", model.EntryDate),
+                    new SqlParameter("@CollectionType", model.CollectionType),
+            
+                    // Weekly Inventory Fields
+                    new SqlParameter("@WeeklyIdentityOfTanks", (object)model.WeeklyIdentityOfTanks ?? DBNull.Value),
+                    new SqlParameter("@WeeklyCapacityOfTanks", model.WeeklyCapacityOfTanks ?? (object)DBNull.Value),
+                    new SqlParameter("@WeeklyTotalQuantityOfRetention", model.WeeklyTotalQuantityOfRetention ?? (object)DBNull.Value),
+            
+                    // Collection Fields
+                    new SqlParameter("@CollectionIdentityOfTanks", (object)model.CollectionIdentityOfTanks ?? DBNull.Value),
+                    new SqlParameter("@CollectionCapacityOfTanks", model.CollectionCapacityOfTanks ?? (object)DBNull.Value),
+                    new SqlParameter("@CollectionTotalQuantityOfRetention", model.CollectionTotalQuantityOfRetention ?? (object)DBNull.Value),
+                    new SqlParameter("@CollectionManualResidueQuantity", model.CollectionManualResidueQuantity ?? (object)DBNull.Value),
+                    new SqlParameter("@CollectionCollectedFromTank", (object)model.CollectionCollectedFromTank ?? DBNull.Value),
+            
+                    // Transfer Fields
+                    new SqlParameter("@TransferOperationType", (object)model.TransferOperationType ?? DBNull.Value),
+                    new SqlParameter("@TransferQuantity", model.TransferQuantity ?? (object)DBNull.Value),
+                    new SqlParameter("@TransferTanksFrom", (object)model.TransferTanksFrom ?? DBNull.Value),
+                    new SqlParameter("@TransferRetainedIn", (object)model.TransferRetainedIn ?? DBNull.Value),
+                    new SqlParameter("@TransferTanksTo", (object)model.TransferTanksTo ?? DBNull.Value),
+            
+                    // Incinerator Fields
+                    new SqlParameter("@IncineratorOperationType", (object)model.IncineratorOperationType ?? DBNull.Value),
+                    new SqlParameter("@IncineratorQuantity", model.IncineratorQuantity ?? (object)DBNull.Value),
+                    new SqlParameter("@IncineratorTanksFrom", (object)model.IncineratorTanksFrom ?? DBNull.Value),
+                    new SqlParameter("@IncineratorRetainedIn", (object)model.IncineratorRetainedIn ?? DBNull.Value),
+                    new SqlParameter("@IncineratorTotalRetainedContent", model.IncineratorTotalRetainedContent ?? (object)DBNull.Value),
+                    new SqlParameter("@IncineratorStartTime", (object)model.IncineratorStartTime ?? DBNull.Value),
+                    new SqlParameter("@IncineratorStopTime", (object)model.IncineratorStopTime ?? DBNull.Value),
+                    new SqlParameter("@IncineratorTotalOperationTime", model.IncineratorTotalOperationTime ?? (object)DBNull.Value),
+            
+                    // Disposal Ship Fields
+                    new SqlParameter("@DisposalShipQuantity", model.DisposalShipQuantity ?? (object)DBNull.Value),
+                    new SqlParameter("@DisposalShipTanksFrom", (object)model.DisposalShipTanksFrom ?? DBNull.Value),
+                    new SqlParameter("@DisposalShipRetainedIn", (object)model.DisposalShipRetainedIn ?? DBNull.Value),
+                    new SqlParameter("@DisposalShipTanksTo", (object)model.DisposalShipTanksTo ?? DBNull.Value),
+                    new SqlParameter("@DisposalShipRetainedTo", (object)model.DisposalShipRetainedTo ?? DBNull.Value),
+            
+                    // Disposal Shore Fields
+                    new SqlParameter("@DisposalShoreQuantity", model.DisposalShoreQuantity ?? (object)DBNull.Value),
+                    new SqlParameter("@DisposalShoreTanksFrom", (object)model.DisposalShoreTanksFrom ?? DBNull.Value),
+                    new SqlParameter("@DisposalShoreRetainedInDischargeTanks", (object)model.DisposalShoreRetainedInDischargeTanks ?? DBNull.Value),
+                    new SqlParameter("@DisposalShoreBargeName", (object)model.DisposalShoreBargeName ?? DBNull.Value),
+                    new SqlParameter("@DisposalShoreReceptionFacility", (object)model.DisposalShoreReceptionFacility ?? DBNull.Value),
+                    new SqlParameter("@DisposalShoreReceiptNo", (object)model.DisposalShoreReceiptNo ?? DBNull.Value)
+                };
 
-        //    try
-        //    {
-        //        string storedProcedure = "proc_InsertORB1CodeA";
-        //        var parameters = new SqlParameter[]
-        //        {
-        //    new SqlParameter("@UserId", model.UserId),
-        //    new SqlParameter("@EntryDate", model.EntryDate),
-        //    new SqlParameter("@BallastingOrCleaning", model.BallastingOrCleaning),
-        //    new SqlParameter("@LastCleaningDate", (object)model.LastCleaningDate ?? DBNull.Value),
-        //    new SqlParameter("@OilCommercialName", (object)model.OilCommercialName ?? DBNull.Value),
-        //    new SqlParameter("@DensityViscosity", (object)model.DensityViscosity ?? DBNull.Value),
-        //    new SqlParameter("@IdentityOfTanksBallasted", (object)model.IdentityOfTanksBallasted ?? DBNull.Value),
-        //    new SqlParameter("@CleanedLastContainedOil", model.CleanedLastContainedOil),
-        //    new SqlParameter("@PreviousOilType", (object)model.PreviousOilType ?? DBNull.Value),
-        //    new SqlParameter("@QuantityBallast", model.QuantityBallast ?? (object)DBNull.Value),
-        //    new SqlParameter("@StartCleaningTime", (object)model.StartCleaningTime ?? DBNull.Value),
-        //    new SqlParameter("@PositionStart", (object)model.PositionStart ?? DBNull.Value),
-        //    new SqlParameter("@StopCleaningTime", (object)model.StopCleaningTime ?? DBNull.Value),
-        //    new SqlParameter("@PositionStop", (object)model.PositionStop ?? DBNull.Value),
-        //    new SqlParameter("@IdentifyTanks", (object)model.IdentifyTanks ?? DBNull.Value),
-        //    new SqlParameter("@MethodCleaning", (object)model.MethodCleaning ?? DBNull.Value),
-        //    new SqlParameter("@ChemicalType", (object)model.ChemicalType ?? DBNull.Value),
-        //    new SqlParameter("@ChemicalQuantity", model.ChemicalQuantity ?? (object)DBNull.Value),
-        //    new SqlParameter("@StartBallastingTime", (object)model.StartBallastingTime ?? DBNull.Value),
-        //    new SqlParameter("@BallastingPositionStart", (object)model.BallastingPositionStart ?? DBNull.Value),
-        //    new SqlParameter("@CompletionBallastingTime", (object)model.CompletionBallastingTime ?? DBNull.Value),
-        //    new SqlParameter("@BallastingPositionCompletion", (object)model.BallastingPositionCompletion ?? DBNull.Value),
-        //        };
+                int InsertedId = _db.ExecuteInsertStoredProcedure(storedProcedure, parameters);
+                if (!Convert.IsDBNull(InsertedId) && InsertedId > 0)
+                {
+                    return Json(new { success = true, message = "Data Inserted Successfully!" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Data Insertion Failed!" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
-        //        int InsertedId = _db.ExecuteInsertStoredProcedure(storedProcedure, parameters);
+        [Route("ORB1/CodeC/Update")]
+        [HttpPost]
+        public IActionResult Update([FromBody] CodeCModel model)
+        {
+            //if (model == null || model.Id <= 0)
+            //{
+            //    return BadRequest("Invalid data received or ID is missing.");
+            //}
 
-        //        if (InsertedId > 0)
-        //        {
-        //            return Json(new { success = true, message = "Data Inserted Successfully!" });
-        //        }
-        //        else
-        //        {
-        //            return Json(new { success = true, message = "Data Insertion Failed!" });
-        //        }
+            try
+            {
+                string storedProcedure = "proc_UpdateORB1CodeC";
+                var parameters = new SqlParameter[]
+                {
+            //new SqlParameter("@Id", model.Id),
+            new SqlParameter("@UserId", model.UserId),
+            new SqlParameter("@EntryDate", model.EntryDate),
+            new SqlParameter("@CollectionType", model.CollectionType),
+    
+            // Weekly Inventory Fields
+            new SqlParameter("@WeeklyIdentityOfTanks", (object)model.WeeklyIdentityOfTanks ?? DBNull.Value),
+            new SqlParameter("@WeeklyCapacityOfTanks", model.WeeklyCapacityOfTanks ?? (object)DBNull.Value),
+            new SqlParameter("@WeeklyTotalQuantityOfRetention", model.WeeklyTotalQuantityOfRetention ?? (object)DBNull.Value),
+    
+            // Collection Fields
+            new SqlParameter("@CollectionIdentityOfTanks", (object)model.CollectionIdentityOfTanks ?? DBNull.Value),
+            new SqlParameter("@CollectionCapacityOfTanks", model.CollectionCapacityOfTanks ?? (object)DBNull.Value),
+            new SqlParameter("@CollectionTotalQuantityOfRetention", model.CollectionTotalQuantityOfRetention ?? (object)DBNull.Value),
+            new SqlParameter("@CollectionManualResidueQuantity", model.CollectionManualResidueQuantity ?? (object)DBNull.Value),
+            new SqlParameter("@CollectionCollectedFromTank", (object)model.CollectionCollectedFromTank ?? DBNull.Value),
+    
+            // Transfer Fields
+            new SqlParameter("@TransferOperationType", (object)model.TransferOperationType ?? DBNull.Value),
+            new SqlParameter("@TransferQuantity", model.TransferQuantity ?? (object)DBNull.Value),
+            new SqlParameter("@TransferTanksFrom", (object)model.TransferTanksFrom ?? DBNull.Value),
+            new SqlParameter("@TransferRetainedIn", (object)model.TransferRetainedIn ?? DBNull.Value),
+            new SqlParameter("@TransferTanksTo", (object)model.TransferTanksTo ?? DBNull.Value),
+    
+            // Incinerator Fields
+            new SqlParameter("@IncineratorOperationType", (object)model.IncineratorOperationType ?? DBNull.Value),
+            new SqlParameter("@IncineratorQuantity", model.IncineratorQuantity ?? (object)DBNull.Value),
+            new SqlParameter("@IncineratorTanksFrom", (object)model.IncineratorTanksFrom ?? DBNull.Value),
+            new SqlParameter("@IncineratorRetainedIn", (object)model.IncineratorRetainedIn ?? DBNull.Value),
+            new SqlParameter("@IncineratorTotalRetainedContent", model.IncineratorTotalRetainedContent ?? (object)DBNull.Value),
+            new SqlParameter("@IncineratorStartTime", (object)model.IncineratorStartTime ?? DBNull.Value),
+            new SqlParameter("@IncineratorStopTime", (object)model.IncineratorStopTime ?? DBNull.Value),
+            new SqlParameter("@IncineratorTotalOperationTime", model.IncineratorTotalOperationTime ?? (object)DBNull.Value),
+    
+            // Disposal Ship Fields
+            new SqlParameter("@DisposalShipQuantity", model.DisposalShipQuantity ?? (object)DBNull.Value),
+            new SqlParameter("@DisposalShipTanksFrom", (object)model.DisposalShipTanksFrom ?? DBNull.Value),
+            new SqlParameter("@DisposalShipRetainedIn", (object)model.DisposalShipRetainedIn ?? DBNull.Value),
+            new SqlParameter("@DisposalShipTanksTo", (object)model.DisposalShipTanksTo ?? DBNull.Value),
+            new SqlParameter("@DisposalShipRetainedTo", (object)model.DisposalShipRetainedTo ?? DBNull.Value),
+    
+            // Disposal Shore Fields
+            new SqlParameter("@DisposalShoreQuantity", model.DisposalShoreQuantity ?? (object)DBNull.Value),
+            new SqlParameter("@DisposalShoreTanksFrom", (object)model.DisposalShoreTanksFrom ?? DBNull.Value),
+            new SqlParameter("@DisposalShoreRetainedInDischargeTanks", (object)model.DisposalShoreRetainedInDischargeTanks ?? DBNull.Value),
+            new SqlParameter("@DisposalShoreBargeName", (object)model.DisposalShoreBargeName ?? DBNull.Value),
+            new SqlParameter("@DisposalShoreReceptionFacility", (object)model.DisposalShoreReceptionFacility ?? DBNull.Value),
+            new SqlParameter("@DisposalShoreReceiptNo", (object)model.DisposalShoreReceiptNo ?? DBNull.Value)
+                };
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
-
-        //[HttpPost]
-        //[Route("ORB1/CodeC/Update")]
-        //public IActionResult Update([FromBody] CodeCViewModel model)
-        //{
-        //    if (model == null)
-        //    {
-        //        return BadRequest("Invalid data.");
-        //    }
-
-        //    try
-        //    {
-        //        string storedProcedure = "proc_UpdateORB1CodeA";
-        //        var parameters = new SqlParameter[]
-        //        {
-        //    new SqlParameter("@Id", model.Id),
-        //    new SqlParameter("@UserId", model.UserId),
-        //    new SqlParameter("@EntryDate", model.EntryDate),
-        //    new SqlParameter("@BallastingOrCleaning", model.BallastingOrCleaning),
-        //    new SqlParameter("@LastCleaningDate", (object)model.LastCleaningDate ?? DBNull.Value),
-        //    new SqlParameter("@OilCommercialName", (object)model.OilCommercialName ?? DBNull.Value),
-        //    new SqlParameter("@DensityViscosity", (object)model.DensityViscosity ?? DBNull.Value),
-        //    new SqlParameter("@IdentityOfTanksBallasted", (object)model.IdentityOfTanksBallasted ?? DBNull.Value),
-        //    new SqlParameter("@CleanedLastContainedOil", model.CleanedLastContainedOil),
-        //    new SqlParameter("@PreviousOilType", (object)model.PreviousOilType ?? DBNull.Value),
-        //    new SqlParameter("@QuantityBallast", model.QuantityBallast ?? (object)DBNull.Value),
-        //    new SqlParameter("@StartCleaningTime", (object)model.StartCleaningTime ?? DBNull.Value),
-        //    new SqlParameter("@PositionStart", (object)model.PositionStart ?? DBNull.Value),
-        //    new SqlParameter("@StopCleaningTime", (object)model.StopCleaningTime ?? DBNull.Value),
-        //    new SqlParameter("@PositionStop", (object)model.PositionStop ?? DBNull.Value),
-        //    new SqlParameter("@IdentifyTanks", (object)model.IdentifyTanks ?? DBNull.Value),
-        //    new SqlParameter("@MethodCleaning", (object)model.MethodCleaning ?? DBNull.Value),
-        //    new SqlParameter("@ChemicalType", (object)model.ChemicalType ?? DBNull.Value),
-        //    new SqlParameter("@ChemicalQuantity", model.ChemicalQuantity ?? (object)DBNull.Value),
-        //    new SqlParameter("@StartBallastingTime", (object)model.StartBallastingTime ?? DBNull.Value),
-        //    new SqlParameter("@BallastingPositionStart", (object)model.BallastingPositionStart ?? DBNull.Value),
-        //    new SqlParameter("@CompletionBallastingTime", (object)model.CompletionBallastingTime ?? DBNull.Value),
-        //    new SqlParameter("@BallastingPositionCompletion", (object)model.BallastingPositionCompletion ?? DBNull.Value)
-        //        };
-
-        //        int result = _db.ExecuteUpdateStoredProcedure(storedProcedure, parameters);
-
-        //        if (result > 0)
-        //        {
-        //            return Json(new { success = true, message = "Record Updated Successfully." });
-        //        }
-        //        else
-        //        {
-        //            return Json(new { success = false, message = "Record Update Failed!" });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
+                int rowsAffected = _db.ExecuteUpdateStoredProcedure(storedProcedure, parameters);
+                if (rowsAffected > 0)
+                {
+                    return Json(new { success = true, message = "Data Updated Successfully!" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "No changes made or record not found." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
         //[HttpPost]
         //[Route("ORB1/CodeC/ApproverUpdate")]

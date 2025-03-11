@@ -82,7 +82,7 @@
     });
 
     // Save form data via AJAX
-    $('#DataEntryCodeCForm').submit(function (event) {
+    $('#saveButton').click(function (event) {
         event.preventDefault();
 
         // Get the selected collection type
@@ -90,6 +90,7 @@
 
         // Create a base data object with common fields
         var formData = {
+            UserId: userId, // Assuming you have a hidden UserId field
             EntryDate: $('#EntryDate').val(),
             CollectionType: collectionType
         };
@@ -97,53 +98,53 @@
         // Add fields based on which section is visible
         switch (collectionType) {
             case 'WeeklyInventory':
-                formData.IdentityOfTanks = $('#WeeklyIdentityOfTanks').val();
-                formData.CapacityOfTanks = $('#WeeklyCapacityOfTanks').val();
-                formData.TotalQuantityOfRetention = $('#WeeklyTotalQuantityOfRetention').val();
+                formData.WeeklyIdentityOfTanks = $('#WeeklyIdentityOfTanks').val();
+                formData.WeeklyCapacityOfTanks = $('#WeeklyCapacityOfTanks').val();
+                formData.WeeklyTotalQuantityOfRetention = $('#WeeklyTotalQuantityOfRetention').val();
                 break;
 
             case 'Collection':
-                formData.IdentityOfTanks = $('#CollectionIdentityOfTanks').val();
-                formData.CapacityOfTanks = $('#CollectionCapacityOfTanks').val();
-                formData.TotalQuantityOfRetention = $('#CollectionTotalQuantityOfRetention').val();
-                formData.ManualResidueQuantity = $('#CollectionManualResidueQuantity').val();
-                formData.CollectedFromTank = $('#CollectionCollectedFromTank').val();
+                formData.CollectionIdentityOfTanks = $('#CollectionIdentityOfTanks').val();
+                formData.CollectionCapacityOfTanks = $('#CollectionCapacityOfTanks').val();
+                formData.CollectionTotalQuantityOfRetention = $('#CollectionTotalQuantityOfRetention').val();
+                formData.CollectionManualResidueQuantity = $('#CollectionManualResidueQuantity').val();
+                formData.CollectionCollectedFromTank = $('#CollectionCollectedFromTank').val();
                 break;
 
             case 'Transfer':
-                formData.OperationType = $('#TransferOperationType').val();
-                formData.Quantity = $('#TransferQuantity').val();
-                formData.TanksFrom = $('#TransferTanksFrom').val();
-                formData.RetainedIn = $('#TransferRetainedIn').val();
-                formData.TanksTo = $('#TransferTanksTo').val();
+                formData.TransferOperationType = $('#TransferOperationType').val();
+                formData.TransferQuantity = $('#TransferQuantity').val();
+                formData.TransferTanksFrom = $('#TransferTanksFrom').val();
+                formData.TransferRetainedIn = $('#TransferRetainedIn').val();
+                formData.TransferTanksTo = $('#TransferTanksTo').val();
                 break;
 
             case 'Incinerator':
-                formData.OperationType = $('#IncineratorOperationType').val();
-                formData.Quantity = $('#IncineratorQuantity').val();
-                formData.TanksFrom = $('#IncineratorTanksFrom').val();
-                formData.RetainedIn = $('#IncineratorRetainedIn').val();
-                formData.TotalRetainedContent = $('#IncineratorTotalRetainedContent').val();
-                formData.StartTime = $('#IncineratorStartTime').val();
-                formData.StopTime = $('#IncineratorStopTime').val();
-                formData.TotalOperationTime = $('#IncineratorTotalOperationTime').val();
+                formData.IncineratorOperationType = $('#IncineratorOperationType').val();
+                formData.IncineratorQuantity = $('#IncineratorQuantity').val();
+                formData.IncineratorTanksFrom = $('#IncineratorTanksFrom').val();
+                formData.IncineratorRetainedIn = $('#IncineratorRetainedIn').val();
+                formData.IncineratorTotalRetainedContent = $('#IncineratorTotalRetainedContent').val();
+                formData.IncineratorStartTime = $('#IncineratorStartTime').val();
+                formData.IncineratorStopTime = $('#IncineratorStopTime').val();
+                formData.IncineratorTotalOperationTime = $('#IncineratorTotalOperationTime').val();
                 break;
 
             case 'DisposalShip':
-                formData.Quantity = $('#DisposalShipQuantity').val();
-                formData.TanksFrom = $('#DisposalShipTanksFrom').val();
-                formData.RetainedIn = $('#DisposalShipRetainedIn').val();
-                formData.TanksTo = $('#DisposalShipTanksTo').val();
-                formData.RetainedTo = $('#DisposalShipRetainedTo').val();
+                formData.DisposalShipQuantity = $('#DisposalShipQuantity').val();
+                formData.DisposalShipTanksFrom = $('#DisposalShipTanksFrom').val();
+                formData.DisposalShipRetainedIn = $('#DisposalShipRetainedIn').val();
+                formData.DisposalShipTanksTo = $('#DisposalShipTanksTo').val();
+                formData.DisposalShipRetainedTo = $('#DisposalShipRetainedTo').val();
                 break;
 
             case 'DisposalShore':
-                formData.Quantity = $('#DisposalShoreQuantity').val();
-                formData.TanksFrom = $('#DisposalShoreTanksFrom').val();
-                formData.RetainedInDischargeTanks = $('#DisposalShoreRetainedInDischargeTanks').val();
-                formData.BargeName = $('#DisposalShoreBargeName').val();
-                formData.ReceptionFacility = $('#DisposalShoreReceptionFacility').val();
-                formData.ReceiptNo = $('#DisposalShoreReceiptNo').val();
+                formData.DisposalShoreQuantity = $('#DisposalShoreQuantity').val();
+                formData.DisposalShoreTanksFrom = $('#DisposalShoreTanksFrom').val();
+                formData.DisposalShoreRetainedInDischargeTanks = $('#DisposalShoreRetainedInDischargeTanks').val();
+                formData.DisposalShoreBargeName = $('#DisposalShoreBargeName').val();
+                formData.DisposalShoreReceptionFacility = $('#DisposalShoreReceptionFacility').val();
+                formData.DisposalShoreReceiptNo = $('#DisposalShoreReceiptNo').val();
                 break;
         }
 
@@ -154,16 +155,16 @@
             data: JSON.stringify(formData),
             success: function (response) {
                 $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-
                 // Reset form fields after successful save
                 $('#DataEntryCodeCForm')[0].reset();
-
                 // Reset date field with today's date
+                let today = new Date();
+                let formattedDate = today.getFullYear() + '-' +
+                    String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(today.getDate()).padStart(2, '0');
                 $('#EntryDate').val(formattedDate);
-
                 // Set default CollectionType
                 $('#CollectionType').val('WeeklyInventory');
-
                 // Show default fields
                 setFieldVisibility('WeeklyInventory');
             },
