@@ -1,0 +1,209 @@
+﻿@{
+    Layout = "_BlankLayout";
+ }
+@{
+    ViewData["Title"] = "DataEntry_CodeC";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter CodeC Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/ORB1/DataEntry_CodeA.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h2 class="text-center mb-4">WEEKLY- COLLECTION, TRANSFER AND DISPOSAL OF OIL RESIDUES (SLUDGE)</h2>
+
+    <form id="DataEntryCodeCForm" class="p-4 border rounded bg-light">
+        <div class="mb-3">
+            <label for="EntryDate" class="form-label">Date (YYYY-MM-DD):</label>
+            <input type="date" class="form-control" id="EntryDate" name="EntryDate" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="CollectionType" class="form-label">Collection / transfer / disposal:</label>
+            <select class="form-select" id="CollectionType" name="CollectionType" required>
+                <option value="WeeklyInventory" selected>Weekly Inventory</option>
+                <option value="Collection">Collection</option>
+                <option value="Transfer">Transfer</option>
+                <option value="Incinerator">Incinerator</option>
+                <option value="DisposalShip">Disposal Ship</option>
+                <option value="DisposalShore">Disposal Shore</option>
+            </select>
+        </div>
+
+        <!-- Weekly Inventory Initially hidden -->
+        <div id="WeeklyInventoryFields">
+            <div class="mb-3">
+                <label for="WeeklyIdentityOfTanks" class="form-label">Identity of Tank(s):</label>
+                <select class="form-select" id="WeeklyIdentityOfTanks" name="WeeklyIdentityOfTanks" required>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="WeeklyCapacityOfTanks" class="form-label">Capacity of Tanks(s) in m³:</label>
+                <input type="text" class="form-control" id="WeeklyCapacityOfTanks" name="WeeklyCapacityOfTanks" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="WeeklyTotalQuantityOfRetention" class="form-label">Total quantity of retention in m³:</label>
+                <input type="text" class="form-control" id="WeeklyTotalQuantityOfRetention" name="WeeklyTotalQuantityOfRetention" required>
+            </div>
+        </div>
+
+        <!-- Collection Initially hidden -->
+        <div id="CollectionFields" style="display: none;">
+            <div class="mb-3">
+                <label for="CollectionIdentityOfTanks" class="form-label">Identity of Tank(s):</label>
+                <select class="form-select" id="CollectionIdentityOfTanks" name="CollectionIdentityOfTanks" required>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="CollectionCapacityOfTanks" class="form-label">Capacity of Tanks(s) in m³:</label>
+                <input type="text" class="form-control" id="CollectionCapacityOfTanks" name="CollectionCapacityOfTanks" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="CollectionTotalQuantityOfRetention" class="form-label">Total quantity of retention in m³:</label>
+                <input type="text" class="form-control" id="CollectionTotalQuantityOfRetention" name="CollectionTotalQuantityOfRetention" required>
+            </div>
+            <div class="mb-3">
+                <label for="CollectionManualResidueQuantity" class="form-label">Quantity of residue collected by manual operation:</label>
+                <input type="text" class="form-control" id="CollectionManualResidueQuantity" name="CollectionManualResidueQuantity" required>
+            </div>
+            <div class="mb-3">
+                <label for="CollectionCollectedFromTank" class="form-label">Collected from (Tank):</label>
+                <input type="text" class="form-control" id="CollectionCollectedFromTank" name="CollectionCollectedFromTank" required>
+            </div>
+        </div>
+
+        <!--Transfer Initially hidden -->
+        <div id="TransferFields" style="display: none;">
+            <div class="mb-3">
+                <label for="TransferOperationType" class="form-label">Type of Operation:</label>
+                <select class="form-select" id="TransferOperationType" name="TransferOperationType" required>
+                    <option value="Select" selected>Select</option>
+                    <option value="Transfer">Transfer</option>
+                    <option value="Drain">Drain</option>
+                    <option value="Heating (Evaporation)">Heating (Evaporation)</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="TransferQuantity" class="form-label">Quantity:</label>
+                <input type="text" class="form-control" id="TransferQuantity" name="TransferQuantity" required>
+            </div>
+            <div class="mb-3">
+                <label for="TransferTanksFrom" class="form-label">Tanks (from):</label>
+                <input type="text" class="form-control" id="TransferTanksFrom" name="TransferTanksFrom" required>
+            </div>
+            <div class="mb-3">
+                <label for="TransferRetainedIn" class="form-label">Retained In:</label>
+                <input type="text" class="form-control" id="TransferRetainedIn" name="TransferRetainedIn" required>
+            </div>
+            <div class="mb-3">
+                <label for="TransferTanksTo" class="form-label">Tanks (to):</label>
+                <input type="text" class="form-control" id="TransferTanksTo" name="TransferTanksTo" required>
+            </div>
+        </div>
+
+        <!--Incinerator Initially hidden -->
+        <div id="IncineratorFields" style="display: none;">
+            <div class="mb-3">
+                <label for="IncineratorOperationType" class="form-label">Type of Operation:</label>
+                <select class="form-select" id="IncineratorOperationType" name="IncineratorOperationType" required>
+                    <option value="Incineration" selected>Incineration</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="IncineratorQuantity" class="form-label">Quantity:</label>
+                <input type="text" class="form-control" id="IncineratorQuantity" name="IncineratorQuantity" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="IncineratorTanksFrom" class="form-label">Tanks (from):</label>
+                <input type="text" class="form-control" id="IncineratorTanksFrom" name="IncineratorTanksFrom" required>
+            </div>
+            <div class="mb-3">
+                <label for="IncineratorRetainedIn" class="form-label">Retained In:</label>
+                <input type="text" class="form-control" id="IncineratorRetainedIn" name="IncineratorRetainedIn" required>
+            </div>
+            <div class="mb-3">
+                <label for="IncineratorTotalRetainedContent" class="form-label">Total content of tank(s)- Retained:</label>
+                <input type="text" class="form-control" id="IncineratorTotalRetainedContent" name="IncineratorTotalRetainedContent" required>
+            </div>
+            <div class="mb-3">
+                <label for="IncineratorStartTime" class="form-label">Start Time (HHMM- 24 hrs format):</label>
+                <input type="time" class="form-control" id="IncineratorStartTime" name="IncineratorStartTime" required>
+            </div>
+            <div class="mb-3">
+                <label for="IncineratorStopTime" class="form-label">Stop Time (HHMM- 24 hrs format):</label>
+                <input type="time" class="form-control" id="IncineratorStopTime" name="IncineratorStopTime" required>
+            </div>
+            <div class="mb-3">
+                <label for="IncineratorTotalOperationTime" class="form-label">Total time of operation (hrs):</label>
+                <input type="text" class="form-control" id="IncineratorTotalOperationTime" name="IncineratorTotalOperationTime" required>
+            </div>
+        </div>
+
+        <!--Disposal Ship Initially hidden -->
+        <div id="DisposalShipFields" style="display: none;">
+            <div class="mb-3">
+                <label for="DisposalShipQuantity" class="form-label">Quantity:</label>
+                <input type="text" class="form-control" id="DisposalShipQuantity" name="DisposalShipQuantity" required>
+            </div>
+            <div class="mb-3">
+                <label for="DisposalShipTanksFrom" class="form-label">Tanks (from):</label>
+                <input type="text" class="form-control" id="DisposalShipTanksFrom" name="DisposalShipTanksFrom" required>
+            </div>
+            <div class="mb-3">
+                <label for="DisposalShipRetainedIn" class="form-label">Retained In:</label>
+                <input type="text" class="form-control" id="DisposalShipRetainedIn" name="DisposalShipRetainedIn" required>
+            </div>
+            <div class="mb-3">
+                <label for="DisposalShipTanksTo" class="form-label">Tanks (to):</label>
+                <input type="text" class="form-control" id="DisposalShipTanksTo" name="DisposalShipTanksTo" required>
+            </div>
+            <div class="mb-3">
+                <label for="DisposalShipRetainedTo" class="form-label">Retained To:</label>
+                <input type="text" class="form-control" id="DisposalShipRetainedTo" name="DisposalShipRetainedTo" required>
+            </div>
+        </div>
+
+        <!--Disposal Shore Initially hidden -->
+        <div id="DisposalShoreFields" style="display: none;">
+            <div class="mb-3">
+                <label for="DisposalShoreQuantity" class="form-label">Quantity:</label>
+                <input type="text" class="form-control" id="DisposalShoreQuantity" name="DisposalShoreQuantity" required>
+            </div>
+            <div class="mb-3">
+                <label for="DisposalShoreTanksFrom" class="form-label">Tanks (from):</label>
+                <input type="text" class="form-control" id="DisposalShoreTanksFrom" name="DisposalShoreTanksFrom" required>
+            </div>
+            <div class="mb-3">
+                <label for="DisposalShoreRetainedInDischargeTanks" class="form-label">Retained In Discharge Tanks:</label>
+                <input type="text" class="form-control" id="DisposalShoreRetainedInDischargeTanks" name="DisposalShoreRetainedInDischargeTanks" required>
+            </div>
+            <div class="mb-3">
+                <label for="DisposalShoreBargeName" class="form-label">Barge Name:</label>
+                <input type="text" class="form-control" id="DisposalShoreBargeName" name="DisposalShoreBargeName" required>
+            </div>
+            <div class="mb-3">
+                <label for="DisposalShoreReceptionFacility" class="form-label">To reception facilities (identify port):</label>
+                <input type="text" class="form-control" id="DisposalShoreReceptionFacility" name="DisposalShoreReceptionFacility" required>
+            </div>
+            <div class="mb-3">
+                <label for="DisposalShoreReceiptNo" class="form-label">Receipt No.:</label>
+                <input type="text" class="form-control" id="DisposalShoreReceiptNo" name="DisposalShoreReceiptNos" required>
+            </div>
+        </div>
+            
+        <button type="submit" id="saveButton" class="btn btn-primary">Save</button>
+        <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
+        <button type="button" id="cancelButton" class="btn btn-danger">Cancel</button>
+    </form>
+
+    <p id="message" class="mt-3 text-center"></p>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/ORB1/DataEntry_CodeC.js"></script>
+</body>
+</html>

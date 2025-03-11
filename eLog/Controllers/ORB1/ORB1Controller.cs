@@ -122,7 +122,7 @@ namespace eLog.Controllers.ORB1
         }
         public IActionResult CodeC()
         {
-            return View();
+            return RedirectToAction("GetCodeCData", "CodeC");
         }
     }
 }

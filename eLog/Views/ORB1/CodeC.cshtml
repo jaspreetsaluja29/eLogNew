@@ -1,0 +1,173 @@
+﻿@model IEnumerable<eLog.ViewModels.ORB1.CodeCViewModel>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Code C Records";
+}
+
+<!-- Include CodeA.css -->
+<link href="~/css/ORB1/CodeA.css" rel="stylesheet" />
+
+<div class="container mt-4 text-center">
+    <!-- Row with header and controls (Add and Search) aligned -->
+    <h2 class="mb-4">Code C Records</h2>
+    <div class="row justify-content-between align-items-center mb-3">
+        <div class="col-auto">
+            <button class="btn btn-primary" onclick="openAddWindow()">Add</button>
+        </div>
+        <div class="col-auto">
+            <input type="text" id="searchInput" class="form-control" style="width: 200px;" placeholder="Search..." onkeyup="filterTable()" />
+        </div>
+    </div>
+
+    <!-- Row count display -->
+    <div class="record-controls d-flex justify-content-between align-items-center mb-3 p-2">
+        <div class="record-count">
+            <strong>Total Records:</strong> @ViewBag.TotalRecords
+        </div>
+        <div class="pagination-controls d-flex align-items-center gap-2">
+            <label for="pageSize" class="fw-semibold" style="white-space: nowrap;">Page Size:</label>
+            <select id="pageSize" class="form-select form-select-sm" onchange="changePage(0)">
+                <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
+                <option value="20" selected="@(ViewBag.PageSize == 20)">20</option>
+                <option value="50" selected="@(ViewBag.PageSize == 50)">50</option>
+                <option value="100" selected="@(ViewBag.PageSize == 100)">100</option>
+                <option value="500" selected="@(ViewBag.PageSize == 500)">500</option>
+            </select>
+
+            <button class="btn btn-outline-primary btn-sm" id="prevPage" onclick="changePage(-1)"
+            @(ViewBag.PageNumber == 1 ? "disabled" : "")>
+                Previous
+            </button>
+
+            <span id="currentPage" class="fw-bold">@ViewBag.PageNumber</span> /
+            <span id="totalPages">@ViewBag.TotalPages</span>
+
+            <button class="btn btn-outline-primary btn-sm" id="nextPage" onclick="changePage(1)"
+            @(ViewBag.PageNumber >= ViewBag.TotalPages ? "disabled" : "")>
+                Next
+            </button>
+        </div>
+    </div>
+
+
+
+    <!-- Table container -->
+    <div class="table-container">
+        <table id="codeCTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Entered By</th>
+                    <th onclick="sortTable(1)">Entry Date</th>
+                    <th onclick="sortTable(2)">Collection / transfer / disposal</th>
+                    <th onclick="sortTable(3)">Weekly Inventory Identity of Tank(s)</th>
+                    <th onclick="sortTable(4)">Weekly Inventory Capacity of Tanks(s) in m³</th>
+                    <th onclick="sortTable(5)">Weekly Inventory Total quantity of retention in m³</th>
+                    <th onclick="sortTable(6)">Collection Identity of Tank(s)</th>
+                    <th onclick="sortTable(7)">Collection Capacity of Tanks(s) in m³</th>
+                    <th onclick="sortTable(8)">Collection Total quantity of retention in m³</th>
+                    <th onclick="sortTable(9)">Collection Quantity of residue collected by manual operation</th>
+                    <th onclick="sortTable(10)">Collection Collected from (Tank)</th>
+                    <th onclick="sortTable(11)">Transfer Type of Operation</th>
+                    <th onclick="sortTable(12)">Transfer Quantity</th>
+                    <th onclick="sortTable(13)">Transfer Tanks (from)</th>
+                    <th onclick="sortTable(14)">Transfer Retained In</th>
+                    <th onclick="sortTable(15)">Transfer Tanks (to)</th>
+                    <th onclick="sortTable(16)">Incinerator Type of Operation</th>
+                    <th onclick="sortTable(17)">Incinerator Quantity</th>
+                    <th onclick="sortTable(18)">Incinerator Tanks (from)</th>
+                    <th onclick="sortTable(19)">Incinerator Retained In</th>
+                    <th onclick="sortTable(20)">Incinerator Total content of tank(s))- Retained</th>
+                    <th onclick="sortTable(21)">Incinerator Start Time (HHMM- 24 hrs format)</th>
+                    <th onclick="sortTable(22)">Incinerator Stop Time (HHMM- 24 hrs format)</th>
+                    <th onclick="sortTable(23)">Incinerator Total time of operation (hrs)</th>
+                    <th onclick="sortTable(24)">Disposal Ship Quantity</th>
+                    <th onclick="sortTable(25)">Disposal Ship Tanks (from)</th>
+                    <th onclick="sortTable(26)">Disposal Ship Retained In</th>
+                    <th onclick="sortTable(27)">Disposal Ship Tanks (to)</th>
+                    <th onclick="sortTable(28)">Disposal Ship Retained To</th>
+                    <th onclick="sortTable(29)">Disposal Shore Quantity</th>
+                    <th onclick="sortTable(30)">Disposal Shore Tanks (from)</th>
+                    <th onclick="sortTable(31)">Disposal Shore Retained In Discharge Tanks</th>
+                    <th onclick="sortTable(32)">Disposal Shore Barge Name</th>
+                    <th onclick="sortTable(33)">Disposal Shore To reception facilities (identify port)</th>
+                    <th onclick="sortTable(34)">Disposal Shore Receipt No.</th>
+                    <th onclick="sortTable(35)">Status Name</th>
+                    <th onclick="sortTable(36)">Approved By</th>
+                    <th onclick="sortTable(37)">Comments</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.UserId.Trim()</td>
+                            <td>@item.EntryDate.ToShortDateString()</td>
+                            <td>@item.CollectionType</td>
+                            <td>@item.WeeklyIdentityOfTanks</td>
+                            <td>@item.WeeklyCapacityOfTanks</td>
+                            <td>@item.WeeklyTotalQuantityOfRetention</td>
+                            <td>@item.CollectionIdentityOfTanks</td>
+                            <td>@item.CollectionCapacityOfTanks</td>
+                            <td>@item.CollectionTotalQuantityOfRetention</td>
+                            <td>@item.CollectionManualResidueQuantity</td>
+                            <td>@item.CollectionCollectedFromTank</td>
+                            <td>@item.TransferOperationType</td>
+                            <td>@item.TransferQuantity</td>
+                            <td>@item.TransferTanksFrom</td>
+                            <td>@item.TransferRetainedIn</td>
+                            <td>@item.TransferTanksTo</td>
+                            <td>@item.IncineratorOperationType</td>
+                            <td>@item.IncineratorQuantity</td>
+                            <td>@item.IncineratorTanksFrom</td>
+                            <td>@item.IncineratorRetainedIn</td>
+                            <td>@item.IncineratorTotalRetainedContent</td>
+                            <td>@item.IncineratorStartTime</td>
+                            <td>@item.IncineratorStopTime</td>
+                            <td>@item.IncineratorTotalOperationTime</td>
+                            <td>@item.DisposalShipQuantity</td>
+                            <td>@item.DisposalShipTanksFrom</td>
+                            <td>@item.DisposalShipRetainedIn</td>
+                            <td>@item.DisposalShipTanksTo</td>
+                            <td>@item.DisposalShipRetainedTo</td>
+                            <td>@item.DisposalShoreQuantity</td>
+                            <td>@item.DisposalShoreTanksFrom</td>
+                            <td>@item.DisposalShoreRetainedInDischargeTanks</td>
+                            <td>@item.DisposalShoreBargeName</td>
+                            <td>@item.DisposalShoreReceptionFacility</td>
+                            <td>@item.DisposalShoreReceiptNo</td>
+                            <td>@item.StatusName</td>
+                            <td>@item.ApprovedBy</td>
+                            <td>@item.Comments</td>
+                            <td>
+                                <button class="btn btn-info btn-sm @if (item.StatusName != "Pending") {
+                        <text>disabled btn-secondary</text>
+ } else {
+                        <text>btn-info</text>
+ }"
+                                        onclick="editRecord(@item.Id)" @if (item.StatusName != "Pending")
+                                {
+                                    <text>disabled</text>
+                                }>
+                Edit
+            </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="25" class="text-center">No records found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Reference to CodeC.js -->
+<script src="~/js/ORB1/CodeC.js"></script>
