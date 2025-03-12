@@ -130,6 +130,43 @@ namespace eLog.Controllers.ORB1
             }
         }
 
+        // Make sure this method has the correct attribute and route
+        [HttpGet]
+        [Route("ORB1/CodeC/GetLastWeeklyRetention")] // Add this if missing
+        public JsonResult GetLastWeeklyRetention()
+        {
+            List<object> lastWeekData = new List<object>();
+
+            try // Add error handling
+            {
+                using (SqlConnection connection = _db.CreateConnection())
+                {
+                    using (SqlCommand cmd = new SqlCommand("proc_GetORB1_CodeC_LastWeeklyRetention", connection))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        connection.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                lastWeekData.Add(new
+                                {
+                                    WeeklyTotalQuantityOfRetention = reader["WeeklyTotalQuantityOfRetention"].ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+                return Json(lastWeekData);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception and return an error message
+                return Json(new { error = ex.Message });
+            }
+        }
+
         // Data Entry Page
         public IActionResult DataEntry_CodeC()
         {

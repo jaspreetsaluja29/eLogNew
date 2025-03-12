@@ -12,12 +12,18 @@
     $('#WeeklyInventoryFields').show(); // Show Weekly Inventory by default
     $('#CollectionFields, #TransferFields, #IncineratorFields, #DisposalShipFields, #DisposalShoreFields').hide();
 
-
     // Change event handler
     $('#CollectionType').change(function () {
         var selectedValue = $(this).val();
         setFieldVisibility(selectedValue);
+        
+        if ($(this).val() === 'WeeklyInventory') {
+            fetchLastWeeklyRetention();
+        }
     });
+
+    // Fetch the last weekly retention value when the form loads
+    fetchLastWeeklyRetention();
 
     // Function to handle visibility
     function setFieldVisibility(selectedValue) {
@@ -182,7 +188,6 @@
         });
     });
 
-
     // Reset button
     $('#resetButton').click(function () {
         $('#DataEntryCodeCForm')[0].reset();
@@ -196,6 +201,42 @@
     $('#cancelButton').click(function () {
         window.location.href = '/ORB1/CodeC/GetCodeCData';
     });
+
+    function fetchLastWeeklyRetention() {
+        $.ajax({
+            url: "/ORB1/CodeC/GetLastWeeklyRetention",
+            type: "GET",
+            success: function (response) {
+                if (response && response.length > 0) {
+                    const data = response[0];
+                    const retentionValue = data.WeeklyTotalQuantityOfRetention;
+
+                    if (retentionValue) {
+                        $('#lastWeeklyRetention').text(`Last Week content: ${retentionValue} m³`);
+                    } else {
+                        // Fallback to iterate through properties if direct access fails
+                        let foundValue = false;
+                        for (const key in data) {
+                            if (key === 'WeeklyTotalQuantityOfRetention' || key.includes('Retention')) {
+                                $('#lastWeeklyRetention').text(`Last Week content: ${data[key]} m³`);
+                                foundValue = true;
+                                break;
+                            }
+                        }
+
+                        if (!foundValue) {
+                            $('#lastWeeklyRetention').text('Data format not as expected');
+                        }
+                    }
+                } else {
+                    $('#lastWeeklyRetention').text('No previous data available');
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#lastWeeklyRetention').text('Error loading previous data');
+            }
+        });
+    }
 
     // Clean loadTanks function
     function loadTanks() {
