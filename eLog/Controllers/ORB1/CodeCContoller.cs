@@ -12,10 +12,12 @@ namespace eLog.Controllers.ORB1
     public class CodeCController : Controller
     {
         private readonly DatabaseHelper _db;
+        private readonly IConfiguration _configuration;
 
-        public CodeCController(DatabaseHelper db)
+        public CodeCController(DatabaseHelper db, IConfiguration configuration)
         {
             _db = db;
+            _configuration = configuration;
         }
 
         // Fetch data using stored procedure        
@@ -226,7 +228,7 @@ namespace eLog.Controllers.ORB1
 
         [Route("ORB1/CodeC/Create")]
         [HttpPost]
-        public IActionResult Create([FromBody] CodeCModel model)
+        public async Task<IActionResult> Create([FromForm] CodeCModel model, IFormFile attachment)
         {
             if (model == null)
             {
@@ -234,6 +236,30 @@ namespace eLog.Controllers.ORB1
             }
             try
             {
+
+                // Fetch file storage path from appsettings.json
+                var uploadPath = _configuration["FileStorage:CodeC_DisposalShoreAttachmentPath"];
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+
+                string filePath = null;
+                if (attachment != null && attachment.Length > 0)
+                {
+                    // Generate unique file name: ReceiptNo_OriginalName_Timestamp.ext
+                    string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    string fileExtension = Path.GetExtension(attachment.FileName);
+                    string fileName = $"{model.DisposalShoreReceiptNo}_{Path.GetFileNameWithoutExtension(attachment.FileName)}_{timestamp}{fileExtension}";
+                    filePath = Path.Combine(uploadPath, fileName);
+
+                    // Save the file
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await attachment.CopyToAsync(stream);
+                    }
+                }
+
                 string storedProcedure = "proc_InsertORB1CodeC";
                 var parameters = new SqlParameter[]
                 {
@@ -283,7 +309,8 @@ namespace eLog.Controllers.ORB1
                     new SqlParameter("@DisposalShoreRetainedInDischargeTanks", (object)model.DisposalShoreRetainedInDischargeTanks ?? DBNull.Value),
                     new SqlParameter("@DisposalShoreBargeName", (object)model.DisposalShoreBargeName ?? DBNull.Value),
                     new SqlParameter("@DisposalShoreReceptionFacility", (object)model.DisposalShoreReceptionFacility ?? DBNull.Value),
-                    new SqlParameter("@DisposalShoreReceiptNo", (object)model.DisposalShoreReceiptNo ?? DBNull.Value)
+                    new SqlParameter("@DisposalShoreReceiptNo", (object)model.DisposalShoreReceiptNo ?? DBNull.Value),
+                    new SqlParameter("@AttachmentPath", (object)filePath ?? DBNull.Value) // Save file path in DB
                 };
 
                 int InsertedId = _db.ExecuteInsertStoredProcedure(storedProcedure, parameters);

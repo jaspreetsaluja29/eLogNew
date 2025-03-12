@@ -42,14 +42,14 @@
         <div id="WeeklyInventoryFields">
             <div class="mb-3">
                 <label asp-for="WeeklyIdentityOfTanks" class="form-label">Identity of Tank(s):</label>
-                <select class="form-select" asp-for="WeeklyIdentityOfTanks" required>
+                <select class="form-select" asp-for="WeeklyIdentityOfTanks" id="WeeklyIdentityOfTanks" required>
+                    <option value="">Select Tank</option>
                 </select>
-                <span asp-validation-for="WeeklyIdentityOfTanks" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label asp-for="WeeklyCapacityOfTanks" class="form-label">Capacity of Tanks(s) in m³:</label>
-                <input type="text" class="form-control" asp-for="WeeklyCapacityOfTanks" required readonly>
-                <span asp-validation-for="WeeklyCapacityOfTanks" class="text-danger"></span>
+                <input type="text" class="form-control" asp-for="WeeklyCapacityOfTanks" id="WeeklyCapacityOfTanks" required readonly>
+
             </div>
             <div class="mb-3">
                 <label asp-for="WeeklyTotalQuantityOfRetention" class="form-label">Total quantity of retention in m³:</label>

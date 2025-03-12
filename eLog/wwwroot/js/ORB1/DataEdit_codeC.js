@@ -2,6 +2,7 @@
     initializeFormState();
     setupEventListeners();
     setupFormValidation();
+    loadTanks(); // Call the loadTanks function when the page loads
 });
 
 function initializeFormState() {
@@ -12,6 +13,12 @@ function setupEventListeners() {
     $("#OperationType").change(toggleOperationFields);
     $("#TankCleaned").change(toggleTankCleaningFields);
     $("#DisposalMethod").change(toggleDisposalFields);
+
+    // Handle change event to update capacity when selecting a tank
+    $("#WeeklyIdentityOfTanks").change(function () {
+        let selectedCapacity = $(this).find(":selected").data("capacity");
+        $("#WeeklyCapacityOfTanks").val(selectedCapacity || "");
+    });
 
     $("#cancelButton").click(function () {
         const { pageNumber, pageSize } = getQueryParams();
@@ -47,6 +54,101 @@ function toggleDisposalFields() {
     $("#seaDisposalFields").toggle(method === "Sea");
 }
 
+function loadTanks() {
+    // Get the record ID if we're on an edit page
+    const recordId = $("#Id").val();
+    const isEditMode = recordId && recordId !== "0";
+
+    $.ajax({
+        url: "/ORB1/CodeC/GetTanks",
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            if (!data || data.length === 0) {
+                return;
+            }
+
+            let weeklySelect = $("#WeeklyIdentityOfTanks");
+            if (weeklySelect.length === 0) {
+                return;
+            }
+
+            // Clear existing options
+            weeklySelect.empty();
+
+            // Add a default first option
+            weeklySelect.append('<option value="">Select Tank</option>');
+
+            // Add tanks to the dropdown
+            data.forEach(tank => {
+                const tankId = tank.tankIdentification || "";
+                const capacity = tank.volumeCapacity || "";
+                if (!tankId) {
+                    return;
+                }
+                let option = $("<option>")
+                    .val(tankId)
+                    .text(tankId)
+                    .attr("data-capacity", capacity);
+                weeklySelect.append(option);
+            });
+
+            // If this is an edit page, load existing data from the database
+            if (isEditMode) {
+                loadExistingTankData(recordId);
+            } else {
+                // Get the selected tank ID from Razor ViewBag for new records
+                let selectedTankId = "@ViewBag.TankId";
+                // Set the selected tank
+                if (selectedTankId) {
+                    weeklySelect.val(selectedTankId);
+                    let selectedCapacity = weeklySelect.find(":selected").data("capacity");
+                    $("#WeeklyCapacityOfTanks").val(selectedCapacity);
+                }
+                // Trigger change event to ensure capacity fields are populated
+                weeklySelect.trigger('change');
+            }
+        },
+        error: function (xhr, status, error) {
+            // Silently fail
+        }
+    });
+}
+
+function loadExistingTankData(recordId) {
+    $.ajax({
+        url: `/ORB1/CodeC/GetCodeCById/${recordId}`,
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            if (!data) {
+                return;
+            }
+
+            // Set the tank dropdown to the existing value
+            if (data.weeklyIdentityOfTanks) {
+                $("#WeeklyIdentityOfTanks").val(data.weeklyIdentityOfTanks);
+
+                // If the tank is found in the dropdown, get its capacity
+                let selectedOption = $("#WeeklyIdentityOfTanks option:selected");
+                if (selectedOption.length > 0) {
+                    let capacity = selectedOption.data("capacity");
+                    $("#WeeklyCapacityOfTanks").val(capacity || data.weeklyCapacityOfTanks || "");
+                } else {
+                    // If the tank isn't in the dropdown (maybe it was deleted), keep the existing capacity
+                    $("#WeeklyCapacityOfTanks").val(data.weeklyCapacityOfTanks || "");
+                }
+            }
+
+            // Trigger change event to ensure any dependent fields are updated
+            $("#WeeklyIdentityOfTanks").trigger('change');
+        },
+        error: function (xhr, status, error) {
+            console.error("Error loading existing tank data:", error);
+        }
+    });
+}
+
 function setupFormValidation() {
     $.validator.addMethod("validPosition", function (value) {
         if (!value) return true;
@@ -79,14 +181,18 @@ function setupFormValidation() {
             },
             DisposalFacilityName: {
                 required: () => $("#DisposalMethod").val() === "Shore"
-            }
+            },
+            WeeklyIdentityOfTanks: "required",
+            WeeklyCapacityOfTanks: { required: true, number: true }
         },
         messages: {
             EntryDate: "Please enter a valid date",
             OperationType: "Please select an operation type",
             OilResidueQuantity: "Please enter a valid number",
             ShipSpeed: "Please enter a valid speed",
-            DistanceFromShore: "Please enter a valid distance"
+            DistanceFromShore: "Please enter a valid distance",
+            WeeklyIdentityOfTanks: "Please select a tank",
+            WeeklyCapacityOfTanks: "Please enter a valid capacity"
         }
     });
 }
@@ -116,7 +222,9 @@ function submitForm() {
         RetentionEndTime: $('#RetentionEndTime').val() || null,
         TransferStartTime: $('#TransferStartTime').val() || null,
         TransferEndTime: $('#TransferEndTime').val() || null,
-        TransferDestination: $('#TransferDestination').val() || null
+        TransferDestination: $('#TransferDestination').val() || null,
+        WeeklyIdentityOfTanks: $('#WeeklyIdentityOfTanks').val() || null,
+        WeeklyCapacityOfTanks: parseFloat($('#WeeklyCapacityOfTanks').val()) || null
     };
 
     $.ajax({

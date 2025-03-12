@@ -88,71 +88,79 @@
         // Get the selected collection type
         var collectionType = $('#CollectionType').val();
 
-        // Create a base data object with common fields
-        var formData = {
-            UserId: userId, // Assuming you have a hidden UserId field
-            EntryDate: $('#EntryDate').val(),
-            CollectionType: collectionType
-        };
+        // Create a FormData object instead of a regular object
+        var formData = new FormData();
+
+        // Add common fields
+        formData.append("UserId", userId); // Assuming you have a hidden UserId field
+        formData.append("EntryDate", $('#EntryDate').val());
+        formData.append("CollectionType", collectionType);
 
         // Add fields based on which section is visible
         switch (collectionType) {
             case 'WeeklyInventory':
-                formData.WeeklyIdentityOfTanks = $('#WeeklyIdentityOfTanks').val();
-                formData.WeeklyCapacityOfTanks = $('#WeeklyCapacityOfTanks').val();
-                formData.WeeklyTotalQuantityOfRetention = $('#WeeklyTotalQuantityOfRetention').val();
+                formData.append("WeeklyIdentityOfTanks", $('#WeeklyIdentityOfTanks').val());
+                formData.append("WeeklyCapacityOfTanks", $('#WeeklyCapacityOfTanks').val());
+                formData.append("WeeklyTotalQuantityOfRetention", $('#WeeklyTotalQuantityOfRetention').val());
                 break;
 
             case 'Collection':
-                formData.CollectionIdentityOfTanks = $('#CollectionIdentityOfTanks').val();
-                formData.CollectionCapacityOfTanks = $('#CollectionCapacityOfTanks').val();
-                formData.CollectionTotalQuantityOfRetention = $('#CollectionTotalQuantityOfRetention').val();
-                formData.CollectionManualResidueQuantity = $('#CollectionManualResidueQuantity').val();
-                formData.CollectionCollectedFromTank = $('#CollectionCollectedFromTank').val();
+                formData.append("CollectionIdentityOfTanks", $('#CollectionIdentityOfTanks').val());
+                formData.append("CollectionCapacityOfTanks", $('#CollectionCapacityOfTanks').val());
+                formData.append("CollectionTotalQuantityOfRetention", $('#CollectionTotalQuantityOfRetention').val());
+                formData.append("CollectionManualResidueQuantity", $('#CollectionManualResidueQuantity').val());
+                formData.append("CollectionCollectedFromTank", $('#CollectionCollectedFromTank').val());
                 break;
 
             case 'Transfer':
-                formData.TransferOperationType = $('#TransferOperationType').val();
-                formData.TransferQuantity = $('#TransferQuantity').val();
-                formData.TransferTanksFrom = $('#TransferTanksFrom').val();
-                formData.TransferRetainedIn = $('#TransferRetainedIn').val();
-                formData.TransferTanksTo = $('#TransferTanksTo').val();
+                formData.append("TransferOperationType", $('#TransferOperationType').val());
+                formData.append("TransferQuantity", $('#TransferQuantity').val());
+                formData.append("TransferTanksFrom", $('#TransferTanksFrom').val());
+                formData.append("TransferRetainedIn", $('#TransferRetainedIn').val());
+                formData.append("TransferTanksTo", $('#TransferTanksTo').val());
                 break;
 
             case 'Incinerator':
-                formData.IncineratorOperationType = $('#IncineratorOperationType').val();
-                formData.IncineratorQuantity = $('#IncineratorQuantity').val();
-                formData.IncineratorTanksFrom = $('#IncineratorTanksFrom').val();
-                formData.IncineratorRetainedIn = $('#IncineratorRetainedIn').val();
-                formData.IncineratorTotalRetainedContent = $('#IncineratorTotalRetainedContent').val();
-                formData.IncineratorStartTime = $('#IncineratorStartTime').val();
-                formData.IncineratorStopTime = $('#IncineratorStopTime').val();
-                formData.IncineratorTotalOperationTime = $('#IncineratorTotalOperationTime').val();
+                formData.append("IncineratorOperationType", $('#IncineratorOperationType').val());
+                formData.append("IncineratorQuantity", $('#IncineratorQuantity').val());
+                formData.append("IncineratorTanksFrom", $('#IncineratorTanksFrom').val());
+                formData.append("IncineratorRetainedIn", $('#IncineratorRetainedIn').val());
+                formData.append("IncineratorTotalRetainedContent", $('#IncineratorTotalRetainedContent').val());
+                formData.append("IncineratorStartTime", $('#IncineratorStartTime').val());
+                formData.append("IncineratorStopTime", $('#IncineratorStopTime').val());
+                formData.append("IncineratorTotalOperationTime", $('#IncineratorTotalOperationTime').val());
                 break;
 
             case 'DisposalShip':
-                formData.DisposalShipQuantity = $('#DisposalShipQuantity').val();
-                formData.DisposalShipTanksFrom = $('#DisposalShipTanksFrom').val();
-                formData.DisposalShipRetainedIn = $('#DisposalShipRetainedIn').val();
-                formData.DisposalShipTanksTo = $('#DisposalShipTanksTo').val();
-                formData.DisposalShipRetainedTo = $('#DisposalShipRetainedTo').val();
+                formData.append("DisposalShipQuantity", $('#DisposalShipQuantity').val());
+                formData.append("DisposalShipTanksFrom", $('#DisposalShipTanksFrom').val());
+                formData.append("DisposalShipRetainedIn", $('#DisposalShipRetainedIn').val());
+                formData.append("DisposalShipTanksTo", $('#DisposalShipTanksTo').val());
+                formData.append("DisposalShipRetainedTo", $('#DisposalShipRetainedTo').val());
                 break;
 
             case 'DisposalShore':
-                formData.DisposalShoreQuantity = $('#DisposalShoreQuantity').val();
-                formData.DisposalShoreTanksFrom = $('#DisposalShoreTanksFrom').val();
-                formData.DisposalShoreRetainedInDischargeTanks = $('#DisposalShoreRetainedInDischargeTanks').val();
-                formData.DisposalShoreBargeName = $('#DisposalShoreBargeName').val();
-                formData.DisposalShoreReceptionFacility = $('#DisposalShoreReceptionFacility').val();
-                formData.DisposalShoreReceiptNo = $('#DisposalShoreReceiptNo').val();
+                formData.append("DisposalShoreQuantity", $('#DisposalShoreQuantity').val());
+                formData.append("DisposalShoreTanksFrom", $('#DisposalShoreTanksFrom').val());
+                formData.append("DisposalShoreRetainedInDischargeTanks", $('#DisposalShoreRetainedInDischargeTanks').val());
+                formData.append("DisposalShoreBargeName", $('#DisposalShoreBargeName').val());
+                formData.append("DisposalShoreReceptionFacility", $('#DisposalShoreReceptionFacility').val());
+                formData.append("DisposalShoreReceiptNo", $('#DisposalShoreReceiptNo').val());
+
+                // Get the file input
+                var fileInput = $('#DisposalShoreAttachment')[0].files[0];
+                if (fileInput) {
+                    formData.append("DisposalShoreAttachment", fileInput);
+                }
                 break;
         }
 
         $.ajax({
             url: "/ORB1/CodeC/CreateCodeC",
             type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(formData),
+            data: formData,
+            processData: false,  // Prevent jQuery from converting the FormData object to a string
+            contentType: false,  // Let the browser set the Content-Type, including multipart/form-data for files
             success: function (response) {
                 $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
                 // Reset form fields after successful save
@@ -173,6 +181,7 @@
             }
         });
     });
+
 
     // Reset button
     $('#resetButton').click(function () {

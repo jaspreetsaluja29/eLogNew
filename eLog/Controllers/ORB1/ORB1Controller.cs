@@ -127,7 +127,7 @@ namespace eLog.Controllers.ORB1
 
         [Route("ORB1/CodeC/CreateCodeC")]
         [HttpPost]
-        public async Task<IActionResult> CreateCodeC([FromBody] CodeCModel model)
+        public async Task<IActionResult> CreateCodeC([FromForm] CodeCModel model, IFormFile? DisposalShoreAttachment)
         {
             if (model == null)
             {
@@ -136,20 +136,52 @@ namespace eLog.Controllers.ORB1
 
             try
             {
-                string json = JsonSerializer.Serialize(model);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                // Call CodeAController.Create via HTTP POST
+                // For direct file handling approach
                 var baseUrl = $"{Request.Scheme}://{Request.Host}";
-                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeC/Create", content);
 
-                if (response.IsSuccessStatusCode)
+                // Create a new HttpClient instance for this specific request
+                using (var client = new HttpClient())
                 {
-                    return Json(new { success = true, message = "Data submitted successfully!" });
-                }
-                else
-                {
-                    return StatusCode((int)response.StatusCode, "Error in CodeAController.");
+                    using (var multipartContent = new MultipartFormDataContent())
+                    {
+                        // Add the model data
+                        // Convert model properties to string form values
+                        foreach (var prop in typeof(CodeCModel).GetProperties())
+                        {
+                            var value = prop.GetValue(model)?.ToString();
+                            if (value != null)
+                            {
+                                multipartContent.Add(new StringContent(value), prop.Name);
+                            }
+                        }
+
+                        // Add the file if it exists
+                        if (DisposalShoreAttachment != null && DisposalShoreAttachment.Length > 0)
+                        {
+                            // Create a byte array and read all file content into it
+                            var fileBytes = new byte[DisposalShoreAttachment.Length];
+                            using (var stream = DisposalShoreAttachment.OpenReadStream())
+                            {
+                                await stream.ReadAsync(fileBytes, 0, (int)DisposalShoreAttachment.Length);
+                            }
+
+                            // Create a ByteArrayContent from the bytes we just read
+                            var fileContent = new ByteArrayContent(fileBytes);
+                            multipartContent.Add(fileContent, "attachment", DisposalShoreAttachment.FileName);
+                        }
+
+                        var response = await client.PostAsync($"{baseUrl}/ORB1/CodeC/Create", multipartContent);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return Json(new { success = true, message = "Data submitted successfully!" });
+                        }
+                        else
+                        {
+                            var errorContent = await response.Content.ReadAsStringAsync();
+                            return StatusCode((int)response.StatusCode, $"Error in CodeCController: {errorContent}");
+                        }
+                    }
                 }
             }
             catch (Exception ex)
