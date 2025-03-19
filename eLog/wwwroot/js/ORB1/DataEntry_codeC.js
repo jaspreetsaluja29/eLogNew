@@ -20,6 +20,10 @@
         if ($(this).val() === 'WeeklyInventory') {
             fetchLastWeeklyRetention();
         }
+
+        if ($(this).val() === 'Collection') {
+            fetchLastWeeklyCollection();
+        }
     });
 
     // Fetch the last weekly retention value when the form loads
@@ -234,6 +238,42 @@
             },
             error: function (xhr, status, error) {
                 $('#lastWeeklyRetention').text('Error loading previous data');
+            }
+        });
+    }
+
+    function fetchLastWeeklyCollection() {
+        $.ajax({
+            url: "/ORB1/CodeC/GetLastWeeklyCollectionRetention",
+            type: "GET",
+            success: function (response) {
+                if (response && response.length > 0) {
+                    const data = response[0];
+                    const collectionValue = data.CollectionTotalQuantityOfRetention;
+
+                    if (collectionValue) {
+                        $('#lastWeeklyCollectionRetention').text(`Last Week content: ${collectionValue} m³`);
+                    } else {
+                        // Fallback to iterate through properties if direct access fails
+                        let foundValue = false;
+                        for (const key in data) {
+                            if (key === 'CollectionTotalQuantityOfRetention' || key.includes('Retention')) {
+                                $('#lastWeeklyCollectionRetention').text(`Last Week content: ${data[key]} m³`);
+                                foundValue = true;
+                                break;
+                            }
+                        }
+
+                        if (!foundValue) {
+                            $('#lastWeeklyCollectionRetention').text('Data format not as expected');
+                        }
+                    }
+                } else {
+                    $('#lastWeeklyCollectionRetention').text('No previous data available');
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#lastWeeklyCollectionRetention').text('Error loading previous data');
             }
         });
     }

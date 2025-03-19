@@ -2,14 +2,46 @@
     initializeFormState();
     setupEventListeners();
     setupFormValidation();
-    loadTanks(); // Call the loadTanks function when the page loads
 });
 
 function initializeFormState() {
-    toggleOperationFields();
+    // Get the current collection type
+    let collectionType = $('#CollectionType').val();
+
+    // Log for debugging
+    console.log("Collection Type on load:", collectionType);
+
+    // If no collection type is selected or it's an empty string, default to WeeklyInventory
+    if (!collectionType || collectionType === "") {
+        $('#CollectionType').val("WeeklyInventory");
+        collectionType = "WeeklyInventory";
+    }
+
+    // Hide all field sections first
+    $("#WeeklyInventoryFields, #CollectionFields, #TransferFields, #IncineratorFields, #DisposalShipFields, #DisposalShoreFields").hide();
+
+    // Show only the relevant section based on collection type
+    if (collectionType === "WeeklyInventory") {
+        $("#WeeklyInventoryFields").show();
+    } else if (collectionType === "Collection") {
+        $("#CollectionFields").show();
+    } else if (collectionType === "Transfer") {
+        $("#TransferFields").show();
+    } else if (collectionType === "Incinerator") {
+        $("#IncineratorFields").show();
+    } else if (collectionType === "DisposalShip") {
+        $("#DisposalShipFields").show();
+    } else if (collectionType === "DisposalShore") {
+        $("#DisposalShoreFields").show();
+    }
 }
 
 function setupEventListeners() {
+    // Handle collection type change
+    $("#CollectionType").change(function () {
+        initializeFormState(); // Re-initialize based on new collection type
+    });
+
     $("#OperationType").change(toggleOperationFields);
     $("#TankCleaned").change(toggleTankCleaningFields);
     $("#DisposalMethod").change(toggleDisposalFields);
@@ -20,9 +52,14 @@ function setupEventListeners() {
         $("#WeeklyCapacityOfTanks").val(selectedCapacity || "");
     });
 
+    // Same for collection fields
+    $("#CollectionIdentityOfTanks").change(function () {
+        let selectedCapacity = $(this).find(":selected").data("capacity");
+        $("#CollectionCapacityOfTanks").val(selectedCapacity || "");
+    });
+
     $("#cancelButton").click(function () {
         const { pageNumber, pageSize } = getQueryParams();
-        // Redirect only after the user clicks "OK"
         window.location.href = `/ORB1/CodeC/GetCodeCData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     });
 
@@ -54,101 +91,6 @@ function toggleDisposalFields() {
     $("#seaDisposalFields").toggle(method === "Sea");
 }
 
-function loadTanks() {
-    // Get the record ID if we're on an edit page
-    const recordId = $("#Id").val();
-    const isEditMode = recordId && recordId !== "0";
-
-    $.ajax({
-        url: "/ORB1/CodeC/GetTanks",
-        type: "GET",
-        dataType: "json",
-        success: function (data) {
-            if (!data || data.length === 0) {
-                return;
-            }
-
-            let weeklySelect = $("#WeeklyIdentityOfTanks");
-            if (weeklySelect.length === 0) {
-                return;
-            }
-
-            // Clear existing options
-            weeklySelect.empty();
-
-            // Add a default first option
-            weeklySelect.append('<option value="">Select Tank</option>');
-
-            // Add tanks to the dropdown
-            data.forEach(tank => {
-                const tankId = tank.tankIdentification || "";
-                const capacity = tank.volumeCapacity || "";
-                if (!tankId) {
-                    return;
-                }
-                let option = $("<option>")
-                    .val(tankId)
-                    .text(tankId)
-                    .attr("data-capacity", capacity);
-                weeklySelect.append(option);
-            });
-
-            // If this is an edit page, load existing data from the database
-            if (isEditMode) {
-                loadExistingTankData(recordId);
-            } else {
-                // Get the selected tank ID from Razor ViewBag for new records
-                let selectedTankId = "@ViewBag.TankId";
-                // Set the selected tank
-                if (selectedTankId) {
-                    weeklySelect.val(selectedTankId);
-                    let selectedCapacity = weeklySelect.find(":selected").data("capacity");
-                    $("#WeeklyCapacityOfTanks").val(selectedCapacity);
-                }
-                // Trigger change event to ensure capacity fields are populated
-                weeklySelect.trigger('change');
-            }
-        },
-        error: function (xhr, status, error) {
-            // Silently fail
-        }
-    });
-}
-
-function loadExistingTankData(recordId) {
-    $.ajax({
-        url: `/ORB1/CodeC/GetCodeCById/${recordId}`,
-        type: "GET",
-        dataType: "json",
-        success: function (data) {
-            if (!data) {
-                return;
-            }
-
-            // Set the tank dropdown to the existing value
-            if (data.weeklyIdentityOfTanks) {
-                $("#WeeklyIdentityOfTanks").val(data.weeklyIdentityOfTanks);
-
-                // If the tank is found in the dropdown, get its capacity
-                let selectedOption = $("#WeeklyIdentityOfTanks option:selected");
-                if (selectedOption.length > 0) {
-                    let capacity = selectedOption.data("capacity");
-                    $("#WeeklyCapacityOfTanks").val(capacity || data.weeklyCapacityOfTanks || "");
-                } else {
-                    // If the tank isn't in the dropdown (maybe it was deleted), keep the existing capacity
-                    $("#WeeklyCapacityOfTanks").val(data.weeklyCapacityOfTanks || "");
-                }
-            }
-
-            // Trigger change event to ensure any dependent fields are updated
-            $("#WeeklyIdentityOfTanks").trigger('change');
-        },
-        error: function (xhr, status, error) {
-            console.error("Error loading existing tank data:", error);
-        }
-    });
-}
-
 function setupFormValidation() {
     $.validator.addMethod("validPosition", function (value) {
         if (!value) return true;
@@ -158,109 +100,240 @@ function setupFormValidation() {
     $("#EditCodeCForm").validate({
         rules: {
             EntryDate: "required",
-            OperationType: "required",
-            IdentityOfTanks: "required",
-            OilResidueQuantity: { required: true, number: true },
-            PositionOfVesselDisposal: {
-                required: () => $("#DisposalMethod").val() === "Sea",
-                validPosition: true
-            },
-            ShipSpeed: {
-                required: () => $("#DisposalMethod").val() === "Sea",
+            CollectionType: "required",
+            // Weekly Inventory validation
+            WeeklyTotalQuantityOfRetention: {
+                required: function () {
+                    return $("#CollectionType").val() === "WeeklyInventory";
+                },
                 number: true
             },
-            DistanceFromShore: {
-                required: () => $("#DisposalMethod").val() === "Sea",
+            // Collection validation
+            CollectionIdentityOfTanks: {
+                required: function () {
+                    return $("#CollectionType").val() === "Collection";
+                }
+            },
+            CollectionTotalQuantityOfRetention: {
+                required: function () {
+                    return $("#CollectionType").val() === "Collection";
+                },
                 number: true
             },
-            PortName: {
-                required: () => $("#DisposalMethod").val() === "Shore"
+            CollectionManualResidueQuantity: {
+                required: function () {
+                    return $("#CollectionType").val() === "Collection";
+                },
+                number: true
             },
-            CleaningMethod: {
-                required: () => $("#TankCleaned").val() === "Yes"
+            CollectionCollectedFromTank: {
+                required: function () {
+                    return $("#CollectionType").val() === "Collection";
+                }
             },
-            DisposalFacilityName: {
-                required: () => $("#DisposalMethod").val() === "Shore"
+            // Transfer validation
+            TransferOperationType: {
+                required: function () {
+                    return $("#CollectionType").val() === "Transfer";
+                }
             },
-            WeeklyIdentityOfTanks: "required",
-            WeeklyCapacityOfTanks: { required: true, number: true }
+            TransferQuantity: {
+                required: function () {
+                    return $("#CollectionType").val() === "Transfer";
+                },
+                number: true
+            },
+            TransferTanksFrom: {
+                required: function () {
+                    return $("#CollectionType").val() === "Transfer";
+                }
+            },
+            TransferRetainedIn: {
+                required: function () {
+                    return $("#CollectionType").val() === "Transfer";
+                }
+            },
+            TransferTanksTo: {
+                required: function () {
+                    return $("#CollectionType").val() === "Transfer";
+                }
+            },
+            // Incinerator validation
+            IncineratorOperationType: {
+                required: function () {
+                    return $("#CollectionType").val() === "Incinerator";
+                }
+            },
+            IncineratorTanksFrom: {
+                required: function () {
+                    return $("#CollectionType").val() === "Incinerator";
+                }
+            },
+            IncineratorRetainedIn: {
+                required: function () {
+                    return $("#CollectionType").val() === "Incinerator";
+                }
+            },
+            IncineratorTotalRetainedContent: {
+                required: function () {
+                    return $("#CollectionType").val() === "Incinerator";
+                },
+                number: true
+            },
+            IncineratorStartTime: {
+                required: function () {
+                    return $("#CollectionType").val() === "Incinerator";
+                }
+            },
+            IncineratorStopTime: {
+                required: function () {
+                    return $("#CollectionType").val() === "Incinerator";
+                }
+            },
+            IncineratorTotalOperationTime: {
+                required: function () {
+                    return $("#CollectionType").val() === "Incinerator";
+                },
+                number: true
+            },
+            // DisposalShip validation
+            DisposalShipQuantity: {
+                required: function () {
+                    return $("#CollectionType").val() === "DisposalShip";
+                },
+                number: true
+            },
+            DisposalShipTanksFrom: {
+                required: function () {
+                    return $("#CollectionType").val() === "DisposalShip";
+                }
+            },
+            DisposalShipRetainedIn: {
+                required: function () {
+                    return $("#CollectionType").val() === "DisposalShip";
+                }
+            },
+            DisposalShipTanksTo: {
+                required: function () {
+                    return $("#CollectionType").val() === "DisposalShip";
+                }
+            },
+            DisposalShipRetainedTo: {
+                required: function () {
+                    return $("#CollectionType").val() === "DisposalShip";
+                }
+            },
+            // DisposalShore validation
+            DisposalShoreQuantity: {
+                required: function () {
+                    return $("#CollectionType").val() === "DisposalShore";
+                },
+                number: true
+            },
+            DisposalShoreTanksFrom: {
+                required: function () {
+                    return $("#CollectionType").val() === "DisposalShore";
+                }
+            },
+            DisposalShoreRetainedInDischargeTanks: {
+                required: function () {
+                    return $("#CollectionType").val() === "DisposalShore";
+                }
+            },
+            DisposalShoreBargeName: {
+                required: function () {
+                    return $("#CollectionType").val() === "DisposalShore";
+                }
+            },
+            DisposalShoreReceptionFacility: {
+                required: function () {
+                    return $("#CollectionType").val() === "DisposalShore";
+                }
+            },
+            DisposalShoreReceiptNo: {
+                required: function () {
+                    return $("#CollectionType").val() === "DisposalShore";
+                }
+            }
         },
         messages: {
             EntryDate: "Please enter a valid date",
-            OperationType: "Please select an operation type",
-            OilResidueQuantity: "Please enter a valid number",
-            ShipSpeed: "Please enter a valid speed",
-            DistanceFromShore: "Please enter a valid distance",
-            WeeklyIdentityOfTanks: "Please select a tank",
-            WeeklyCapacityOfTanks: "Please enter a valid capacity"
+            CollectionType: "Please select an operation type"
         }
     });
 }
 
 function submitForm() {
+
     let formData = {
         Id: $('#Id').val(),
         UserId: userId,
         EntryDate: $('#EntryDate').val(),
-        OperationType: $('#OperationType').val(),
-        TankCleaned: $('#TankCleaned').val() === "Yes",
-        IdentityOfTanks: $('#IdentityOfTanks').val(),
-        OilResidueQuantity: parseFloat($('#OilResidueQuantity').val()) || 0,
-        DisposalMethod: $('#DisposalMethod').val() || null,
-        DisposalStartTime: $('#DisposalStartTime').val() || null,
-        DisposalEndTime: $('#DisposalEndTime').val() || null,
-        PositionOfVesselDisposal: $('#PositionOfVesselDisposal').val() || null,
-        ShipSpeed: parseFloat($('#ShipSpeed').val()) || null,
-        DistanceFromShore: parseFloat($('#DistanceFromShore').val()) || null,
-        PortName: $('#PortName').val() || null,
-        DisposalFacilityName: $('#DisposalFacilityName').val() || null,
-        CleaningMethod: $('#CleaningMethod').val() || null,
-        CleaningStartTime: $('#CleaningStartTime').val() || null,
-        CleaningEndTime: $('#CleaningEndTime').val() || null,
-        OilType: $('#OilType').val() || null,
-        RetentionStartTime: $('#RetentionStartTime').val() || null,
-        RetentionEndTime: $('#RetentionEndTime').val() || null,
-        TransferStartTime: $('#TransferStartTime').val() || null,
-        TransferEndTime: $('#TransferEndTime').val() || null,
-        TransferDestination: $('#TransferDestination').val() || null,
+        CollectionType: $('#CollectionType').val(),
+
+        // Weekly Inventory Fields
         WeeklyIdentityOfTanks: $('#WeeklyIdentityOfTanks').val() || null,
-        WeeklyCapacityOfTanks: parseFloat($('#WeeklyCapacityOfTanks').val()) || null
+        WeeklyCapacityOfTanks: parseFloat($('#WeeklyCapacityOfTanks').val()) || null,
+        WeeklyTotalQuantityOfRetention: parseFloat($('#WeeklyTotalQuantityOfRetention').val()) || null,
+
+        // Collection Fields
+        CollectionIdentityOfTanks: $('#CollectionIdentityOfTanks').val() || null,
+        CollectionCapacityOfTanks: parseFloat($('#CollectionCapacityOfTanks').val()) || null,
+        CollectionTotalQuantityOfRetention: parseFloat($('#CollectionTotalQuantityOfRetention').val()) || null,
+        CollectionManualResidueQuantity: parseFloat($('#CollectionManualResidueQuantity').val()) || null,
+        CollectionCollectedFromTank: $('#CollectionCollectedFromTank').val() || null,
+
+        // Transfer Fields
+        TransferOperationType: $('#TransferOperationType').val() || null,
+        TransferQuantity: parseFloat($('#TransferQuantity').val()) || null,
+        TransferTanksFrom: $('#TransferTanksFrom').val() || null,
+        TransferRetainedIn: $('#TransferRetainedIn').val() || null,
+        TransferTanksTo: $('#TransferTanksTo').val() || null,
+
+        // Incinerator Fields
+        IncineratorOperationType: $('#IncineratorOperationType').val() || null,
+        IncineratorQuantity: parseFloat($('#IncineratorQuantity').val()) || null,
+        IncineratorTanksFrom: $('#IncineratorTanksFrom').val() || null,
+        IncineratorRetainedIn: $('#IncineratorRetainedIn').val() || null,
+        IncineratorTotalRetainedContent: parseFloat($('#IncineratorTotalRetainedContent').val()) || null,
+        IncineratorStartTime: $('#IncineratorStartTime').val() || null,
+        IncineratorStopTime: $('#IncineratorStopTime').val() || null,
+        IncineratorTotalOperationTime: parseFloat($('#IncineratorTotalOperationTime').val()) || null,
+
+        // Disposal Ship Fields
+        DisposalShipQuantity: parseFloat($('#DisposalShipQuantity').val()) || null,
+        DisposalShipTanksFrom: $('#DisposalShipTanksFrom').val() || null,
+        DisposalShipRetainedIn: $('#DisposalShipRetainedIn').val() || null,
+        DisposalShipTanksTo: $('#DisposalShipTanksTo').val() || null,
+        DisposalShipRetainedTo: $('#DisposalShipRetainedTo').val() || null,
+
+        // Disposal Shore Fields
+        DisposalShoreQuantity: parseFloat($('#DisposalShoreQuantity').val()) || null,
+        DisposalShoreTanksFrom: $('#DisposalShoreTanksFrom').val() || null,
+        DisposalShoreRetainedInDischargeTanks: $('#DisposalShoreRetainedInDischargeTanks').val() || null,
+        DisposalShoreBargeName: $('#DisposalShoreBargeName').val() || null,
+        DisposalShoreReceptionFacility: $('#DisposalShoreReceptionFacility').val() || null,
+        DisposalShoreReceiptNo: $('#DisposalShoreReceiptNo').val() || null
     };
 
     $.ajax({
-        url: "/ORB1/CodeC/UpdateCodeC",
+        url: "/ORB1/CodeC/Update",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(formData),
         success: function (response) {
-            // Reset the form and apply UI changes before showing the alert
-            $('#EditCodeCForm')[0].reset();
-            resetFormDate();
-            hideOperationFields();
-
-            // Show message in an alert popup and redirect when the user clicks "OK"
+            // Show message in an alert popup
             alert(response.message);
 
             const { pageNumber, pageSize } = getQueryParams();
-            // Redirect only after the user clicks "OK"
+            // Redirect after the user clicks "OK"
             window.location.href = `/ORB1/CodeC/GetCodeCData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
         },
         error: function (xhr) {
+            // Show error message
             $('#message').html('<div class="alert alert-danger">Error: ' + xhr.responseText + '</div>');
         }
     });
-}
-
-function resetFormDate() {
-    let today = new Date();
-    let formattedDate = today.getFullYear() + '-' +
-        String(today.getMonth() + 1).padStart(2, '0') + '-' +
-        String(today.getDate()).padStart(2, '0');
-    $('#EntryDate').val(formattedDate);
-}
-
-function hideOperationFields() {
-    $('#disposalFields, #retentionFields, #transferFields, #tankCleaningFields, #shoreDisposalFields, #seaDisposalFields').hide();
 }
 
 // Function to get query parameters from the URL

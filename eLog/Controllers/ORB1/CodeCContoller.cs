@@ -167,6 +167,44 @@ namespace eLog.Controllers.ORB1
             }
         }
 
+
+        // Make sure this method has the correct attribute and route
+        [HttpGet]
+        [Route("ORB1/CodeC/GetLastWeeklyCollectionRetention")] // Add this if missing
+        public JsonResult GetLastWeeklyCollectionRetention()
+        {
+            List<object> lastWeekData = new List<object>();
+
+            try // Add error handling
+            {
+                using (SqlConnection connection = _db.CreateConnection())
+                {
+                    using (SqlCommand cmd = new SqlCommand("proc_GetORB1_CodeC_LastWeeklyCollectionRetention", connection))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        connection.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                lastWeekData.Add(new
+                                {
+                                    CollectionTotalQuantityOfRetention = reader["CollectionTotalQuantityOfRetention"].ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+                return Json(lastWeekData);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception and return an error message
+                return Json(new { error = ex.Message });
+            }
+        }
+
         // Data Entry Page
         public IActionResult DataEntry_CodeC()
         {
@@ -368,19 +406,27 @@ namespace eLog.Controllers.ORB1
 
         [Route("ORB1/CodeC/Update")]
         [HttpPost]
-        public IActionResult Update([FromBody] CodeCModel model)
+        public IActionResult Update([FromBody] CodeCViewModel model)
         {
-            //if (model == null || model.Id <= 0)
-            //{
-            //    return BadRequest("Invalid data received or ID is missing.");
-            //}
+            if (model == null || model.Id <= 0)
+            {
+                return BadRequest("Invalid data received or ID is missing.");
+            }
+            if (model.TransferOperationType == "Select")
+            {
+                model.TransferOperationType = null;
+            }
+            if (model.IncineratorOperationType == "Incineration" && model.CollectionType != "Incinerator")
+            {
+                model.IncineratorOperationType = null;
+            }
 
             try
             {
                 string storedProcedure = "proc_UpdateORB1CodeC";
                 var parameters = new SqlParameter[]
                 {
-            //new SqlParameter("@Id", model.Id),
+            new SqlParameter("@Id", model.Id),
             new SqlParameter("@UserId", model.UserId),
             new SqlParameter("@EntryDate", model.EntryDate),
             new SqlParameter("@CollectionType", model.CollectionType),
@@ -446,63 +492,95 @@ namespace eLog.Controllers.ORB1
             }
         }
 
-        //[HttpPost]
-        //[Route("ORB1/CodeC/ApproverUpdate")]
-        //public IActionResult ApproverUpdate([FromBody] CodeCViewModel model)
-        //{
-        //    if (model == null)
-        //    {
-        //        return BadRequest("Invalid data.");
-        //    }
+        [HttpPost]
+        [Route("ORB1/CodeC/ApproverUpdate")]
+        public IActionResult ApproverUpdate([FromBody] CodeCViewModel model)
+        {
+            if (model == null || model.Id <= 0)
+            {
+                return BadRequest("Invalid data received or ID is missing.");
+            }
+            if (model.TransferOperationType == "Select")
+            {
+                model.TransferOperationType = null;
+            }
+            if (model.IncineratorOperationType == "Incineration" && model.CollectionType != "Incinerator")
+            {
+                model.IncineratorOperationType = null;
+            }
 
-        //    try
-        //    {
-        //        string storedProcedure = "proc_ApproverUpdateORB1CodeA";
-        //        var parameters = new SqlParameter[]
-        //        {
-        //    new SqlParameter("@Id", model.Id),
-        //    new SqlParameter("@UserId", model.UserId),
-        //    new SqlParameter("@EntryDate", model.EntryDate),
-        //    new SqlParameter("@BallastingOrCleaning", model.BallastingOrCleaning),
-        //    new SqlParameter("@LastCleaningDate", (object)model.LastCleaningDate ?? DBNull.Value),
-        //    new SqlParameter("@OilCommercialName", (object)model.OilCommercialName ?? DBNull.Value),
-        //    new SqlParameter("@DensityViscosity", (object)model.DensityViscosity ?? DBNull.Value),
-        //    new SqlParameter("@IdentityOfTanksBallasted", (object)model.IdentityOfTanksBallasted ?? DBNull.Value),
-        //    new SqlParameter("@CleanedLastContainedOil", model.CleanedLastContainedOil),
-        //    new SqlParameter("@PreviousOilType", (object)model.PreviousOilType ?? DBNull.Value),
-        //    new SqlParameter("@QuantityBallast", model.QuantityBallast ?? (object)DBNull.Value),
-        //    new SqlParameter("@StartCleaningTime", (object)model.StartCleaningTime ?? DBNull.Value),
-        //    new SqlParameter("@PositionStart", (object)model.PositionStart ?? DBNull.Value),
-        //    new SqlParameter("@StopCleaningTime", (object)model.StopCleaningTime ?? DBNull.Value),
-        //    new SqlParameter("@PositionStop", (object)model.PositionStop ?? DBNull.Value),
-        //    new SqlParameter("@IdentifyTanks", (object)model.IdentifyTanks ?? DBNull.Value),
-        //    new SqlParameter("@MethodCleaning", (object)model.MethodCleaning ?? DBNull.Value),
-        //    new SqlParameter("@ChemicalType", (object)model.ChemicalType ?? DBNull.Value),
-        //    new SqlParameter("@ChemicalQuantity", model.ChemicalQuantity ?? (object)DBNull.Value),
-        //    new SqlParameter("@StartBallastingTime", (object)model.StartBallastingTime ?? DBNull.Value),
-        //    new SqlParameter("@BallastingPositionStart", (object)model.BallastingPositionStart ?? DBNull.Value),
-        //    new SqlParameter("@CompletionBallastingTime", (object)model.CompletionBallastingTime ?? DBNull.Value),
-        //    new SqlParameter("@BallastingPositionCompletion", (object)model.BallastingPositionCompletion ?? DBNull.Value),
-        //    new SqlParameter("@StatusName", (object)model.StatusName ?? DBNull.Value),
-        //    new SqlParameter("@Comments", (object)model.Comments ?? DBNull.Value),
+            try
+            {
+                string storedProcedure = "proc_ApproverUpdateORB1CodeC";
+                var parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@Id", model.Id),
+                    new SqlParameter("@UserId", model.UserId),
+                    new SqlParameter("@EntryDate", model.EntryDate),
+                    new SqlParameter("@CollectionType", model.CollectionType),
+    
+                    // Weekly Inventory Fields
+                    new SqlParameter("@WeeklyIdentityOfTanks", (object)model.WeeklyIdentityOfTanks ?? DBNull.Value),
+                    new SqlParameter("@WeeklyCapacityOfTanks", model.WeeklyCapacityOfTanks ?? (object)DBNull.Value),
+                    new SqlParameter("@WeeklyTotalQuantityOfRetention", model.WeeklyTotalQuantityOfRetention ?? (object)DBNull.Value),
+    
+                    // Collection Fields
+                    new SqlParameter("@CollectionIdentityOfTanks", (object)model.CollectionIdentityOfTanks ?? DBNull.Value),
+                    new SqlParameter("@CollectionCapacityOfTanks", model.CollectionCapacityOfTanks ?? (object)DBNull.Value),
+                    new SqlParameter("@CollectionTotalQuantityOfRetention", model.CollectionTotalQuantityOfRetention ?? (object)DBNull.Value),
+                    new SqlParameter("@CollectionManualResidueQuantity", model.CollectionManualResidueQuantity ?? (object)DBNull.Value),
+                    new SqlParameter("@CollectionCollectedFromTank", (object)model.CollectionCollectedFromTank ?? DBNull.Value),
+    
+                    // Transfer Fields
+                    new SqlParameter("@TransferOperationType", (object)model.TransferOperationType ?? DBNull.Value),
+                    new SqlParameter("@TransferQuantity", model.TransferQuantity ?? (object)DBNull.Value),
+                    new SqlParameter("@TransferTanksFrom", (object)model.TransferTanksFrom ?? DBNull.Value),
+                    new SqlParameter("@TransferRetainedIn", (object)model.TransferRetainedIn ?? DBNull.Value),
+                    new SqlParameter("@TransferTanksTo", (object)model.TransferTanksTo ?? DBNull.Value),
+    
+                    // Incinerator Fields
+                    new SqlParameter("@IncineratorOperationType", (object)model.IncineratorOperationType ?? DBNull.Value),
+                    new SqlParameter("@IncineratorQuantity", model.IncineratorQuantity ?? (object)DBNull.Value),
+                    new SqlParameter("@IncineratorTanksFrom", (object)model.IncineratorTanksFrom ?? DBNull.Value),
+                    new SqlParameter("@IncineratorRetainedIn", (object)model.IncineratorRetainedIn ?? DBNull.Value),
+                    new SqlParameter("@IncineratorTotalRetainedContent", model.IncineratorTotalRetainedContent ?? (object)DBNull.Value),
+                    new SqlParameter("@IncineratorStartTime", (object)model.IncineratorStartTime ?? DBNull.Value),
+                    new SqlParameter("@IncineratorStopTime", (object)model.IncineratorStopTime ?? DBNull.Value),
+                    new SqlParameter("@IncineratorTotalOperationTime", model.IncineratorTotalOperationTime ?? (object)DBNull.Value),
+    
+                    // Disposal Ship Fields
+                    new SqlParameter("@DisposalShipQuantity", model.DisposalShipQuantity ?? (object)DBNull.Value),
+                    new SqlParameter("@DisposalShipTanksFrom", (object)model.DisposalShipTanksFrom ?? DBNull.Value),
+                    new SqlParameter("@DisposalShipRetainedIn", (object)model.DisposalShipRetainedIn ?? DBNull.Value),
+                    new SqlParameter("@DisposalShipTanksTo", (object)model.DisposalShipTanksTo ?? DBNull.Value),
+                    new SqlParameter("@DisposalShipRetainedTo", (object)model.DisposalShipRetainedTo ?? DBNull.Value),
+    
+                    // Disposal Shore Fields
+                    new SqlParameter("@DisposalShoreQuantity", model.DisposalShoreQuantity ?? (object)DBNull.Value),
+                    new SqlParameter("@DisposalShoreTanksFrom", (object)model.DisposalShoreTanksFrom ?? DBNull.Value),
+                    new SqlParameter("@DisposalShoreRetainedInDischargeTanks", (object)model.DisposalShoreRetainedInDischargeTanks ?? DBNull.Value),
+                    new SqlParameter("@DisposalShoreBargeName", (object)model.DisposalShoreBargeName ?? DBNull.Value),
+                    new SqlParameter("@DisposalShoreReceptionFacility", (object)model.DisposalShoreReceptionFacility ?? DBNull.Value),
+                    new SqlParameter("@DisposalShoreReceiptNo", (object)model.DisposalShoreReceiptNo ?? DBNull.Value),
+                    new SqlParameter("@StatusName", (object)model.StatusName ?? DBNull.Value),
+                    new SqlParameter("@Comments", (object)model.Comments ?? DBNull.Value)
+                };
 
-        //        };
+                int result = _db.ExecuteUpdateStoredProcedure(storedProcedure, parameters);
 
-        //        int result = _db.ExecuteUpdateStoredProcedure(storedProcedure, parameters);
-
-        //        if (result > 0)
-        //        {
-        //            return Json(new { success = true, message = "Record Updated Successfully." });
-        //        }
-        //        else
-        //        {
-        //            return Json(new { success = false, message = "Record Update Failed!" });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
+                if (result > 0)
+                {
+                    return Json(new { success = true, message = "Record Updated Successfully." });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Record Update Failed!" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }
