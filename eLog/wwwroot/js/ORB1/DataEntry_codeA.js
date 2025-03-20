@@ -29,14 +29,16 @@
     $('#saveButton').click(function (event) {
         event.preventDefault();
 
+        var basePath = document.querySelector('base')?.getAttribute('href') || ''; // Get base path
+
         var formData = {
-            UserId: userId,  // Include the UserID
+            UserId: userId, // Include the UserID
             EntryDate: $('#EntryDate').val(),
             BallastingOrCleaning: $('#ballastingOrCleaning').val(),
             LastCleaningDate: $('#dateLastCleaning').val() || null,
             OilCommercialName: $('#oilCommercialName').val() || null,
             DensityViscosity: $('#densityViscosity').val() || null,
-            CleanedLastContainedOil: $('#wasCleaned').val() === "Yes" ? true : false,
+            CleanedLastContainedOil: $('#wasCleaned').val() === "Yes",
             PreviousOilType: $('#PreviousOilType').val() || null,
             QuantityBallast: parseFloat($('#QuantityBallast').val()) || null,
             IdentityOfTanksBallasted: $('#IdentityOfTanksBallasted').val() || null,
@@ -55,7 +57,7 @@
         };
 
         $.ajax({
-            url: "/ORB1/CodeA/CreateCodeA",
+            url: basePath + "/ORB1/CodeA/CreateCodeA", // Corrected URL string
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(formData),
@@ -76,11 +78,12 @@
                 $('#cleaningFields, #wasCleanedFields, #ChemicalFields, #ballastingFields').hide();
             },
             error: function (xhr, status, error) {
-                console.log(xhr.responseText);
+                console.error("AJAX Error:", xhr.responseText);
                 $('#message').html('<div class="alert alert-danger">Error: ' + xhr.responseText + '</div>');
             }
         });
     });
+
 
     // Reset form fields
     $('#resetButton').click(function () {
@@ -90,8 +93,11 @@
     });
 
     // Cancel button - Redirect to another page
-    $('#cancelButton').click(function () {
-        window.location.href = '/ORB1/CodeA/GetCodeAData'; // Change to the appropriate redirection URL
+    $("#cancelButton").click(function () {
+        const { pageNumber, pageSize } = getQueryParams();
+        // Redirect only after the user clicks "OK"
+        var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+        window.location.href = `${basePath}/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     });
 
     // Toggle fields based on selection
@@ -109,3 +115,12 @@
         $('#ChemicalFields').toggle($(this).val() === 'Chemicals');
     });
 });
+
+// Function to get query parameters from the URL
+function getQueryParams() {
+    const urlParams = new URLSearchParams(window.location.search); // Get the query string from the URL
+    const pageNumber = urlParams.get('pageNumber') || 1; // Default to 1 if not provided
+    const pageSize = urlParams.get('pageSize') || 10; // Default to 10 if not provided
+
+    return { pageNumber, pageSize };
+}

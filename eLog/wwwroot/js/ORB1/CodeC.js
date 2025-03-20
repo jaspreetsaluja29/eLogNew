@@ -1,6 +1,7 @@
 ﻿// Open the add new record window
 function openAddWindow() {
-    window.open('/CodeC/DataEntry_CodeC', 'AddRecord');
+    var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+    window.open(basePath + '/CodeC/DataEntry_CodeC', 'AddRecord');
 }
 
 // Track sorting order
@@ -62,8 +63,8 @@ function filterTable() {
 
 // Open the edit window for a record
 function editRecord(id) {
-    // Open the edit page for the selected record
-    window.open(`/CodeC/Edit/${id}`, 'EditRecord');
+    var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+    window.open(basePath + '/CodeC/Edit/' + id, 'EditRecord');
 }
 
 // Pagination Logic
@@ -75,7 +76,7 @@ function changePage(offset) {
     let newPage = currentPage + offset;
 
     if (newPage >= 1 && newPage <= totalPages) {
-        // Fixed route to match controller route
-        window.location.href = `/ORB1/CodeC/GetCodeCData?pageNumber=${newPage}&pageSize=${pageSize}`;
+        var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+        window.location.href = `${basePath}/ORB1/CodeC/GetCodeCData?pageNumber=${newPage}&pageSize=${pageSize}`;
     }
 }

@@ -9,10 +9,12 @@ namespace eLog.Controllers.ORB1
     public class ORB1Controller : Controller
     {
         private readonly HttpClient _httpClient;
+        private readonly string _basePath;
 
-        public ORB1Controller(HttpClient httpClient)
+        public ORB1Controller(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _basePath = configuration["BasePath"] ?? "";
         }
         public IActionResult CodeA()
         {
@@ -33,7 +35,7 @@ namespace eLog.Controllers.ORB1
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 // Call CodeAController.Create via HTTP POST
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
                 var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeA/Create", content);
 
                 if (response.IsSuccessStatusCode)
@@ -66,7 +68,7 @@ namespace eLog.Controllers.ORB1
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 // Call CodeAController.Create via HTTP POST
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
                 var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeA/Update", content);
 
                 if (response.IsSuccessStatusCode)
@@ -99,7 +101,7 @@ namespace eLog.Controllers.ORB1
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 // Call CodeAController.Create via HTTP POST
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
                 var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeA/ApproverUpdate", content);
 
                 if (response.IsSuccessStatusCode)
@@ -137,7 +139,7 @@ namespace eLog.Controllers.ORB1
             try
             {
                 // For direct file handling approach
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
 
                 // Create a new HttpClient instance for this specific request
                 using (var client = new HttpClient())
@@ -205,7 +207,7 @@ namespace eLog.Controllers.ORB1
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 // Call CodeAController.Create via HTTP POST
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
                 var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeC/Update", content);
 
                 if (response.IsSuccessStatusCode)
@@ -238,7 +240,7 @@ namespace eLog.Controllers.ORB1
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 // Call CodeAController.Create via HTTP POST
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
                 var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeC/ApproverUpdate", content);
 
                 if (response.IsSuccessStatusCode)

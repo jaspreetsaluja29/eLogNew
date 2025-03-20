@@ -16,7 +16,8 @@ function setupEventListeners() {
     $("#cancelButton").click(function () {
         const { pageNumber, pageSize } = getQueryParams();
         // Redirect only after the user clicks "OK"
-        window.location.href = `/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+        var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+        window.location.href = `${basePath}/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     });
 
     $("#EditCodeAForm").submit(function (event) {
@@ -71,6 +72,7 @@ function setupFormValidation() {
     });
 }
 
+var basePath = document.querySelector('base')?.getAttribute('href') || ''; // Get base path
 function submitForm() {
     let formData = {
         Id: $('#Id').val(),
@@ -99,7 +101,7 @@ function submitForm() {
     };
 
     $.ajax({
-        url: "/ORB1/CodeA/UpdateCodeA",
+        url: basePath + "/ORB1/CodeA/UpdateCodeA",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(formData),
@@ -114,7 +116,7 @@ function submitForm() {
 
             const { pageNumber, pageSize } = getQueryParams();
             // Redirect only after the user clicks "OK"
-            window.location.href = `/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+            window.location.href = `${basePath}/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
         },
         error: function (xhr) {
             $('#message').html('<div class="alert alert-danger">Error: ' + xhr.responseText + '</div>');

@@ -1,9 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
+
+    @{
+        var basePath = Configuration["BasePath"] ?? "/";
+    }
+    <base href="@basePath">
 </head>
 <body>
     <div>

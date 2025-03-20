@@ -60,7 +60,8 @@ function setupEventListeners() {
 
     $("#cancelButton").click(function () {
         const { pageNumber, pageSize } = getQueryParams();
-        window.location.href = `/ORB1/CodeC/GetCodeCData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+        var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+        window.location.href = `${basePath}/ORB1/CodeC/GetCodeCData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     });
 
     $("#EditCodeCForm").submit(function (event) {
@@ -265,6 +266,8 @@ function setupFormValidation() {
 
 function submitForm() {
 
+    var basePath = document.querySelector('base')?.getAttribute('href') || ''; // Get base path
+
     let formData = {
         Id: $('#Id').val(),
         UserId: userId,
@@ -317,7 +320,7 @@ function submitForm() {
     };
 
     $.ajax({
-        url: "/ORB1/CodeC/Update",
+        url: basePath + "/ORB1/CodeC/Update",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(formData),
@@ -327,7 +330,8 @@ function submitForm() {
 
             const { pageNumber, pageSize } = getQueryParams();
             // Redirect after the user clicks "OK"
-            window.location.href = `/ORB1/CodeC/GetCodeCData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+            var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+            window.location.href = `${basePath}/ORB1/CodeC/GetCodeCData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
         },
         error: function (xhr) {
             // Show error message

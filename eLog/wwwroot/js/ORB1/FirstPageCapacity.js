@@ -48,14 +48,16 @@
             });
         });
 
+        var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+
         $.ajax({
-            url: '/FirstPageCapacity/SaveData',
+            url: basePath + "/FirstPageCapacity/SaveData",
             type: 'POST',
             contentType: 'application/x-www-form-urlencoded',
             data: { retentions: retentionData, sludges: sludgeData },
             success: function (response) {
                 alert('Data saved successfully!');
-                window.location.href = '/FirstPageCapacity/FirstPageCapacity';
+                window.location.href = '${basePath}/FirstPageCapacity/FirstPageCapacity';
             },
             error: function () {
                 alert('Failed to save data.');

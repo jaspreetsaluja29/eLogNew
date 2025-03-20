@@ -1,38 +1,46 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - eLog</title>
+
+    @{
+        var basePath = Configuration["BasePath"] ?? "/";
+    }
+    <base href="@basePath">
+
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/eLog.styles.css" asp-append-version="true" />
     <style>
         .notification-sidebar {
-        position: fixed;
-        top: 0;
-        right: -300px;
-        width: 300px;
-        height: 100%;
-        background-color: #f8f9fa;
-        box-shadow: -2px 0 5px rgba(0,0,0,0.5);
-        padding: 20px;
-        transition: right 0.3s ease-in-out;
-        z-index: 1050;
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #f8f9fa;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+            padding: 20px;
+            transition: right 0.3s ease-in-out;
+            z-index: 1050;
         }
 
-        .notification-sidebar.show {
-        right: 0;
-        }
+            .notification-sidebar.show {
+                right: 0;
+            }
 
         .sidebar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -42,7 +50,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">eLog</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
+                        aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -64,8 +72,8 @@
                     @if (Context.Session.GetString("UserRoleName") == "Approver" || Context.Session.GetString("UserRoleName") == "SuperAdmin")
                     {
                         <ul class="navbar-nav">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link text-dark" href="#" id="notificationIcon" role="button">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="javascript:void(0);" id="notificationIcon" role="button">
                                     🔔 <span id="notificationCount" class="badge bg-danger">0</span>
                                 </a>
                             </li>
@@ -126,40 +134,46 @@
     <script>
         var userId = '@(Context.Session.GetInt32("UserID") ?? 0)';
         var userName = '@(Context.Session.GetString("UserName") ?? "Guest")';
-        var UserRoleName = '@(Context.Session.GetString("UserRoleName") ?? "Anonymous")';
+        var userRoleName = '@(Context.Session.GetString("UserRoleName") ?? "Anonymous")';
+        var basePath = document.querySelector('base')?.getAttribute('href') || ''; // Get base path
 
-            $(document).ready(function () {
+        $(document).ready(function () {
             // Load notification count on page load
             loadNotificationCount();
 
             // Show/hide notification sidebar
-            $('#notificationIcon').click(function () {
+            $('#notificationIcon').click(function(event) {
+                event.preventDefault(); // Prevent default navigation behavior
                 $('#notificationSidebar').toggleClass('show');
                 loadNotifications();
             });
 
-            $('#closeSidebar').click(function () {
+            $('#closeSidebar').click(function() {
                 $('#notificationSidebar').removeClass('show');
             });
         });
 
         function loadNotificationCount() {
             $.ajax({
-                url: '/Notification/GetNotificationCount',
+                url: basePath + "/Notification/GetNotificationCount",
                 method: 'GET',
                 data: { userId: userId },
                 success: function (data) {
                     let count = data.count || 0;
                     $('#notificationCount').text(count);
                     $('#notificationCount').toggle(count > 0); // Hide badge if count is 0
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error loading notification count:", error);
                 }
             });
         }
 
         function loadNotifications() {
             $.ajax({
-                url: '/Notification/GetNotifications',
+                url: basePath + "/Notification/GetNotifications",
                 method: 'GET',
+                data: { userId: userId },
                 success: function (data) {
                     let notifications = data.notifications || [];
                     let list = $('#notificationList');
@@ -174,6 +188,10 @@
                     }
 
                     $('#notificationCount').text(notifications.length);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error loading notifications:", error);
+                    $('#notificationList').html('<li class="list-group-item text-danger">Error loading notifications</li>');
                 }
             });
         }

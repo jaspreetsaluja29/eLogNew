@@ -17,7 +17,8 @@ function setupEventListeners() {
     $("#cancelButton").click(function () {
         if (confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
             const { pageNumber, pageSize } = getQueryParams();
-            window.location.href = `/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+            var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+            window.location.href = `${basePath}/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
         }
     });
 
@@ -97,6 +98,7 @@ function setupFormValidation() {
     });
 }
 
+var basePath = document.querySelector('base')?.getAttribute('href') || '/';
 function submitForm() {
     let actionType = $("#actionType").val() || "Pending"; // Set a default value if empty
 
@@ -129,7 +131,7 @@ function submitForm() {
     };
 
     $.ajax({
-        url: "/ORB1/CodeA/ApproverUpdateCodeA",
+        url: basePath + "/ORB1/CodeA/ApproverUpdateCodeA",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(formData),
@@ -139,7 +141,8 @@ function submitForm() {
             hideDependentFields();
             alert(response.message);
             const { pageNumber, pageSize } = getQueryParams();
-            window.location.href = `/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+            var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+            window.location.href = `${basePath}/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
         },
         error: function (xhr) {
             $('#message').html('<div class="alert alert-danger">Error: ' + xhr.responseText + '</div>');

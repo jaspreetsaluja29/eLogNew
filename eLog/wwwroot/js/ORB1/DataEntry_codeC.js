@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+
     // Set default date in the format YYYY-MM-DD
     let today = new Date();
     let formattedDate = today.getFullYear() + '-' +
@@ -11,6 +12,9 @@
     // Initial state setup and visibility settings
     $('#WeeklyInventoryFields').show(); // Show Weekly Inventory by default
     $('#CollectionFields, #TransferFields, #IncineratorFields, #DisposalShipFields, #DisposalShoreFields').hide();
+
+    // Global base path
+    const basePath = document.querySelector('base')?.getAttribute('href') || '/';
 
     // Change event handler
     $('#CollectionType').change(function () {
@@ -98,6 +102,8 @@
         // Get the selected collection type
         var collectionType = $('#CollectionType').val();
 
+        var basePath = document.querySelector('base')?.getAttribute('href') || ''; // Get base path
+
         // Create a FormData object instead of a regular object
         var formData = new FormData();
 
@@ -166,7 +172,7 @@
         }
 
         $.ajax({
-            url: "/ORB1/CodeC/CreateCodeC",
+            url: basePath + "/ORB1/CodeC/CreateCodeC",
             type: "POST",
             data: formData,
             processData: false,  // Prevent jQuery from converting the FormData object to a string
@@ -201,14 +207,18 @@
         $('#message').html('');
     });
 
-    // Cancel button
-    $('#cancelButton').click(function () {
-        window.location.href = '/ORB1/CodeC/GetCodeCData';
+    // Cancel button - Redirect to another page
+    $("#cancelButton").click(function () {
+        const { pageNumber, pageSize } = getQueryParams();
+        // Redirect only after the user clicks "OK"
+        var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+        window.location.href = `${basePath}/ORB1/CodeC/GetCodeCData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     });
 
+    // Fetch last weekly retention
     function fetchLastWeeklyRetention() {
         $.ajax({
-            url: "/ORB1/CodeC/GetLastWeeklyRetention",
+            url: basePath + "/ORB1/CodeC/GetLastWeeklyRetention",
             type: "GET",
             success: function (response) {
                 if (response && response.length > 0) {
@@ -242,9 +252,11 @@
         });
     }
 
+
+    // Fetch last weekly collection retention
     function fetchLastWeeklyCollection() {
         $.ajax({
-            url: "/ORB1/CodeC/GetLastWeeklyCollectionRetention",
+            url: basePath + "/ORB1/CodeC/GetLastWeeklyCollectionRetention",
             type: "GET",
             success: function (response) {
                 if (response && response.length > 0) {
@@ -278,10 +290,11 @@
         });
     }
 
+
     // Clean loadTanks function
     function loadTanks() {
         $.ajax({
-            url: "/ORB1/CodeC/GetTanks",
+            url: basePath + "/ORB1/CodeC/GetTanks",
             type: "GET",
             dataType: "json",
             success: function (data) {
@@ -343,3 +356,12 @@
     // Call the loadTanks function when the page loads
     loadTanks();
 });
+
+// Function to get query parameters from the URL
+function getQueryParams() {
+    const urlParams = new URLSearchParams(window.location.search); // Get the query string from the URL
+    const pageNumber = urlParams.get('pageNumber') || 1; // Default to 1 if not provided
+    const pageSize = urlParams.get('pageSize') || 10; // Default to 10 if not provided
+
+    return { pageNumber, pageSize };
+}
