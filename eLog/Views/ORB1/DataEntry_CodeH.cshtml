@@ -1,0 +1,115 @@
+﻿@{
+    Layout = "_BlankLayout";
+ }
+@{
+    ViewData["Title"] = "DataEntry_CodeH";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter CodeH Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/ORB1/DataEntry_CodeA.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h2 class="text-center mb-4">BUNKERING OF FUEL OIL OR LUBE OIL</h2>
+
+    <form id="DataEntryCodeHForm" class="p-4 border rounded bg-light">
+        <div class="mb-3">
+            <label for="EntryDate" class="form-label">Date (YYYY-MM-DD):</label>
+            <input type="date" class="form-control" id="EntryDate" name="EntryDate" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="Port" class="form-label">Port:</label>
+            <input type="text" class="form-control" id="Port" name="Port" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="Location" class="form-label">Location(Position):</label>
+            <input type="text" class="form-control" id="Location" name="Location" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="StartDateTime" class="form-label">Start Date & Time:</label>
+            <input type="datetime-local" class="form-control" id="StartDateTime" name="StartDateTime" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="StopDateTime" class="form-label">Stop Date & Time:</label>
+            <input type="datetime-local" class="form-control" id="StopDateTime" name="StopDateTime" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="Quantity" class="form-label">Quantity (MT):</label>
+            <input type="text" class="form-control" id="Quantity" name="Quantity" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="Grade" class="form-label">Grade:</label>
+            <input type="text" class="form-control" id="Grade" name="Grade" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="SulphurContent" class="form-label">Sulphur Content:</label>
+            <input type="text" class="form-control" id="SulphurContent" name="SulphurContent" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="TankLoaded1" class="form-label">Tank Loaded 1:</label>
+            <select class="form-select" id="TankLoaded1" name="TankLoaded1" required>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="TankRetained1" class="form-label">Tank Retained 1:</label>
+            <input type="text" class="form-control" id="TankRetained1" name="TankRetained1" required readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="TankLoaded2" class="form-label">Tank Loaded 2:</label>
+            <select class="form-select" id="TankLoaded2" name="TankLoaded2" required>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="TankRetained2" class="form-label">Tank Retained 2:</label>
+            <input type="text" class="form-control" id="TankRetained2" name="TankRetained2" required readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="TankLoaded3" class="form-label">Tank Loaded 3:</label>
+            <select class="form-select" id="TankLoaded3" name="TankLoaded3" required>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="TankRetained3" class="form-label">Tank Retained 3:</label>
+            <input type="text" class="form-control" id="TankRetained3" name="TankRetained3" required readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="TankLoaded4" class="form-label">Tank Loaded 4:</label>
+            <select class="form-select" id="TankLoaded4" name="TankLoaded4" required>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="TankRetained4" class="form-label">Tank Retained 4:</label>
+            <input type="text" class="form-control" id="TankRetained4" name="TankRetained4" required readonly>
+        </div>
+
+        <button type="submit" id="saveButton" class="btn btn-primary">Save</button>
+        <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
+        <button type="button" id="cancelButton" class="btn btn-danger">Cancel</button>
+    </form>
+
+    <p id="message" class="mt-3 text-center"></p>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/ORB1/DataEntry_codeH.js"></script>
+</body>
+</html>

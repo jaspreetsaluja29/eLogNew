@@ -1,0 +1,132 @@
+﻿@model eLog.ViewModels.ORB1.CodeHViewModel
+@{
+    Layout = "_BlankLayout";
+    ViewData["Title"] = "Edit_CodeH";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit CodeH Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/ORB1/DataEntry_CodeA.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h2 class="text-center mb-4">EDIT - BUNKERING OF FUEL OIL OR LUBE OIL</h2>
+
+    <form asp-action="Edit" asp-controller="CodeH" method="post" id="EditCodeHForm" class="p-4 border rounded bg-light">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label asp-for="EntryDate" class="form-label">Date (YYYY-MM-DD):</label>
+            <input type="date" class="form-control" asp-for="EntryDate" required>
+            <span asp-validation-for="EntryDate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Port" class="form-label">Port:</label>
+            <input type="text" class="form-control" asp-for="Port" name="Port" id="Port">
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Location" class="form-label">Location(Position):</label>
+            <input type="text" class="form-control" asp-for="Location" name="Location" id="Location">
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="StartDateTime" class="form-label">Start Date & Time:</label>
+            <input type="datetime-local" class="form-control" asp-for="StartDateTime" required>
+            <span asp-validation-for="StartDateTime" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="StopDateTime" class="form-label">Stop Date & Time:</label>
+            <input type="datetime-local" class="form-control" asp-for="StopDateTime" required>
+            <span asp-validation-for="StopDateTime" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Quantity" class="form-label">Quantity (MT):</label>
+            <input type="text" class="form-control" asp-for="Quantity" required>
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Grade" class="form-label">Grade:</label>
+            <input type="text" class="form-control" asp-for="Grade" required>
+            <span asp-validation-for="Grade" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="SulphurContent" class="form-label">Sulphur Content:</label>
+            <input type="text" class="form-control" asp-for="SulphurContent" required>
+            <span asp-validation-for="SulphurContent" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TankLoaded1" class="form-label">Tank Loaded 1:</label>
+            <input type="text" class="form-control" asp-for="TankLoaded1" id="TankLoaded1" value="@Model.TankLoaded1" required disabled>
+            <span asp-validation-for="TankLoaded1" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TankRetained1" class="form-label">Tank Retained 1:</label>
+            <input type="text" class="form-control" asp-for="TankRetained1" id="TankRetained1" value="@Model.TankRetained1" required disabled>
+            <span asp-validation-for="TankRetained1" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TankLoaded2" class="form-label">Tank Loaded 2:</label>
+            <input type="text" class="form-control" asp-for="TankLoaded2" id="TankLoaded2" value="@Model.TankLoaded2" required disabled>
+            <span asp-validation-for="TankLoaded2" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TankRetained2" class="form-label">Tank Retained 2:</label>
+            <input type="text" class="form-control" asp-for="TankRetained2" id="TankRetained2" value="@Model.TankRetained2" required disabled>
+            <span asp-validation-for="TankRetained2" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TankLoaded3" class="form-label">Tank Loaded 3:</label>
+            <input type="text" class="form-control" asp-for="TankLoaded3" id="TankLoaded3" value="@Model.TankLoaded3" required disabled>
+            <span asp-validation-for="TankLoaded3" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TankRetained3" class="form-label">Tank Retained 3:</label>
+            <input type="text" class="form-control" asp-for="TankRetained3" id="TankRetained3" value="@Model.TankRetained3" required disabled>
+            <span asp-validation-for="TankRetained3" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TankLoaded4" class="form-label">Tank Loaded 4:</label>
+            <input type="text" class="form-control" asp-for="TankLoaded4" id="TankLoaded4" value="@Model.TankLoaded4" required disabled>
+            <span asp-validation-for="TankLoaded4" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TankRetained4" class="form-label">Tank Retained 4:</label>
+            <input type="text" class="form-control" asp-for="TankRetained4" id="TankRetained4" value="@Model.TankRetained4" required disabled>
+            <span asp-validation-for="TankRetained4" class="text-danger"></span>
+        </div>
+
+        <button type="submit" id="updateButton" class="btn btn-primary">Update</button>
+        <button type="button" id="cancelButton" class="btn btn-danger">Cancel</button>
+    </form>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <p id="message" class="mt-3 text-center"></p>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        // Define userId if it's not already defined elsewhere
+        var userId = "@ViewBag.UserId"; // Make sure this is set in your controller
+    </script>
+    <script src="~/js/ORB1/DataEdit_codeH.js"></script>
+</body>
+</html>

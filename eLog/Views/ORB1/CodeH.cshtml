@@ -1,0 +1,137 @@
+﻿@model IEnumerable<eLog.ViewModels.ORB1.CodeHViewModel>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Code H Records";
+}
+
+<!-- Include CodeA.css -->
+<link href="~/css/ORB1/CodeA.css" rel="stylesheet" />
+
+<div class="container mt-4 text-center">
+    <!-- Row with header and controls (Add and Search) aligned -->
+    <h2 class="mb-4">Code H Records</h2>
+    <div class="row justify-content-between align-items-center mb-3">
+        <div class="col-auto">
+            <button class="btn btn-primary" onclick="openAddWindow()">Add</button>
+        </div>
+        <div class="col-auto">
+            <input type="text" id="searchInput" class="form-control" style="width: 200px;" placeholder="Search..." onkeyup="filterTable()" />
+        </div>
+    </div>
+
+    <!-- Row count display -->
+    <div class="record-controls d-flex justify-content-between align-items-center mb-3 p-2">
+        <div class="record-count">
+            <strong>Total Records:</strong> @ViewBag.TotalRecords
+        </div>
+        <div class="pagination-controls d-flex align-items-center gap-2">
+            <label for="pageSize" class="fw-semibold" style="white-space: nowrap;">Page Size:</label>
+            <select id="pageSize" class="form-select form-select-sm" onchange="changePage(0)">
+                <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
+                <option value="20" selected="@(ViewBag.PageSize == 20)">20</option>
+                <option value="50" selected="@(ViewBag.PageSize == 50)">50</option>
+                <option value="100" selected="@(ViewBag.PageSize == 100)">100</option>
+                <option value="500" selected="@(ViewBag.PageSize == 500)">500</option>
+            </select>
+
+            <button class="btn btn-outline-primary btn-sm" id="prevPage" onclick="changePage(-1)"
+            @(ViewBag.PageNumber == 1 ? "disabled" : "")>
+                Previous
+            </button>
+
+            <span id="currentPage" class="fw-bold">@ViewBag.PageNumber</span> /
+            <span id="totalPages">@ViewBag.TotalPages</span>
+
+            <button class="btn btn-outline-primary btn-sm" id="nextPage" onclick="changePage(1)"
+            @(ViewBag.PageNumber >= ViewBag.TotalPages ? "disabled" : "")>
+                Next
+            </button>
+        </div>
+    </div>
+
+
+
+    <!-- Table container -->
+    <div class="table-container">
+        <table id="codeHTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Entered By</th>
+                    <th onclick="sortTable(1)">Entry Date</th>
+                    <th onclick="sortTable(2)">Port</th>
+                    <th onclick="sortTable(3)">Location</th>
+                    <th onclick="sortTable(4)">StartDateTime</th>
+                    <th onclick="sortTable(5)">StopDateTime</th>
+                    <th onclick="sortTable(6)">Quantity</th>
+                    <th onclick="sortTable(7)">Grade</th>
+                    <th onclick="sortTable(8)">SulphurContent</th>
+                    <th onclick="sortTable(9)">TankLoaded1</th>
+                    <th onclick="sortTable(10)">TankRetained1</th>
+                    <th onclick="sortTable(11)">TankLoaded2</th>
+                    <th onclick="sortTable(12)">TankRetained2</th>
+                    <th onclick="sortTable(13)">TankLoaded3</th>
+                    <th onclick="sortTable(14)">TankRetained3</th>
+                    <th onclick="sortTable(15)">TankLoaded4</th>
+                    <th onclick="sortTable(16)">TankRetained4</th>
+                    <th onclick="sortTable(17)">Status Name</th>
+                    <th onclick="sortTable(18)">Approved By</th>
+                    <th onclick="sortTable(19)">Comments</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.UserId.Trim()</td>
+                            <td>@item.EntryDate.ToShortDateString()</td>
+                            <td>@item.Port</td>
+                            <td>@item.Location</td>
+                            <td>@item.StartDateTime</td>
+                            <td>@item.StopDateTime</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Grade</td>
+                            <td>@item.SulphurContent</td>
+                            <td>@item.TankLoaded1</td>
+                            <td>@item.TankRetained1</td>
+                            <td>@item.TankLoaded2</td>
+                            <td>@item.TankRetained2</td>
+                            <td>@item.TankLoaded3</td>
+                            <td>@item.TankRetained3</td>
+                            <td>@item.TankLoaded4</td>
+                            <td>@item.TankRetained4</td>
+                            <td>@item.StatusName</td>
+                            <td>@item.ApprovedBy</td>
+                            <td>@item.Comments</td>
+                            <td>
+                                <button class="btn btn-info btn-sm @if (item.StatusName != "Pending") {
+                        <text>disabled btn-secondary</text>
+ } else {
+                        <text>btn-info</text>
+ }"
+                                        onclick="editRecord(@item.Id)" @if (item.StatusName != "Pending")
+                                {
+                                    <text>disabled</text>
+                                }>
+                Edit
+            </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="25" class="text-center">No records found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Reference to CodeH.js -->
+<script src="~/js/ORB1/CodeH.js"></script>

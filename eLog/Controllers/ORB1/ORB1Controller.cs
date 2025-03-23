@@ -118,10 +118,6 @@ namespace eLog.Controllers.ORB1
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        public IActionResult CodeB()
-        {
-            return View();
-        }
         public IActionResult CodeC()
         {
             return RedirectToAction("GetCodeCData", "CodeC");
@@ -206,7 +202,7 @@ namespace eLog.Controllers.ORB1
                 string json = JsonSerializer.Serialize(model);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                // Call CodeAController.Create via HTTP POST
+                // Call CodeCController.Create via HTTP POST
                 var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
                 var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeC/Update", content);
 
@@ -216,7 +212,7 @@ namespace eLog.Controllers.ORB1
                 }
                 else
                 {
-                    return StatusCode((int)response.StatusCode, "Error in CodeAController.");
+                    return StatusCode((int)response.StatusCode, "Error in CodeCController.");
                 }
             }
             catch (Exception ex)
@@ -239,7 +235,7 @@ namespace eLog.Controllers.ORB1
                 string json = JsonSerializer.Serialize(model);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                // Call CodeAController.Create via HTTP POST
+                // Call CodeCController.Create via HTTP POST
                 var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
                 var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeC/ApproverUpdate", content);
 
@@ -249,7 +245,111 @@ namespace eLog.Controllers.ORB1
                 }
                 else
                 {
-                    return StatusCode((int)response.StatusCode, "Error in CodeAController.");
+                    return StatusCode((int)response.StatusCode, "Error in CodeCController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        public IActionResult CodeH()
+        {
+            return RedirectToAction("GetCodeHData", "CodeH");
+        }
+
+        [Route("ORB1/CodeH/CreateCodeH")]
+        [HttpPost]
+        public async Task<IActionResult> CreateCodeH([FromBody] CodeHModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeHController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeH/Create", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeHController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Route("ORB1/CodeH/UpdateCodeH")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateCodeH([FromBody] CodeHViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeHController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeH/Update", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeHController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Route("ORB1/CodeH/ApproverUpdateCodeH")]
+        [HttpPost]
+        public async Task<IActionResult> ApproverUpdateCodeH([FromBody] CodeHViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeHController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeH/ApproverUpdate", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeHController.");
                 }
             }
             catch (Exception ex)

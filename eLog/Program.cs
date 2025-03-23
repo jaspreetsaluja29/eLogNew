@@ -73,6 +73,19 @@ builder.Services.AddSession(options =>
     options.Cookie.SameSite = SameSiteMode.Strict;
 });
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure it's sent over HTTPS
+    options.Cookie.SameSite = SameSiteMode.None; // Allow cross-origin cookies
+    options.Cookie.HttpOnly = true;
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
+
 var app = builder.Build();
 
 // Configure Middleware
@@ -104,4 +117,5 @@ app.MapControllerRoute(
     pattern: "{controller=Account}/{action=Login}/{id?}"
 );
 
+app.UseCors("AllowAll");
 app.Run();
