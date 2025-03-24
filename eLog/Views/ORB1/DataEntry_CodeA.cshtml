@@ -33,18 +33,7 @@
         </div>
 
         <div id="cleaningFields" style="display:none;">
-            <div class="mb-3">
-                <label for="dateLastCleaning" class="form-label">Date of Last Cleaning:</label>
-                <input type="date" class="form-control" id="dateLastCleaning" name="DateLastCleaning" required>
-            </div>
-            <div class="mb-3">
-                <label for="oilCommercialName" class="form-label">Oil Commercial Name:</label>
-                <input type="text" class="form-control" id="oilCommercialName" name="OilCommercialName" required>
-            </div>
-            <div class="mb-3">
-                <label for="densityViscosity" class="form-label">Density and/or Viscosity:</label>
-                <input type="text" class="form-control" id="densityViscosity" name="DensityViscosity" required>
-            </div>
+
             <div class="mb-3">
                 <label for="wasCleaned" class="form-label">Whether cleaned since they last contained oil:</label>
                 <select class="form-select" id="wasCleaned" name="WasCleaned" required>
@@ -53,33 +42,42 @@
                     <option value="No">No</option>
                 </select>
             </div>
-
             <!-- Initially hidden -->
             <div id="wasCleanedFields" style="display: none;">
+                <div class="mb-3">
+                    <label for="dateLastCleaning" class="form-label">Date of Last Cleaning:</label>
+                    <input type="date" class="form-control" id="dateLastCleaning" name="DateLastCleaning" required>
+                </div>
+                <div class="mb-3">
+                    <label for="oilCommercialName" class="form-label">Oil Commercial Name:</label>
+                    <input type="text" class="form-control" id="oilCommercialName" name="OilCommercialName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="densityViscosity" class="form-label">Density and/or Viscosity:</label>
+                    <input type="text" class="form-control" id="densityViscosity" name="DensityViscosity" required>
+                </div>
+            </div>
+            <div id="wasCleanedFieldsNo" style="display: none;">
                 <div class="mb-3">
                     <label for="PreviousOilType" class="form-label">Type of oil previously carried:</label>
                     <input type="text" class="form-control" id="PreviousOilType" name="PreviousOilType" required>
                 </div>
-                <div class="mb-3">
-                    <label for="QuantityBallast" class="form-label">Quantity of ballast (m³):</label>
-                    <input type="text" class="form-control" id="QuantityBallast" name="QuantityBallast" required>
-                </div>
             </div>
 
             <div class="mb-3">
-                <label for="StartCleaningTime" class="form-label">Start cleaning Time (HH:MM - 24 hrs format):</label>
+                <label for="StartCleaningTime" class="form-label">Start cleaning Time:</label>
                 <input type="time" class="form-control" id="StartCleaningTime" name="StartCleaningTime" required>
             </div>
             <div class="mb-3">
-                <label for="PositionStart" class="form-label">Position at Start (XX DEG XX MIN N/S, XX DEG XX MIN E/W):</label>
+                <label for="PositionStart" class="form-label">Position at Start:</label>
                 <input type="text" class="form-control" id="PositionStart" name="PositionStart" required>
             </div>
             <div class="mb-3">
-                <label for="StopCleaningTime" class="form-label">Stop cleaning Time (HHMM- 24 hrs format):</label>
+                <label for="StopCleaningTime" class="form-label">Stop cleaning Time:</label>
                 <input type="time" class="form-control" id="StopCleaningTime" name="StopCleaningTime" required>
             </div>
             <div class="mb-3">
-                <label for="PositionStop" class="form-label">Position at Stop (XX DEG XX MIN N/S, XX DEG XX MIN E/W):</label>
+                <label for="PositionStop" class="form-label">Position at Stop:</label>
                 <input type="text" class="form-control" id="PositionStop" name="PositionStop" required>
             </div>
             <div class="mb-3">
@@ -111,23 +109,27 @@
 
         <div id="ballastingFields" style="display: none;">
             <div class="mb-3">
+                <label for="QuantityBallast" class="form-label">Quantity of ballast (m³):</label>
+                <input type="text" class="form-control" id="QuantityBallast" name="QuantityBallast" required>
+            </div>
+            <div class="mb-3">
                 <label for="IdentityOfTanksBallasted" class="form-label">Identity of tank(s) ballasted:</label>
                 <input type="text" class="form-control" id="IdentityOfTanksBallasted" name="IdentityOfTanksBallasted" required>
             </div>
             <div class="mb-3">
-                <label for="StartBallastingTime" class="form-label">Time at start of Ballasting (HH:MM - 24 hrs format):</label>
+                <label for="StartBallastingTime" class="form-label">Time at start of Ballasting:</label>
                 <input type="time" class="form-control" id="StartBallastingTime" name="StartBallastingTime" required>
             </div>
             <div class="mb-3">
-                <label for="BallastingPositionStart" class="form-label">Position of ship at start of Ballasting (XX DEG XX MIN N/S, XX DEG XX MIN E/W):</label>
+                <label for="BallastingPositionStart" class="form-label">Position of ship at start of Ballasting:</label>
                 <input type="text" class="form-control" id="BallastingPositionStart" name="BallastingPositionStart" required>
             </div>
             <div class="mb-3">
-                <label for="CompletionBallastingTime" class="form-label">Time on completion of Ballasting (HHMM- 24 hrs format):</label>
+                <label for="CompletionBallastingTime" class="form-label">Time on completion of Ballasting:</label>
                 <input type="time" class="form-control" id="CompletionBallastingTime" name="CompletionBallastingTime" required>
             </div>
             <div class="mb-3">
-                <label for="BallastingPositionCompletion" class="form-label">Position of ship on completion of Ballasting (XX DEG XX MIN N/S, XX DEG XX MIN E/W):</label>
+                <label for="BallastingPositionCompletion" class="form-label">Position of ship on completion of Ballasting:</label>
                 <input type="text" class="form-control" id="BallastingPositionCompletion" name="BallastingPositionCompletion" required>
             </div>
         </div>

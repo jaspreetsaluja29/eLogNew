@@ -27,7 +27,7 @@
 
         <div class="mb-3">
             <label asp-for="BallastingOrCleaning" class="form-label">Ballasting or Cleaning:</label>
-            <select class="form-select" asp-for="BallastingOrCleaning" required>
+            <select class="form-select" asp-for="BallastingOrCleaning" required disabled>
                 <option value="Select">Select</option>
                 <option value="Ballasting">Ballasting</option>
                 <option value="Cleaning">Cleaning</option>
@@ -37,60 +37,55 @@
 
         <div id="cleaningFields" style="display: none;">
             <div class="mb-3">
-                <label asp-for="LastCleaningDate" class="form-label">Date of Last Cleaning:</label>
-                <input type="date" class="form-control" asp-for="LastCleaningDate">
-                <span asp-validation-for="LastCleaningDate" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="OilCommercialName" class="form-label">Oil Commercial Name:</label>
-                <input type="text" class="form-control" asp-for="OilCommercialName">
-                <span asp-validation-for="OilCommercialName" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="DensityViscosity" class="form-label">Density and/or Viscosity:</label>
-                <input type="text" class="form-control" asp-for="DensityViscosity">
-                <span asp-validation-for="DensityViscosity" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
                 <label asp-for="CleanedLastContainedOil" class="form-label">Whether cleaned since they last contained oil:</label>
-                <select class="form-select" asp-for="CleanedLastContainedOil">
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
+                <input type="text" class="form-control" asp-for="CleanedLastContainedOil" id="CleanedLastContainedOil" value="@Model.CleanedLastContainedOil" required disabled>
                 <span asp-validation-for="CleanedLastContainedOil" class="text-danger"></span>
+            </div>
+            <!-- Initially hidden -->
+            <div id="wasCleanedFields" style="display: none;">
+                <div class="mb-3">
+                    <label asp-for="LastCleaningDate" class="form-label">Date of Last Cleaning:</label>
+                    <input type="date" class="form-control" asp-for="LastCleaningDate">
+                    <span asp-validation-for="LastCleaningDate" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="OilCommercialName" class="form-label">Oil Commercial Name:</label>
+                    <input type="text" class="form-control" asp-for="OilCommercialName">
+                    <span asp-validation-for="OilCommercialName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="DensityViscosity" class="form-label">Density and/or Viscosity:</label>
+                    <input type="text" class="form-control" asp-for="DensityViscosity">
+                    <span asp-validation-for="DensityViscosity" class="text-danger"></span>
+                </div>
             </div>
 
             <!-- Conditionally displayed based on WasCleaned value -->
-            <div id="wasCleanedFields" style="display: none;">
+            <div id="wasCleanedFieldsNo" style="display: none;">
                 <div class="mb-3">
                     <label asp-for="PreviousOilType" class="form-label">Type of oil previously carried:</label>
                     <input type="text" class="form-control" asp-for="PreviousOilType">
                     <span asp-validation-for="PreviousOilType" class="text-danger"></span>
                 </div>
-                <div class="mb-3">
-                    <label asp-for="QuantityBallast" class="form-label">Quantity of ballast (m³):</label>
-                    <input type="text" class="form-control" asp-for="QuantityBallast">
-                    <span asp-validation-for="QuantityBallast" class="text-danger"></span>
-                </div>
             </div>
 
             <div class="mb-3">
-                <label asp-for="StartCleaningTime" class="form-label">Start cleaning Time (HH:MM - 24 hrs format):</label>
+                <label asp-for="StartCleaningTime" class="form-label">Start cleaning Time:</label>
                 <input type="time" class="form-control" asp-for="StartCleaningTime">
                 <span asp-validation-for="StartCleaningTime" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="PositionStart" class="form-label">Position at Start (XX DEG XX MIN N/S, XX DEG XX MIN E/W):</label>
+                <label asp-for="PositionStart" class="form-label">Position at Start:</label>
                 <input type="text" class="form-control" asp-for="PositionStart">
                 <span asp-validation-for="PositionStart" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="StopCleaningTime" class="form-label">Stop cleaning Time (HH:MM - 24 hrs format):</label>
+                <label asp-for="StopCleaningTime" class="form-label">Stop cleaning Time:</label>
                 <input type="time" class="form-control" asp-for="StopCleaningTime">
                 <span asp-validation-for="StopCleaningTime" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="PositionStop" class="form-label">Position at Stop (XX DEG XX MIN N/S, XX DEG XX MIN E/W):</label>
+                <label asp-for="PositionStop" class="form-label">Position at Stop:</label>
                 <input type="text" class="form-control" asp-for="PositionStop">
                 <span asp-validation-for="PositionStop" class="text-danger"></span>
             </div>
@@ -126,27 +121,32 @@
 
         <div id="ballastingFields" style="display: none;">
             <div class="mb-3">
+                <label asp-for="QuantityBallast" class="form-label">Quantity of ballast (m³):</label>
+                <input type="text" class="form-control" asp-for="QuantityBallast">
+                <span asp-validation-for="QuantityBallast" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
                 <label asp-for="IdentityOfTanksBallasted" class="form-label">Identity of tank(s) ballasted:</label>
                 <input type="text" class="form-control" asp-for="IdentityOfTanksBallasted">
                 <span asp-validation-for="IdentityOfTanksBallasted" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="StartBallastingTime" class="form-label">Time at start of Ballasting (HH:MM - 24 hrs format):</label>
+                <label asp-for="StartBallastingTime" class="form-label">Time at start of Ballasting:</label>
                 <input type="time" class="form-control" asp-for="StartBallastingTime">
                 <span asp-validation-for="StartBallastingTime" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="BallastingPositionStart" class="form-label">Position of ship at start of Ballasting (XX DEG XX MIN N/S, XX DEG XX MIN E/W):</label>
+                <label asp-for="BallastingPositionStart" class="form-label">Position of ship at start of Ballasting:</label>
                 <input type="text" class="form-control" asp-for="BallastingPositionStart">
                 <span asp-validation-for="BallastingPositionStart" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="CompletionBallastingTime" class="form-label">Time on completion of Ballasting (HH:MM - 24 hrs format):</label>
+                <label asp-for="CompletionBallastingTime" class="form-label">Time on completion of Ballasting:</label>
                 <input type="time" class="form-control" asp-for="CompletionBallastingTime">
                 <span asp-validation-for="CompletionBallastingTime" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="BallastingPositionCompletion" class="form-label">Position of ship on completion of Ballasting (XX DEG XX MIN N/S, XX DEG XX MIN E/W):</label>
+                <label asp-for="BallastingPositionCompletion" class="form-label">Position of ship on completion of Ballasting:</label>
                 <input type="text" class="form-control" asp-for="BallastingPositionCompletion">
                 <span asp-validation-for="BallastingPositionCompletion" class="text-danger"></span>
             </div>

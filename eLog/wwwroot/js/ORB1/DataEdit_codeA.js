@@ -5,7 +5,25 @@
 });
 
 function initializeFormState() {
-    toggleFields();
+    // Show appropriate fields based on initial values
+    const initialAction = $("#BallastingOrCleaning").val();
+    if (initialAction === "Cleaning") {
+        $("#cleaningFields").show();
+        const cleanedStatus = $("#CleanedLastContainedOil").val().toLowerCase();
+        if (cleanedStatus === "true" || cleanedStatus === "yes") {
+            $("#wasCleanedFields").show();
+            $("#wasCleanedFieldsNo").hide();
+        } else if (cleanedStatus === "false" || cleanedStatus === "no") {
+            $("#wasCleanedFields").hide();
+            $("#wasCleanedFieldsNo").show();
+        }
+
+        // Handle chemical fields
+        const method = $("#MethodCleaning").val();
+        $("#ChemicalFields").toggle(method === "Chemicals");
+    } else if (initialAction === "Ballasting") {
+        $("#ballastingFields").show();
+    }
 }
 
 function setupEventListeners() {
@@ -15,7 +33,6 @@ function setupEventListeners() {
 
     $("#cancelButton").click(function () {
         const { pageNumber, pageSize } = getQueryParams();
-        // Redirect only after the user clicks "OK"
         var basePath = document.querySelector('base')?.getAttribute('href') || '/';
         window.location.href = `${basePath}/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     });
@@ -28,17 +45,25 @@ function setupEventListeners() {
     });
 }
 
+function toggleWasCleanedFields() {
+    let cleaned = $("#CleanedLastContainedOil").val().toLowerCase();
+    if (cleaned === "true" || cleaned === "yes") {
+        $("#wasCleanedFields").show();
+        $("#wasCleanedFieldsNo").hide();
+    } else if (cleaned === "false" || cleaned === "no") {
+        $("#wasCleanedFields").hide();
+        $("#wasCleanedFieldsNo").show();
+    } else {
+        $("#wasCleanedFields, #wasCleanedFieldsNo").hide();
+    }
+}
+
 function toggleFields() {
     let selection = $("#BallastingOrCleaning").val();
     $("#cleaningFields").toggle(selection === "Cleaning");
     $("#ballastingFields").toggle(selection === "Ballasting");
     toggleWasCleanedFields();
     toggleChemicalFields();
-}
-
-function toggleWasCleanedFields() {
-    let cleaned = $("#CleanedLastContainedOil").val();
-    $("#wasCleanedFields").toggle(cleaned === "No");
 }
 
 function toggleChemicalFields() {
@@ -61,7 +86,10 @@ function setupFormValidation() {
             PositionStart: { validPosition: true },
             PositionStop: { validPosition: true },
             ChemicalType: { required: () => $("#MethodCleaning").val() === "Chemicals" },
-            ChemicalQuantity: { required: () => $("#MethodCleaning").val() === "Chemicals", number: true },
+            ChemicalQuantity: {
+                required: () => $("#MethodCleaning").val() === "Chemicals",
+                number: true
+            },
             QuantityBallast: { number: true }
         },
         messages: {
@@ -72,17 +100,18 @@ function setupFormValidation() {
     });
 }
 
-var basePath = document.querySelector('base')?.getAttribute('href') || ''; // Get base path
+var basePath = document.querySelector('base')?.getAttribute('href') || '';
+
 function submitForm() {
     let formData = {
         Id: $('#Id').val(),
         UserId: userId,
         EntryDate: $('#EntryDate').val(),
         BallastingOrCleaning: $('#BallastingOrCleaning').val(),
-        LastCleaningDate: $('#dateLastCleaning').val() || null,
-        OilCommercialName: $('#oilCommercialName').val() || null,
-        DensityViscosity: $('#densityViscosity').val() || null,
-        CleanedLastContainedOil: $('#CleanedLastContainedOil').val() === "Yes",
+        LastCleaningDate: $('#LastCleaningDate').val() || null,
+        OilCommercialName: $('#OilCommercialName').val() || null,
+        DensityViscosity: $('#DensityViscosity').val() || null,
+        CleanedLastContainedOil: $("#CleanedLastContainedOil").val().toLowerCase() === "yes",
         PreviousOilType: $('#PreviousOilType').val() || null,
         QuantityBallast: parseFloat($('#QuantityBallast').val()) || null,
         IdentityOfTanksBallasted: $('#IdentityOfTanksBallasted').val() || null,
@@ -106,16 +135,13 @@ function submitForm() {
         contentType: "application/json",
         data: JSON.stringify(formData),
         success: function (response) {
-            // Reset the form and apply UI changes before showing the alert
             $('#EditCodeAForm')[0].reset();
             resetFormDate();
             hideDependentFields();
 
-            // Show message in an alert popup and redirect when the user clicks "OK"
             alert(response.message);
 
             const { pageNumber, pageSize } = getQueryParams();
-            // Redirect only after the user clicks "OK"
             window.location.href = `${basePath}/ORB1/CodeA/GetCodeAData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
         },
         error: function (xhr) {
@@ -133,14 +159,12 @@ function resetFormDate() {
 }
 
 function hideDependentFields() {
-    $('#cleaningFields, #wasCleanedFields, #ChemicalFields, #ballastingFields').hide();
+    $('#cleaningFields, #wasCleanedFields, #wasCleanedFieldsNo, #ChemicalFields, #ballastingFields').hide();
 }
 
-// Function to get query parameters from the URL
 function getQueryParams() {
-    const urlParams = new URLSearchParams(window.location.search); // Get the query string from the URL
-    const pageNumber = urlParams.get('pageNumber') || 1; // Default to 1 if not provided
-    const pageSize = urlParams.get('pageSize') || 10; // Default to 10 if not provided
-
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageNumber = urlParams.get('pageNumber') || 1;
+    const pageSize = urlParams.get('pageSize') || 10;
     return { pageNumber, pageSize };
 }

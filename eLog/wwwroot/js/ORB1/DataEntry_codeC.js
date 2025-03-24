@@ -226,13 +226,13 @@
                     const retentionValue = data.WeeklyTotalQuantityOfRetention;
 
                     if (retentionValue) {
-                        $('#lastWeeklyRetention').text(`Last Week content: ${retentionValue} m³`);
+                        $('#lastWeeklyRetention').text(`Last Week Content: ${retentionValue} m³`);
                     } else {
                         // Fallback to iterate through properties if direct access fails
                         let foundValue = false;
                         for (const key in data) {
                             if (key === 'WeeklyTotalQuantityOfRetention' || key.includes('Retention')) {
-                                $('#lastWeeklyRetention').text(`Last Week content: ${data[key]} m³`);
+                                $('#lastWeeklyRetention').text(`Last Week Content: ${data[key]} m³`);
                                 foundValue = true;
                                 break;
                             }
@@ -264,13 +264,13 @@
                     const collectionValue = data.CollectionTotalQuantityOfRetention;
 
                     if (collectionValue) {
-                        $('#lastWeeklyCollectionRetention').text(`Last Week content: ${collectionValue} m³`);
+                        $('#lastWeeklyCollectionRetention').text(`Last Content: ${collectionValue} m³`);
                     } else {
                         // Fallback to iterate through properties if direct access fails
                         let foundValue = false;
                         for (const key in data) {
                             if (key === 'CollectionTotalQuantityOfRetention' || key.includes('Retention')) {
-                                $('#lastWeeklyCollectionRetention').text(`Last Week content: ${data[key]} m³`);
+                                $('#lastWeeklyCollectionRetention').text(`Last Content: ${data[key]} m³`);
                                 foundValue = true;
                                 break;
                             }

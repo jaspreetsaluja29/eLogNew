@@ -61,8 +61,16 @@ function toggleFields() {
 }
 
 function toggleWasCleanedFields() {
-    let cleaned = $("#CleanedLastContainedOil").val();
-    $("#wasCleanedFields").toggle(cleaned === "No");
+    let cleaned = $("#CleanedLastContainedOil").val().toLowerCase();
+    if (cleaned === "true" || cleaned === "yes") {
+        $("#wasCleanedFields").show();
+        $("#wasCleanedFieldsNo").hide();
+    } else if (cleaned === "false" || cleaned === "no") {
+        $("#wasCleanedFields").hide();
+        $("#wasCleanedFieldsNo").show();
+    } else {
+        $("#wasCleanedFields, #wasCleanedFieldsNo").hide();
+    }
 }
 
 function toggleChemicalFields() {
@@ -159,7 +167,7 @@ function resetFormDate() {
 }
 
 function hideDependentFields() {
-    $('#cleaningFields, #wasCleanedFields, #ChemicalFields, #ballastingFields').hide();
+    $('#cleaningFields, #wasCleanedFields, #wasCleanedFieldsNo, #ChemicalFields, #ballastingFields').hide();
 }
 
 // Function to get query parameters from the URL

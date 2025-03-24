@@ -108,7 +108,10 @@
     });
 
     $('#wasCleaned').change(function () {
-        $('#wasCleanedFields').toggle($(this).val() === 'No');
+        $('#wasCleanedFields').toggle($(this).val() === 'Yes');
+    });
+    $('#wasCleaned').change(function () {
+        $('#wasCleanedFieldsNo').toggle($(this).val() === 'No');
     });
 
     $('#MethodCleaning').change(function () {
