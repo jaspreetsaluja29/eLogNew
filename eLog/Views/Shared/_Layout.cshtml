@@ -10,9 +10,9 @@
     @{
         var basePath = Configuration["BasePath"] ?? "/";
     }
+
     <base href="@basePath">
 
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/eLog.styles.css" asp-append-version="true" />
@@ -45,6 +45,11 @@
     </style>
 </head>
 <body>
+    <!-- Store user info in hidden fields for JavaScript access -->
+    <input type="hidden" id="hiddenUserId" value="@TempData["UserID"]" />
+    <input type="hidden" id="hiddenUserName" value="@TempData["UserName"]" />
+    <input type="hidden" id="hiddenUserRole" value="@TempData["UserRoleName"]" />
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -62,20 +67,14 @@
                             <ul class="dropdown-menu" aria-labelledby="orb1Dropdown">
                                 <li><a class="dropdown-item" asp-controller="FirstPageCapacity" asp-action="FirstPageCapacity">First Page Capacity</a></li>
                                 <li><a class="dropdown-item" asp-controller="ORB1" asp-action="CodeA">Code A</a></li>
-                                <!--<li><a class="dropdown-item" asp-controller="ORB1" asp-action="CodeB">Code B</a></li>-->
                                 <li><a class="dropdown-item" asp-controller="ORB1" asp-action="CodeC">Code C</a></li>
-                                <!--<li><a class="dropdown-item" asp-controller="ORB1" asp-action="CodeD">Code D</a></li>
-                                <li><a class="dropdown-item" asp-controller="ORB1" asp-action="CodeE">Code E</a></li>
-                                <li><a class="dropdown-item" asp-controller="ORB1" asp-action="CodeF">Code F</a></li>
-                                <li><a class="dropdown-item" asp-controller="ORB1" asp-action="CodeG">Code G</a></li>-->
                                 <li><a class="dropdown-item" asp-controller="ORB1" asp-action="CodeH">Code H</a></li>
-
                             </ul>
                         </li>
                     </ul>
 
                     <!-- Notification Icon -->
-                    @if (Context.Session.GetString("UserRoleName") == "Approver" || Context.Session.GetString("UserRoleName") == "SuperAdmin")
+                    @if (TempData["UserName"]?.ToString() == "Level 2- Approver")
                     {
                         <ul class="navbar-nav">
                             <li class="nav-item">
@@ -88,11 +87,11 @@
 
                     <!-- User Profile Section -->
                     <ul class="navbar-nav">
-                        @if (Context.Session.GetInt32("UserID") != null)
+                        @if (TempData["UserID"] != null)
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    👤 @Context.Session.GetString("UserName") (@Context.Session.GetString("UserRoleName"))
+                                    👤 @TempData["UserName"] (@TempData["UserRoleName"])
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                                     <li><a class="dropdown-item" asp-controller="Account" asp-action="Reset">Logout</a></li>
@@ -138,10 +137,11 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
-        var userId = '@(Context.Session.GetInt32("UserID") ?? 0)'; // Default to 0 if null
-        var userName = '@(Context.Session.GetString("UserName") ?? "Guest")'; // Default to "Guest" if null
-        var UserRoleName = '@(Context.Session.GetString("UserRoleName") ?? "Anonymous")'; // Default to "Anonymous" if null
-        var basePath = document.querySelector('base')?.getAttribute('href') || ''; // Get base path
+        // Get user data from hidden fields
+        var userId = document.getElementById('hiddenUserId')?.value || '0';
+        var userName = document.getElementById('hiddenUserName')?.value || 'Guest';
+        var userRoleName = document.getElementById('hiddenUserRole')?.value || 'Anonymous';
+        var basePath = document.querySelector('base')?.getAttribute('href') || '/';
 
         $(document).ready(function () {
             // Load notification count on page load
@@ -161,7 +161,7 @@
 
         function loadNotificationCount() {
             $.ajax({
-                url: basePath + "/Notification/GetNotificationCount",
+                url: basePath + "Notification/GetNotificationCount",
                 method: 'GET',
                 data: { userId: userId },
                 success: function (data) {
@@ -177,7 +177,7 @@
 
         function loadNotifications() {
             $.ajax({
-                url: basePath + "/Notification/GetNotifications",
+                url: basePath + "Notification/GetNotifications",
                 method: 'GET',
                 data: { userId: userId },
                 success: function (data) {

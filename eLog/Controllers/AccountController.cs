@@ -59,17 +59,21 @@ namespace eLog.Controllers
             }
             if (userRoleId == 2)
             {
-                userRoleName = "Approver";
+                userRoleName = "Level 2- Approver";
             }
             if (userRoleId == 3)
             {
-                userRoleName = "User";
+                userRoleName = "Level 1- Entry";
             }
 
             // Set session values
             HttpContext.Session.SetInt32("UserID", userId);
             HttpContext.Session.SetString("UserName", username);
             HttpContext.Session.SetString("UserRoleName", userRoleName);
+
+            TempData["UserID"] = userId;
+            TempData["UserName"] = username;
+            TempData["UserRoleName"] = userRoleName;
 
             var claims = new List<Claim>
             {
