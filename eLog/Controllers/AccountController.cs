@@ -84,7 +84,14 @@ namespace eLog.Controllers
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
 
-            return RedirectToAction("FirstPageCapacity", "FirstPageCapacity");
+            if (userRoleId == 1)
+            {
+                return RedirectToAction("GetISMCompanyDetails", "ISMCompanyDetails");
+            }
+            else
+            {
+                return RedirectToAction("FirstPageCapacity", "FirstPageCapacity");
+            }
         }
 
         public IActionResult Reset()

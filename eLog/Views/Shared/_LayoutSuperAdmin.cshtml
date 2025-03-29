@@ -1,0 +1,127 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DigitalLog</title>
+
+    @{
+        var basePath = Configuration["BasePath"] ?? "/";
+    }
+    @{
+        TempData.Keep("UserID");
+        TempData.Keep("UserName");
+        TempData.Keep("UserRoleName");
+    }
+
+    <base href="@basePath">
+
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/eLog.styles.css" asp-append-version="true" />
+    <style>
+        .notification-sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #f8f9fa;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+            padding: 20px;
+            transition: right 0.3s ease-in-out;
+            z-index: 1050;
+        }
+
+            .notification-sidebar.show {
+                right: 0;
+            }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Store user info in hidden fields for JavaScript access -->
+    <input type="hidden" id="hiddenUserId" value="@TempData.Peek("UserID")" />
+    <input type="hidden" id="hiddenUserName" value="@TempData.Peek("UserName")" />
+    <input type="hidden" id="hiddenUserRole" value="@TempData.Peek("UserRoleName")" />
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DigitalLog</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <!-- Navigation Tabs -->
+                    <ul class="navbar-nav flex-grow-1 d-flex">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Company" asp-action="Index">Company</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Services" asp-action="Index">User</a>
+                        </li>
+                    </ul>
+
+                    <!-- User Profile Section -->
+                    <ul class="navbar-nav">
+                        @if (TempData["UserID"] != null)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    👤 @TempData["UserName"] (@TempData["UserRoleName"])
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Reset">Logout</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - eLog - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        var userId = document.getElementById('hiddenUserId')?.value || '0';
+        var userName = document.getElementById('hiddenUserName')?.value || 'Guest';
+        var userRoleName = document.getElementById('hiddenUserRole')?.value || 'Anonymous';
+        var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+    </script>
+</body>
+</html>

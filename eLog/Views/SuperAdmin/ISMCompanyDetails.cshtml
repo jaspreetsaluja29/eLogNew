@@ -1,0 +1,105 @@
+﻿@model IEnumerable<eLog.ViewModels.ISMCompanyDetailsViewModel>
+
+@{
+    Layout = "_LayoutSuperAdmin";
+    ViewData["Title"] = "ISM Company Details";
+}
+
+<!-- Include CodeA.css -->
+<link href="~/css/ORB1/CodeA.css" rel="stylesheet" />
+
+<div class="container mt-4 text-center">
+    <!-- Row with header and controls (Add and Search) aligned -->
+    <h2 class="mb-4">ISM Company Dashboard</h2>
+    <div class="row justify-content-between align-items-center mb-3">
+        <div class="col-auto">
+            <button class="btn btn-primary" onclick="openAddWindow()">Add</button>
+        </div>
+        <div class="col-auto">
+            <input type="text" id="searchInput" class="form-control" style="width: 200px;" placeholder="Search..." onkeyup="filterTable()" />
+        </div>
+    </div>
+
+    <!-- Row count display -->
+    <div class="record-controls d-flex justify-content-between align-items-center mb-3 p-2">
+        <div class="record-count">
+            <strong>Total Records:</strong> @ViewBag.TotalRecords
+        </div>
+        <div class="pagination-controls d-flex align-items-center gap-2">
+            <label for="pageSize" class="fw-semibold" style="white-space: nowrap;">Page Size:</label>
+            <select id="pageSize" class="form-select form-select-sm" onchange="changePage(0)">
+                <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
+                <option value="20" selected="@(ViewBag.PageSize == 20)">20</option>
+                <option value="50" selected="@(ViewBag.PageSize == 50)">50</option>
+                <option value="100" selected="@(ViewBag.PageSize == 100)">100</option>
+                <option value="500" selected="@(ViewBag.PageSize == 500)">500</option>
+            </select>
+
+            <button class="btn btn-outline-primary btn-sm" id="prevPage" onclick="changePage(-1)"
+            @(ViewBag.PageNumber == 1 ? "disabled" : "")>
+                Previous
+            </button>
+
+            <span id="currentPage" class="fw-bold">@ViewBag.PageNumber</span> /
+            <span id="totalPages">@ViewBag.TotalPages</span>
+
+            <button class="btn btn-outline-primary btn-sm" id="nextPage" onclick="changePage(1)"
+            @(ViewBag.PageNumber >= ViewBag.TotalPages ? "disabled" : "")>
+                Next
+            </button>
+        </div>
+    </div>
+
+    <!-- Table container -->
+    <div class="table-container">
+        <table id="ismCompanyTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Company (ISM)</th>
+                    <th onclick="sortTable(1)">Vessel name</th>
+                    <th onclick="sortTable(2)">IMO No.</th>
+                    <th onclick="sortTable(3)">Active ID's</th>
+                    <th onclick="sortTable(4)">Flag</th>
+                    <th onclick="sortTable(5)">Last entry date</th>
+                    <th onclick="sortTable(6)">Last approved entry</th>
+                    <th onclick="sortTable(7)">Subscription start Date</th>
+                    <th onclick="sortTable(8)">Total active eLog</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.CompanyName</td>
+                            <td>@item.VesselName</td>
+                            <td>@item.IMONumber</td>
+                            <td>@item.ActiveId</td>
+                            <td>@item.Flag</td>
+                            <td>@item.LastEntryDate</td>
+                            <td>@item.LastApprovedDate</td>
+                            <td>@item.SubscriptionStartDate</td>
+                            <td>@item.TotalActiveeLog</td>
+                            <td>
+                                <button class="btn btn-info btn-sm" onclick="editRecord(@item.CompanyId)">
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="10" class="text-center">No records found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Reference to ISMCompany.js -->
+<script src="~/js/ISMCompanyDetails.js"></script>
