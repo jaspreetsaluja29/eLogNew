@@ -1,7 +1,16 @@
 ﻿// Open the add new record window
 function openAddWindow() {
     var basePath = document.querySelector('base')?.getAttribute('href') || '/';
-    window.open(basePath + '/CodeA/DataEntry_CodeA', 'AddRecord');
+
+    // Fetch user details from hidden fields
+    var userId = document.getElementById('hiddenUserId')?.value || '';
+    var userName = document.getElementById('hiddenUserName')?.value || '';
+    var userRoleName = document.getElementById('hiddenUserRole')?.value || '';
+
+    // Encode the values to handle spaces and special characters
+    var url = `${basePath}/CodeA/DataEntry_CodeA?userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}`;
+
+    window.open(url, 'AddRecord');
 }
 
 // Track sorting order

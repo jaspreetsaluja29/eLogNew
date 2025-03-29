@@ -53,7 +53,7 @@ builder.Services.AddHttpClient();
 
 // Enhanced Session Configuration
 builder.Services.AddDistributedMemoryCache(); // For development
-// For production, consider using a distributed cache:
+                                              // For production, consider using a distributed cache:
 /* Uncomment for SQL Server cache:
 builder.Services.AddDistributedSqlServerCache(options =>
 {
@@ -79,6 +79,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SameSite = SameSiteMode.None; // Allow cross-origin cookies
     options.Cookie.HttpOnly = true;
 });
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddCors(options =>
 {
@@ -104,10 +105,11 @@ if (!string.IsNullOrEmpty(basePath))
 // Middleware order is important
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseRouting();
-
 // Add session before authentication to ensure session is initialized
 app.UseSession();
+app.UseRouting();
+
+
 app.UseAuthentication();
 app.UseAuthorization();
 

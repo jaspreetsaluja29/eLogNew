@@ -83,8 +83,11 @@ namespace eLog.Controllers.ORB1
 
 
         // Data Entry Page
-        public IActionResult DataEntry_CodeA()
+        public IActionResult DataEntry_CodeA(string userId, string userName, string userRoleName)
         {
+            ViewBag.UserID = userId;
+            ViewBag.UserName = userName;
+            ViewBag.UserRoleName = userRoleName;
             return View("~/Views/ORB1/DataEntry_CodeA.cshtml", new CodeAModel());
         }
 

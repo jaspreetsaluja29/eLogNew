@@ -12,13 +12,16 @@
     <base href="@basePath">
 </head>
 <body>
+    <input type="hidden" id="hiddenUserId" value="@ViewBag.UserID" />
+    <input type="hidden" id="hiddenUserName" value="@ViewBag.UserName" />
+    <input type="hidden" id="hiddenUserRole" value="@ViewBag.UserRoleName" />
     <div>
         @RenderBody()
     </div>
     <script>
-        var userId = '@(Context.Session.GetInt32("UserID") ?? 0)'; // Default to 0 if null
-        var userName = '@(Context.Session.GetString("UserName") ?? "Guest")'; // Default to "Guest" if null
-        var UserRoleName = '@(Context.Session.GetString("UserRoleName") ?? "Anonymous")'; // Default to "Anonymous" if null
+        var userId = document.getElementById('hiddenUserId')?.value || '0';
+        var userName = document.getElementById('hiddenUserName')?.value || 'Guest';
+        var userRoleName = document.getElementById('hiddenUserRole')?.value || 'Anonymous';
     </script>
 </body>
 </html>
