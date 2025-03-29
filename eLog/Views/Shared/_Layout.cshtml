@@ -10,6 +10,11 @@
     @{
         var basePath = Configuration["BasePath"] ?? "/";
     }
+    @{
+        TempData.Keep("UserID");
+        TempData.Keep("UserName");
+        TempData.Keep("UserRoleName");
+    }
 
     <base href="@basePath">
 
@@ -46,9 +51,9 @@
 </head>
 <body>
     <!-- Store user info in hidden fields for JavaScript access -->
-    <input type="hidden" id="hiddenUserId" value="@TempData["UserID"]" />
-    <input type="hidden" id="hiddenUserName" value="@TempData["UserName"]" />
-    <input type="hidden" id="hiddenUserRole" value="@TempData["UserRoleName"]" />
+    <input type="hidden" id="hiddenUserId" value="@TempData.Peek("UserID")" />
+    <input type="hidden" id="hiddenUserName" value="@TempData.Peek("UserName")" />
+    <input type="hidden" id="hiddenUserRole" value="@TempData.Peek("UserRoleName")" />
 
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
