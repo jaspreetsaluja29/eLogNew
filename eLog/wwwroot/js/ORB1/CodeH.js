@@ -1,7 +1,16 @@
 ﻿// Open the add new record window
 function openAddWindow() {
     var basePath = document.querySelector('base')?.getAttribute('href') || '/';
-    window.open(basePath + '/CodeH/DataEntry_CodeH', 'AddRecord');
+
+    // Fetch user details from hidden fields
+    var userId = document.getElementById('hiddenUserId')?.value || '';
+    var userName = document.getElementById('hiddenUserName')?.value || '';
+    var userRoleName = document.getElementById('hiddenUserRole')?.value || '';
+
+    // Encode the values to handle spaces and special characters
+    var url = `${basePath}/CodeH/DataEntry_CodeH?userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}`;
+
+    window.open(url, 'AddRecord');
 }
 
 // Track sorting order
@@ -64,7 +73,16 @@ function filterTable() {
 // Open the edit window for a record
 function editRecord(id) {
     var basePath = document.querySelector('base')?.getAttribute('href') || '/';
-    window.open(basePath + '/CodeH/Edit/' + id, 'EditRecord');
+
+    // Fetch user details from hidden fields
+    var userId = document.getElementById('hiddenUserId')?.value || '';
+    var userName = document.getElementById('hiddenUserName')?.value || '';
+    var userRoleName = document.getElementById('hiddenUserRole')?.value || '';
+
+    // Encode the values to handle spaces and special characters
+    var url = `${basePath}/CodeH/Edit/${id}?userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}`;
+
+    window.open(url, 'EditRecord'); // Open in new window/tab
 }
 
 

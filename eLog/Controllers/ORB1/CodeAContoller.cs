@@ -92,9 +92,13 @@ namespace eLog.Controllers.ORB1
         }
 
         // Edit data entry page (fetch record by Id)
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, string userId, string userName, string userRoleName)
         {
-            var userRoleName = HttpContext.Session.GetString("UserRoleName");
+            // Store user details in ViewBag (so they can be used in the view)
+            ViewBag.UserID = userId;
+            ViewBag.UserName = userName;
+            ViewBag.UserRoleName = userRoleName;
+
             CodeAViewModel recordToEdit = null;
 
             using (SqlConnection connection = _db.CreateConnection())
@@ -150,8 +154,8 @@ namespace eLog.Controllers.ORB1
 
             return userRoleName switch
             {
-                "User" => View("~/Views/ORB1/DataEdit_CodeA.cshtml", recordToEdit),
-                "Approver" => View("~/Views/ORB1/Approver_DataEdit_CodeA.cshtml", recordToEdit),
+                "Level 1- Entry" => View("~/Views/ORB1/DataEdit_CodeA.cshtml", recordToEdit),
+                "Level 2- Approver" => View("~/Views/ORB1/Approver_DataEdit_CodeA.cshtml", recordToEdit),
                 "SuperAdmin" => View("~/Views/ORB1/Approver_DataEdit_CodeA.cshtml", recordToEdit),
                 _ => Forbid() // Handle unexpected roles
             };

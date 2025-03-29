@@ -206,15 +206,21 @@ namespace eLog.Controllers.ORB1
         }
 
         // Data Entry Page
-        public IActionResult DataEntry_CodeC()
+        public IActionResult DataEntry_CodeC(string userId, string userName, string userRoleName)
         {
+            ViewBag.UserID = userId;
+            ViewBag.UserName = userName;
+            ViewBag.UserRoleName = userRoleName;
             return View("~/Views/ORB1/DataEntry_CodeC.cshtml", new CodeCModel());
         }
 
         // Edit data entry page (fetch record by Id)
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, string userId, string userName, string userRoleName)
         {
-            var userRoleName = HttpContext.Session.GetString("UserRoleName");
+            // Store user details in ViewBag (so they can be used in the view)
+            ViewBag.UserID = userId;
+            ViewBag.UserName = userName;
+            ViewBag.UserRoleName = userRoleName;
             CodeCViewModel recordToEdit = null;
 
             try
@@ -284,8 +290,8 @@ namespace eLog.Controllers.ORB1
 
                 return userRoleName switch
                 {
-                    "User" => View("~/Views/ORB1/DataEdit_CodeC.cshtml", recordToEdit),
-                    "Approver" => View("~/Views/ORB1/Approver_DataEdit_CodeC.cshtml", recordToEdit),
+                    "Level 1- Entry" => View("~/Views/ORB1/DataEdit_CodeC.cshtml", recordToEdit),
+                    "Level 2- Approver" => View("~/Views/ORB1/Approver_DataEdit_CodeC.cshtml", recordToEdit),
                     "SuperAdmin" => View("~/Views/ORB1/Approver_DataEdit_CodeC.cshtml", recordToEdit),
                     _ => Forbid() // Handle unexpected roles
                 };

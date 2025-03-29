@@ -71,10 +71,25 @@ function filterTable() {
 }
 
 // Open the edit window for a record
+//function editRecord(id) {
+//    var basePath = document.querySelector('base')?.getAttribute('href') || '/';
+//    window.open(basePath + '/CodeA/Edit/' + id, 'EditRecord');
+//}
+
 function editRecord(id) {
     var basePath = document.querySelector('base')?.getAttribute('href') || '/';
-    window.open(basePath + '/CodeA/Edit/' + id, 'EditRecord');
+
+    // Fetch user details from hidden fields
+    var userId = document.getElementById('hiddenUserId')?.value || '';
+    var userName = document.getElementById('hiddenUserName')?.value || '';
+    var userRoleName = document.getElementById('hiddenUserRole')?.value || '';
+
+    // Encode the values to handle spaces and special characters
+    var url = `${basePath}/CodeA/Edit/${id}?userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}`;
+
+    window.open(url, 'EditRecord'); // Open in new window/tab
 }
+
 
 
 // Pagination Logic
