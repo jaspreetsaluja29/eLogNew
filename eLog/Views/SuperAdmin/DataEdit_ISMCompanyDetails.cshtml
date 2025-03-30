@@ -1,0 +1,117 @@
+﻿@model eLog.Models.ISMCompanyDetails
+@{
+    Layout = "_BlankLayout";
+    ViewData["Title"] = "Edit_ISMCompanyDetails";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit ISM Company Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/ORB1/DataEntry_CodeA.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h2 class="text-center mb-4">EDIT - ISM COMPANY DETAILS</h2>
+
+    <form asp-action="Edit" asp-controller="ISMCompanyDetails" method="post" id="EditISMCompanyDetailsForm" class="p-4 border rounded bg-light">
+        <input type="hidden" asp-for="CompanyId" />
+        <input type="hidden" id="userId" name="UserId" />
+        <input type="hidden" id="userName" name="UserName" />
+        <input type="hidden" id="userRoleName" name="UserRoleName" />
+
+        <div class="mb-3">
+            <label asp-for="CompanyName" class="form-label">Company Name:</label>
+            <input type="text" class="form-control" asp-for="CompanyName" required>
+            <span asp-validation-for="CompanyName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ManagerName" class="form-label">Manager Name:</label>
+            <input type="text" class="form-control" asp-for="ManagerName" required>
+            <span asp-validation-for="ManagerName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="OwnerName" class="form-label">Owner Name:</label>
+            <input type="text" class="form-control" asp-for="OwnerName" required>
+            <span asp-validation-for="OwnerName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Address" class="form-label">Address:</label>
+            <textarea class="form-control" asp-for="Address" rows="3" required></textarea>
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email:</label>
+            <input type="email" class="form-control" asp-for="Email" required>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ContactNumber" class="form-label">Contact Number:</label>
+            <input type="tel" class="form-control" asp-for="ContactNumber" required>
+            <span asp-validation-for="ContactNumber" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="PICDetails" class="form-label">PIC Details:</label>
+            <input type="text" class="form-control" asp-for="PICDetails" required>
+            <span asp-validation-for="PICDetails" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="PilotProjectStartDate" class="form-label">Pilot Project Start Date:</label>
+            <input type="date" class="form-control" asp-for="PilotProjectStartDate" required>
+            <span asp-validation-for="PilotProjectStartDate" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="VesselName" class="form-label">Vessel Name:</label>
+            <input type="text" class="form-control" asp-for="VesselName">
+            <span asp-validation-for="VesselName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="IMONumber" class="form-label">IMO Number:</label>
+            <input type="number" class="form-control" asp-for="IMONumber">
+            <span asp-validation-for="IMONumber" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ActiveId" class="form-label">Active ID:</label>
+            <input type="number" class="form-control" asp-for="ActiveId">
+            <span asp-validation-for="ActiveId" class="text-danger"></span>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" asp-for="Flag">
+            <label class="form-check-label" asp-for="Flag">Flag</label>
+            <span asp-validation-for="Flag" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="LastEntryDate" class="form-label">Last Entry Date:</label>
+            <input type="date" class="form-control" asp-for="LastEntryDate">
+            <span asp-validation-for="LastEntryDate" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="LastApprovedDate" class="form-label">Last Approved Date:</label>
+            <input type="date" class="form-control" asp-for="LastApprovedDate">
+            <span asp-validation-for="LastApprovedDate" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="SubscriptionStartDate" class="form-label">Subscription Start Date:</label>
+            <input type="date" class="form-control" asp-for="SubscriptionStartDate">
+            <span asp-validation-for="SubscriptionStartDate" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="TotalActiveeLog" class="form-label">Total Active eLog:</label>
+            <input type="number" class="form-control" asp-for="TotalActiveeLog">
+            <span asp-validation-for="TotalActiveeLog" class="text-danger"></span>
+        </div>
+        <button type="submit" id="updateButton" class="btn btn-primary">Update</button>
+        <button type="button" id="cancelButton" class="btn btn-danger">Cancel</button>
+    </form>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <p id="message" class="mt-3 text-center"></p>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/DataEdit_ISMCompanyDetails.js"></script>
+</body>
+</html>

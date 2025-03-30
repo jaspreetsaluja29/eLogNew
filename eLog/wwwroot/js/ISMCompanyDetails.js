@@ -76,7 +76,7 @@ function filterTable() {
 //    window.open(basePath + '/CodeA/Edit/' + id, 'EditRecord');
 //}
 
-function editRecord(id) {
+function editRecord(CompanyId) {
     var basePath = document.querySelector('base')?.getAttribute('href') || '/';
 
     // Fetch user details from hidden fields
@@ -85,8 +85,7 @@ function editRecord(id) {
     var userRoleName = document.getElementById('hiddenUserRole')?.value || '';
 
     // Encode the values to handle spaces and special characters
-    var url = `${basePath}/ISMCompanyDetails/Edit/${id}?userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}`;
-
+    var url = `${basePath}/ISMCompanyDetails/Edit?CompanyId=${CompanyId}&userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}`;
     window.open(url, 'EditRecord'); // Open in new window/tab
 }
 
