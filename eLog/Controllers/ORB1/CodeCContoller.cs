@@ -54,29 +54,30 @@ namespace eLog.Controllers.ORB1
                                 TransferOperationType = reader.IsDBNull(12) ? null : reader.GetString(12),
                                 TransferQuantity = reader.IsDBNull(13) ? (decimal?)null : reader.GetDecimal(13),
                                 TransferTanksFrom = reader.IsDBNull(14) ? null : reader.GetString(14),
-                                TransferRetainedIn = reader.IsDBNull(15) ? null : reader.GetString(15),
+                                TransferRetainedInTransfer = reader.IsDBNull(15) ? null : reader.GetString(15),
                                 TransferTanksTo = reader.IsDBNull(16) ? null : reader.GetString(16),
-                                IncineratorOperationType = reader.IsDBNull(17) ? null : reader.GetString(17),
-                                IncineratorQuantity = reader.IsDBNull(18) ? (decimal?)null : reader.GetDecimal(18),
-                                IncineratorTanksFrom = reader.IsDBNull(19) ? null : reader.GetString(19),
-                                IncineratorTotalRetainedContent = reader.IsDBNull(20) ? (decimal?)null : reader.GetDecimal(20),  // Changed from 21 → 20
-                                IncineratorStartTime = reader.IsDBNull(21) ? (TimeSpan?)null : reader.GetTimeSpan(21),          // Changed from 22 → 21
-                                IncineratorStopTime = reader.IsDBNull(22) ? (TimeSpan?)null : reader.GetTimeSpan(22),          // Changed from 23 → 22
-                                IncineratorTotalOperationTime = reader.IsDBNull(23) ? (decimal?)null : reader.GetDecimal(23),  // Changed from 24 → 23
-                                DisposalShipQuantity = reader.IsDBNull(24) ? (decimal?)null : reader.GetDecimal(24),           // Changed from 25 → 24
-                                DisposalShipTanksFrom = reader.IsDBNull(25) ? null : reader.GetString(25),                    // Changed from 26 → 25
-                                DisposalShipRetainedIn = reader.IsDBNull(26) ? null : reader.GetString(26),                   // Changed from 27 → 26
-                                DisposalShipTanksTo = reader.IsDBNull(27) ? null : reader.GetString(27),                      // Changed from 28 → 27
-                                DisposalShipRetainedTo = reader.IsDBNull(28) ? null : reader.GetString(28),                   // Changed from 29 → 28
-                                DisposalShoreQuantity = reader.IsDBNull(29) ? (decimal?)null : reader.GetDecimal(29),         // Changed from 30 → 29
-                                DisposalShoreTanksFrom = reader.IsDBNull(30) ? null : reader.GetString(30),                  // Changed from 31 → 30
-                                DisposalShoreRetainedInDischargeTanks = reader.IsDBNull(31) ? null : reader.GetString(31),    // Changed from 32 → 31
-                                DisposalShoreBargeName = reader.IsDBNull(32) ? null : reader.GetString(32),                  // Changed from 33 → 32
-                                DisposalShoreReceptionFacility = reader.IsDBNull(33) ? null : reader.GetString(33),           // Changed from 34 → 33
-                                DisposalShoreReceiptNo = reader.IsDBNull(34) ? null : reader.GetString(34),                  // Changed from 35 → 34
-                                StatusName = reader.IsDBNull(35) ? null : reader.GetString(35),                              // Changed from 36 → 35
-                                ApprovedBy = reader.IsDBNull(36) ? null : reader.GetString(36),                              // Changed from 37 → 36
-                                Comments = reader.IsDBNull(37) ? null : reader.GetString(37)                                 // Changed from 38 → 37
+                                TransferRetainedInReceiving = reader.IsDBNull(17) ? null : reader.GetString(17),
+                                IncineratorOperationType = reader.IsDBNull(18) ? null : reader.GetString(18),
+                                IncineratorQuantity = reader.IsDBNull(19) ? (decimal?)null : reader.GetDecimal(19),
+                                IncineratorTanksFrom = reader.IsDBNull(20) ? null : reader.GetString(20),
+                                IncineratorTotalRetainedContent = reader.IsDBNull(21) ? (decimal?)null : reader.GetDecimal(21),
+                                IncineratorStartTime = reader.IsDBNull(22) ? (TimeSpan?)null : reader.GetTimeSpan(22),
+                                IncineratorStopTime = reader.IsDBNull(23) ? (TimeSpan?)null : reader.GetTimeSpan(23),
+                                IncineratorTotalOperationTime = reader.IsDBNull(24) ? (decimal?)null : reader.GetDecimal(24),
+                                DisposalShipQuantity = reader.IsDBNull(25) ? (decimal?)null : reader.GetDecimal(25),
+                                DisposalShipTanksFrom = reader.IsDBNull(26) ? null : reader.GetString(26),
+                                DisposalShipRetainedIn = reader.IsDBNull(27) ? null : reader.GetString(27),
+                                DisposalShipTanksTo = reader.IsDBNull(28) ? null : reader.GetString(28),
+                                DisposalShipRetainedTo = reader.IsDBNull(29) ? null : reader.GetString(29),
+                                DisposalShoreQuantity = reader.IsDBNull(30) ? (decimal?)null : reader.GetDecimal(30),
+                                DisposalShoreTanksFrom = reader.IsDBNull(31) ? null : reader.GetString(31),
+                                DisposalShoreRetainedInDischargeTanks = reader.IsDBNull(32) ? null : reader.GetString(32),
+                                DisposalShoreBargeName = reader.IsDBNull(33) ? null : reader.GetString(33),
+                                DisposalShoreReceptionFacility = reader.IsDBNull(34) ? null : reader.GetString(34),
+                                DisposalShoreReceiptNo = reader.IsDBNull(35) ? null : reader.GetString(35),
+                                StatusName = reader.IsDBNull(36) ? null : reader.GetString(36),
+                                ApprovedBy = reader.IsDBNull(37) ? null : reader.GetString(37),
+                                Comments = reader.IsDBNull(38) ? null : reader.GetString(38)
                             });
                         }
                     }
@@ -261,29 +262,30 @@ namespace eLog.Controllers.ORB1
                                     TransferOperationType = reader.IsDBNull(12) ? null : reader.GetString(12),
                                     TransferQuantity = reader.IsDBNull(13) ? (decimal?)null : reader.GetDecimal(13),
                                     TransferTanksFrom = reader.IsDBNull(14) ? null : reader.GetString(14),
-                                    TransferRetainedIn = reader.IsDBNull(15) ? null : reader.GetString(15),
+                                    TransferRetainedInTransfer = reader.IsDBNull(15) ? null : reader.GetString(15),
                                     TransferTanksTo = reader.IsDBNull(16) ? null : reader.GetString(16),
-                                    IncineratorOperationType = reader.IsDBNull(17) ? null : reader.GetString(17),
-                                    IncineratorQuantity = reader.IsDBNull(18) ? (decimal?)null : reader.GetDecimal(18),
-                                    IncineratorTanksFrom = reader.IsDBNull(19) ? null : reader.GetString(19),
-                                    IncineratorTotalRetainedContent = reader.IsDBNull(20) ? (decimal?)null : reader.GetDecimal(20),
-                                    IncineratorStartTime = reader.IsDBNull(21) ? (TimeSpan?)null : reader.GetTimeSpan(21),
-                                    IncineratorStopTime = reader.IsDBNull(22) ? (TimeSpan?)null : reader.GetTimeSpan(22),
-                                    IncineratorTotalOperationTime = reader.IsDBNull(23) ? (decimal?)null : reader.GetDecimal(23),
-                                    DisposalShipQuantity = reader.IsDBNull(24) ? (decimal?)null : reader.GetDecimal(24),
-                                    DisposalShipTanksFrom = reader.IsDBNull(25) ? null : reader.GetString(25),
-                                    DisposalShipRetainedIn = reader.IsDBNull(26) ? null : reader.GetString(26),
-                                    DisposalShipTanksTo = reader.IsDBNull(27) ? null : reader.GetString(27),
-                                    DisposalShipRetainedTo = reader.IsDBNull(28) ? null : reader.GetString(28),
-                                    DisposalShoreQuantity = reader.IsDBNull(29) ? (decimal?)null : reader.GetDecimal(29),
-                                    DisposalShoreTanksFrom = reader.IsDBNull(30) ? null : reader.GetString(30),
-                                    DisposalShoreRetainedInDischargeTanks = reader.IsDBNull(31) ? null : reader.GetString(31),
-                                    DisposalShoreBargeName = reader.IsDBNull(32) ? null : reader.GetString(32),
-                                    DisposalShoreReceptionFacility = reader.IsDBNull(33) ? null : reader.GetString(33),
-                                    DisposalShoreReceiptNo = reader.IsDBNull(34) ? null : reader.GetString(34),
-                                    StatusName = reader.IsDBNull(35) ? null : reader.GetValue(35).ToString(),
-                                    ApprovedBy = reader.IsDBNull(36) ? null : reader.GetValue(36).ToString(),
-                                    Comments = reader.IsDBNull(37) ? null : reader.GetValue(37).ToString()
+                                    TransferRetainedInReceiving = reader.IsDBNull(17) ? null : reader.GetString(17),  // Corrected index
+                                    IncineratorOperationType = reader.IsDBNull(18) ? null : reader.GetString(18),
+                                    IncineratorQuantity = reader.IsDBNull(19) ? (decimal?)null : reader.GetDecimal(19),
+                                    IncineratorTanksFrom = reader.IsDBNull(20) ? null : reader.GetString(20),
+                                    IncineratorTotalRetainedContent = reader.IsDBNull(21) ? (decimal?)null : reader.GetDecimal(21),
+                                    IncineratorStartTime = reader.IsDBNull(22) ? (TimeSpan?)null : reader.GetTimeSpan(22),
+                                    IncineratorStopTime = reader.IsDBNull(23) ? (TimeSpan?)null : reader.GetTimeSpan(23),
+                                    IncineratorTotalOperationTime = reader.IsDBNull(24) ? (decimal?)null : reader.GetDecimal(24),
+                                    DisposalShipQuantity = reader.IsDBNull(25) ? (decimal?)null : reader.GetDecimal(25),
+                                    DisposalShipTanksFrom = reader.IsDBNull(26) ? null : reader.GetString(26),
+                                    DisposalShipRetainedIn = reader.IsDBNull(27) ? null : reader.GetString(27),
+                                    DisposalShipTanksTo = reader.IsDBNull(28) ? null : reader.GetString(28),
+                                    DisposalShipRetainedTo = reader.IsDBNull(29) ? null : reader.GetString(29),
+                                    DisposalShoreQuantity = reader.IsDBNull(30) ? (decimal?)null : reader.GetDecimal(30),
+                                    DisposalShoreTanksFrom = reader.IsDBNull(31) ? null : reader.GetString(31),
+                                    DisposalShoreRetainedInDischargeTanks = reader.IsDBNull(32) ? null : reader.GetString(32),
+                                    DisposalShoreBargeName = reader.IsDBNull(33) ? null : reader.GetString(33),
+                                    DisposalShoreReceptionFacility = reader.IsDBNull(34) ? null : reader.GetString(34),
+                                    DisposalShoreReceiptNo = reader.IsDBNull(35) ? null : reader.GetString(35),
+                                    StatusName = reader.IsDBNull(36) ? null : reader.GetValue(36).ToString(),
+                                    ApprovedBy = reader.IsDBNull(37) ? null : reader.GetValue(37).ToString(),
+                                    Comments = reader.IsDBNull(38) ? null : reader.GetValue(38).ToString()  // Updated index to 38
                                 };
                             }
                         }
@@ -370,8 +372,9 @@ namespace eLog.Controllers.ORB1
                     new SqlParameter("@TransferOperationType", (object)model.TransferOperationType ?? DBNull.Value),
                     new SqlParameter("@TransferQuantity", model.TransferQuantity ?? (object)DBNull.Value),
                     new SqlParameter("@TransferTanksFrom", (object)model.TransferTanksFrom ?? DBNull.Value),
-                    new SqlParameter("@TransferRetainedIn", (object)model.TransferRetainedIn ?? DBNull.Value),
+                    new SqlParameter("@TransferRetainedInTransfer", (object)model.TransferRetainedInTransfer ?? DBNull.Value),
                     new SqlParameter("@TransferTanksTo", (object)model.TransferTanksTo ?? DBNull.Value),
+                    new SqlParameter("@TransferRetainedInReceiving", (object)model.TransferRetainedInReceiving ?? DBNull.Value),
             
                     // Incinerator Fields
                     new SqlParameter("@IncineratorOperationType", (object)model.IncineratorOperationType ?? DBNull.Value),
@@ -458,8 +461,9 @@ namespace eLog.Controllers.ORB1
             new SqlParameter("@TransferOperationType", (object)model.TransferOperationType ?? DBNull.Value),
             new SqlParameter("@TransferQuantity", model.TransferQuantity ?? (object)DBNull.Value),
             new SqlParameter("@TransferTanksFrom", (object)model.TransferTanksFrom ?? DBNull.Value),
-            new SqlParameter("@TransferRetainedIn", (object)model.TransferRetainedIn ?? DBNull.Value),
+            new SqlParameter("@TransferRetainedInTransfer", (object)model.TransferRetainedInTransfer ?? DBNull.Value),
             new SqlParameter("@TransferTanksTo", (object)model.TransferTanksTo ?? DBNull.Value),
+            new SqlParameter("@TransferRetainedInReceiving", (object)model.TransferRetainedInReceiving ?? DBNull.Value),
     
             // Incinerator Fields
             new SqlParameter("@IncineratorOperationType", (object)model.IncineratorOperationType ?? DBNull.Value),
@@ -545,8 +549,9 @@ namespace eLog.Controllers.ORB1
                     new SqlParameter("@TransferOperationType", (object)model.TransferOperationType ?? DBNull.Value),
                     new SqlParameter("@TransferQuantity", model.TransferQuantity ?? (object)DBNull.Value),
                     new SqlParameter("@TransferTanksFrom", (object)model.TransferTanksFrom ?? DBNull.Value),
-                    new SqlParameter("@TransferRetainedIn", (object)model.TransferRetainedIn ?? DBNull.Value),
+                    new SqlParameter("@TransferRetainedInTransfer", (object)model.TransferRetainedInTransfer ?? DBNull.Value),
                     new SqlParameter("@TransferTanksTo", (object)model.TransferTanksTo ?? DBNull.Value),
+                    new SqlParameter("@TransferRetainedInReceiving", (object)model.TransferRetainedInReceiving ?? DBNull.Value),
     
                     // Incinerator Fields
                     new SqlParameter("@IncineratorOperationType", (object)model.IncineratorOperationType ?? DBNull.Value),

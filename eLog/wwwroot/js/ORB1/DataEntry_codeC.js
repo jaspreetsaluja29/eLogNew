@@ -64,6 +64,19 @@
         }
     }
 
+    // Logic to show/hide fields based on Transfer Operation Type
+    $('#TransferOperationType').change(function () {
+        var selectedOperation = $(this).val();
+
+        if (selectedOperation === 'Heating (Evaporation)') {
+            $('#TransferTanksTo, #TransferTanksToLabel').hide();
+            $('#TransferRetainedInReceiving, #TransferRetainedInReceivingLabel').hide();
+        } else {
+            $('#TransferTanksTo, #TransferTanksToLabel').show();
+            $('#TransferRetainedInReceiving, #TransferRetainedInReceivingLabel').show();
+        }
+    });
+
     // Populate capacity when tank is selected in Weekly section
     $('#WeeklyIdentityOfTanks').change(function () {
         var capacity = $(this).find('option:selected').data('capacity');
@@ -132,8 +145,9 @@
                 formData.append("TransferOperationType", $('#TransferOperationType').val());
                 formData.append("TransferQuantity", $('#TransferQuantity').val());
                 formData.append("TransferTanksFrom", $('#TransferTanksFrom').val());
-                formData.append("TransferRetainedIn", $('#TransferRetainedIn').val());
+                formData.append("TransferRetainedInTransfer", $('#TransferRetainedInTransfer').val());
                 formData.append("TransferTanksTo", $('#TransferTanksTo').val());
+                formData.append("TransferRetainedInReceiving", $('#TransferRetainedInReceiving').val());
                 break;
 
             case 'Incinerator':
@@ -304,18 +318,24 @@
 
                 let weeklySelect = $("#WeeklyIdentityOfTanks");
                 let collectionSelect = $("#CollectionIdentityOfTanks");
+                let transferFromSelect = $("#TransferTanksFrom");
+                let transferToSelect = $("#TransferTanksTo");
 
-                if (weeklySelect.length === 0 || collectionSelect.length === 0) {
+                if (weeklySelect.length === 0 || collectionSelect.length === 0 || transferFromSelect.length === 0 || transferToSelect.length === 0) {
                     return;
                 }
 
                 // Clear existing options
                 weeklySelect.empty();
                 collectionSelect.empty();
+                transferFromSelect.empty();
+                transferToSelect.empty();
 
                 // Add a default first option
                 weeklySelect.append('<option value="">Select Tank</option>');
                 collectionSelect.append('<option value="">Select Tank</option>');
+                transferFromSelect.append('<option value="">Select Tank</option>');
+                transferToSelect.append('<option value="">Select Tank</option>');
 
                 // Add tanks to both dropdowns
                 data.forEach(tank => {
@@ -336,13 +356,27 @@
                         .text(tankId)
                         .attr("data-capacity", capacity);
 
+                    let option3 = $("<option>")
+                        .val(tankId)
+                        .text(tankId);
+
+                    let option4 = $("<option>")
+                        .val(tankId)
+                        .text(tankId);
+
                     weeklySelect.append(option1);
                     collectionSelect.append(option2);
+                    transferFromSelect.append(option3);
+                    transferToSelect.append(option4);
+
+
                 });
 
                 // Trigger change event to ensure capacity fields are populated if a default is selected
                 weeklySelect.trigger('change');
                 collectionSelect.trigger('change');
+                transferFromSelect.trigger('change');
+                transferToSelect.trigger('change');
 
                 // Set the first select field to visible to match CollectionType default
                 setFieldVisibility($('#CollectionType').val());

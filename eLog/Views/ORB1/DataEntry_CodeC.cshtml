@@ -85,26 +85,32 @@
                 <label for="TransferOperationType" class="form-label">Type of Operation:</label>
                 <select class="form-select" id="TransferOperationType" name="TransferOperationType" required>
                     <option value="Select" selected>Select</option>
-                    <option value="Transfer">Transfer</option>
+                    <option value="Transfer of Sludge">Transfer of Sludge</option>
                     <option value="Drain">Drain</option>
                     <option value="Heating (Evaporation)">Heating (Evaporation)</option>
                 </select>
             </div>
             <div class="mb-3">
-                <label for="TransferQuantity" class="form-label">Quantity:</label>
+                <label for="TransferQuantity" class="form-label">Quantity (m³):</label>
                 <input type="text" class="form-control" id="TransferQuantity" name="TransferQuantity" required>
             </div>
             <div class="mb-3">
                 <label for="TransferTanksFrom" class="form-label">Tanks (from):</label>
-                <input type="text" class="form-control" id="TransferTanksFrom" name="TransferTanksFrom" required>
+                <select class="form-select" id="TransferTanksFrom" name="TransferTanksFrom" required>
+                </select>
             </div>
             <div class="mb-3">
-                <label for="TransferRetainedIn" class="form-label">Retained In:</label>
-                <input type="text" class="form-control" id="TransferRetainedIn" name="TransferRetainedIn" required>
+                <label for="TransferRetainedInTransfer" class="form-label">Retained In "Transfer Tank":</label>
+                <input type="text" class="form-control" id="TransferRetainedInTransfer" name="TransferRetainedInTransfer" required>
             </div>
             <div class="mb-3">
-                <label for="TransferTanksTo" class="form-label">Tanks (to):</label>
-                <input type="text" class="form-control" id="TransferTanksTo" name="TransferTanksTo" required>
+                <label id="TransferTanksToLabel" for="TransferTanksTo" class="form-label">Tanks (to):</label>
+                <select class="form-select" id="TransferTanksTo" name="TransferTanksTo" required>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label id="TransferRetainedInReceivingLabel" for="TransferRetainedInReceiving" class="form-label">Retained In "Receiving Tank":</label>
+                <input type="text" class="form-control" id="TransferRetainedInReceiving" name="TransferRetainedInReceiving" required>
             </div>
         </div>
 

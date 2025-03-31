@@ -19,8 +19,9 @@ namespace eLog.Models.ORB1
         public string TransferOperationType { get; set; }
         public decimal? TransferQuantity { get; set; }
         public string TransferTanksFrom { get; set; }
-        public string TransferRetainedIn { get; set; }
+        public string TransferRetainedInTransfer { get; set; }
         public string TransferTanksTo { get; set; }
+        public string TransferRetainedInReceiving { get; set; }
         public string IncineratorOperationType { get; set; }
         public decimal? IncineratorQuantity { get; set; }
         public string IncineratorTanksFrom { get; set; }

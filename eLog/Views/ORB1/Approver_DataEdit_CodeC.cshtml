@@ -90,12 +90,7 @@
         <div id="TransferFields" style="display: none;">
             <div class="mb-3">
                 <label asp-for="TransferOperationType" class="form-label">Type of Operation:</label>
-                <select class="form-select" asp-for="TransferOperationType" required>
-                    <option value="Select">Select</option>
-                    <option value="Transfer">Transfer</option>
-                    <option value="Drain">Drain</option>
-                    <option value="Heating(Evaporation)">Heating (Evaporation)</option>
-                </select>
+                <input type="text" class="form-control" asp-for="TransferOperationType" id="TransferOperationType" value="@Model.TransferOperationType" required disabled>
                 <span asp-validation-for="TransferOperationType" class="text-danger"></span>
             </div>
             <div class="mb-3">
@@ -105,18 +100,23 @@
             </div>
             <div class="mb-3">
                 <label asp-for="TransferTanksFrom" class="form-label">Tanks (from):</label>
-                <input type="text" class="form-control" asp-for="TransferTanksFrom" required>
+                <input type="text" class="form-control" asp-for="TransferTanksFrom" id="TransferTanksFrom" value="@Model.TransferTanksFrom" required disabled>
                 <span asp-validation-for="TransferTanksFrom" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="TransferRetainedIn" class="form-label">Retained In:</label>
-                <input type="text" class="form-control" asp-for="TransferRetainedIn" required>
-                <span asp-validation-for="TransferRetainedIn" class="text-danger"></span>
+                <label asp-for="TransferRetainedInTransfer" class="form-label">Retained In "Transfer Tank":</label>
+                <input type="text" class="form-control" asp-for="TransferRetainedInTransfer" required>
+                <span asp-validation-for="TransferRetainedInTransfer" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label asp-for="TransferTanksTo" class="form-label">Tanks (to):</label>
-                <input type="text" class="form-control" asp-for="TransferTanksTo" required>
+                <input type="text" class="form-control" asp-for="TransferTanksTo" id="TransferTanksTo" value="@Model.TransferTanksTo" required disabled>
                 <span asp-validation-for="TransferTanksTo" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="TransferRetainedInReceiving" class="form-label">Retained In "Receiving Tank":</label>
+                <input type="text" class="form-control" asp-for="TransferRetainedInReceiving" required>
+                <span asp-validation-for="TransferRetainedInReceiving" class="text-danger"></span>
             </div>
         </div>
 

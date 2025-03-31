@@ -102,6 +102,9 @@ function setupEventListeners() {
             submitForm();
         }
     });
+
+    // Call this function on page load to apply correct visibility
+    toggleTransferOperationFields();
 }
 
 function toggleOperationFields() {
@@ -181,12 +184,17 @@ function setupFormValidation() {
                     return $("#CollectionType").val() === "Transfer";
                 }
             },
-            TransferRetainedIn: {
+            TransferRetainedInTransfer: {
                 required: function () {
                     return $("#CollectionType").val() === "Transfer";
                 }
             },
             TransferTanksTo: {
+                required: function () {
+                    return $("#CollectionType").val() === "Transfer";
+                }
+            },
+            TransferRetainedInReceiving: {
                 required: function () {
                     return $("#CollectionType").val() === "Transfer";
                 }
@@ -317,8 +325,9 @@ function submitForm() {
         TransferOperationType: $('#TransferOperationType').val() || null,
         TransferQuantity: parseFloat($('#TransferQuantity').val()) || null,
         TransferTanksFrom: $('#TransferTanksFrom').val() || null,
-        TransferRetainedIn: $('#TransferRetainedIn').val() || null,
+        TransferRetainedInTransfer: $('#TransferRetainedInTransfer').val() || null,
         TransferTanksTo: $('#TransferTanksTo').val() || null,
+        TransferRetainedInReceiving: $('#TransferRetainedInReceiving').val() || null,
 
         // Incinerator Fields
         IncineratorOperationType: $('#IncineratorOperationType').val() || null,
@@ -381,4 +390,18 @@ function getQueryParams() {
     const pageSize = urlParams.get('pageSize') || 10; // Default to 10 if not provided
 
     return { pageNumber, pageSize };
+}
+
+function toggleTransferOperationFields() {
+    var selectedOperation = $("#TransferOperationType").val();
+
+    if (selectedOperation === "Heating (Evaporation)") {
+        // Hide fields and labels
+        $('#TransferTanksTo, #TransferTanksTo').closest('.mb-3').hide();
+        $('#TransferRetainedInReceiving, #TransferRetainedInReceiving').closest('.mb-3').hide();
+    } else {
+        // Show fields and labels
+        $('#TransferTanksTo, #TransferTanksTo').closest('.mb-3').show();
+        $('#TransferRetainedInReceiving, #TransferRetainedInReceiving').closest('.mb-3').show();
+    }
 }
