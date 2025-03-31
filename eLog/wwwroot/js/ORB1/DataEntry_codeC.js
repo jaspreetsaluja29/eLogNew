@@ -215,81 +215,82 @@
         window.location.href = `${basePath}/ORB1/CodeC/GetCodeCData?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     });
 
-    // Fetch last weekly retention
+    // Fetch last weekly retention for a specific tank
     function fetchLastWeeklyRetention() {
+        const selectedTank = $('#WeeklyIdentityOfTanks').val(); // Get selected tank ID
+        if (!selectedTank) {
+            $('#lastWeeklyRetention').text('');
+            return;
+        }
+        var basePath = document.querySelector('base')?.getAttribute('href') || '/';
         $.ajax({
             url: basePath + "/ORB1/CodeC/GetLastWeeklyRetention",
             type: "GET",
+            data: { WeeklyIdentityOfTanks: selectedTank }, // Pass selected tank ID
+            dataType: "json",
             success: function (response) {
-                if (response && response.length > 0) {
-                    const data = response[0];
-                    const retentionValue = data.WeeklyTotalQuantityOfRetention;
-
-                    if (retentionValue) {
-                        $('#lastWeeklyRetention').text(`Last Week Content: ${retentionValue} m³`);
+                console.log("AJAX Success Response:", response);
+                if (response && response.data && response.data.length > 0) {
+                    const data = response.data[0];
+                    if (data && data.weeklyTotalQuantityOfRetention !== undefined && data.weeklyTotalQuantityOfRetention !== null) {
+                        $('#lastWeeklyRetention').text(`Last Week Content: ${data.weeklyTotalQuantityOfRetention} m³`);
                     } else {
-                        // Fallback to iterate through properties if direct access fails
-                        let foundValue = false;
-                        for (const key in data) {
-                            if (key === 'WeeklyTotalQuantityOfRetention' || key.includes('Retention')) {
-                                $('#lastWeeklyRetention').text(`Last Week Content: ${data[key]} m³`);
-                                foundValue = true;
-                                break;
-                            }
-                        }
-
-                        if (!foundValue) {
-                            $('#lastWeeklyRetention').text('Data format not as expected');
-                        }
+                        $('#lastWeeklyRetention').text('Last Week Content: No data available');
                     }
                 } else {
                     $('#lastWeeklyRetention').text('No previous data available');
                 }
             },
             error: function (xhr, status, error) {
+                console.error("AJAX Error:", status, error);
                 $('#lastWeeklyRetention').text('Error loading previous data');
             }
         });
     }
 
+    // Bind event listener to dropdown
+    $('#WeeklyIdentityOfTanks').change(function () {
+        fetchLastWeeklyRetention(); // Call function when tank is selected
+    });
+
 
     // Fetch last weekly collection retention
     function fetchLastWeeklyCollection() {
+        const selectedTank = $('#CollectionIdentityOfTanks').val(); // Get selected tank ID
+        if (!selectedTank) {
+            $('#lastWeeklyCollectionRetention').text('');
+            return;
+        }
+        var basePath = document.querySelector('base')?.getAttribute('href') || '/';
         $.ajax({
             url: basePath + "/ORB1/CodeC/GetLastWeeklyCollectionRetention",
             type: "GET",
+            data: { CollectionIdentityOfTanks: selectedTank }, // Pass selected tank ID
+            dataType: "json",
             success: function (response) {
-                if (response && response.length > 0) {
-                    const data = response[0];
-                    const collectionValue = data.CollectionTotalQuantityOfRetention;
-
-                    if (collectionValue) {
-                        $('#lastWeeklyCollectionRetention').text(`Last Content: ${collectionValue} m³`);
+                console.log("AJAX Success Response:", response);
+                if (response && response.data && response.data.length > 0) {
+                    const data = response.data[0];
+                    if (data && data.collectionTotalQuantityOfRetention !== undefined && data.collectionTotalQuantityOfRetention !== null) {
+                        $('#lastWeeklyCollectionRetention').text(`Last Content: ${data.collectionTotalQuantityOfRetention} m³`);
                     } else {
-                        // Fallback to iterate through properties if direct access fails
-                        let foundValue = false;
-                        for (const key in data) {
-                            if (key === 'CollectionTotalQuantityOfRetention' || key.includes('Retention')) {
-                                $('#lastWeeklyCollectionRetention').text(`Last Content: ${data[key]} m³`);
-                                foundValue = true;
-                                break;
-                            }
-                        }
-
-                        if (!foundValue) {
-                            $('#lastWeeklyCollectionRetention').text('Data format not as expected');
-                        }
+                        $('#lastWeeklyCollectionRetention').text('Last Content: No data available');
                     }
                 } else {
                     $('#lastWeeklyCollectionRetention').text('No previous data available');
                 }
             },
             error: function (xhr, status, error) {
+                console.error("AJAX Error:", status, error);
                 $('#lastWeeklyCollectionRetention').text('Error loading previous data');
             }
         });
     }
 
+    // Bind event listener to dropdown
+    $('#CollectionIdentityOfTanks').change(function () {
+        fetchLastWeeklyCollection(); // Call function when tank is selected
+    });
 
     // Clean loadTanks function
     function loadTanks() {

@@ -130,20 +130,26 @@ namespace eLog.Controllers.ORB1
             }
         }
 
-        // Make sure this method has the correct attribute and route
         [HttpGet]
-        [Route("ORB1/CodeC/GetLastWeeklyRetention")] // Add this if missing
-        public JsonResult GetLastWeeklyRetention()
+        [Route("ORB1/CodeC/GetLastWeeklyRetention")]
+        public JsonResult GetLastWeeklyRetention(string WeeklyIdentityOfTanks)
         {
+            if (string.IsNullOrEmpty(WeeklyIdentityOfTanks))
+            {
+                return Json(new { error = "Identity Of Tanks is required" });
+            }
+
             List<object> lastWeekData = new List<object>();
 
-            try // Add error handling
+            try
             {
                 using (SqlConnection connection = _db.CreateConnection())
                 {
                     using (SqlCommand cmd = new SqlCommand("proc_GetORB1_CodeC_LastWeeklyRetention", connection))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@WeeklyIdentityOfTanks", WeeklyIdentityOfTanks); // Pass tank ID
+
                         connection.Open();
 
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -152,26 +158,27 @@ namespace eLog.Controllers.ORB1
                             {
                                 lastWeekData.Add(new
                                 {
-                                    WeeklyTotalQuantityOfRetention = reader["WeeklyTotalQuantityOfRetention"].ToString()
+                                    WeeklyTotalQuantityOfRetention = reader["WeeklyTotalQuantityOfRetention"]?.ToString() ?? "0"
                                 });
                             }
                         }
                     }
                 }
-                return Json(lastWeekData);
+
+                return Json(new { success = true, data = lastWeekData });
             }
             catch (Exception ex)
             {
-                // Log the exception and return an error message
-                return Json(new { error = ex.Message });
+                return Json(new { success = false, error = ex.Message });
             }
         }
+
 
 
         // Make sure this method has the correct attribute and route
         [HttpGet]
         [Route("ORB1/CodeC/GetLastWeeklyCollectionRetention")] // Add this if missing
-        public JsonResult GetLastWeeklyCollectionRetention()
+        public JsonResult GetLastWeeklyCollectionRetention(string CollectionIdentityOfTanks)
         {
             List<object> lastWeekData = new List<object>();
 
@@ -182,6 +189,8 @@ namespace eLog.Controllers.ORB1
                     using (SqlCommand cmd = new SqlCommand("proc_GetORB1_CodeC_LastWeeklyCollectionRetention", connection))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@CollectionIdentityOfTanks", CollectionIdentityOfTanks); // Pass tank ID
+
                         connection.Open();
 
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -196,12 +205,11 @@ namespace eLog.Controllers.ORB1
                         }
                     }
                 }
-                return Json(lastWeekData);
+                return Json(new { success = true, data = lastWeekData });
             }
             catch (Exception ex)
             {
-                // Log the exception and return an error message
-                return Json(new { error = ex.Message });
+                return Json(new { success = false, error = ex.Message });
             }
         }
 
