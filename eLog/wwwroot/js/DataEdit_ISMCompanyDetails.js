@@ -46,7 +46,7 @@ function submitForm() {
         VesselName: $('#VesselName').val() || null,
         IMONumber: $('#IMONumber').val() ? parseInt($('#IMONumber').val()) : null,
         ActiveId: $('#ActiveId').val() ? parseInt($('#ActiveId').val()) : null,
-        Flag: $('#Flag').is(':checked'),
+        Flag: $('#Flag').val() || null,
         LastEntryDate: $('#LastEntryDate').val() || null,
         LastApprovedDate: $('#LastApprovedDate').val() || null,
         SubscriptionStartDate: $('#SubscriptionStartDate').val() || null,

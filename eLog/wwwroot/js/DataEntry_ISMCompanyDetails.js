@@ -29,7 +29,7 @@
             VesselName: $('#vesselName').val() || null,
             IMONumber: parseInt($('#imoNumber').val()) || null,
             ActiveId: parseInt($('#activeId').val()) || null,
-            Flag: $('#flag').is(':checked'),
+            Flag: $('#flag').val() || null,
             LastEntryDate: $('#lastEntryDate').val() || null,
             LastApprovedDate: $('#lastApprovedDate').val() || null,
             SubscriptionStartDate: $('#subscriptionStartDate').val() || null,

@@ -39,7 +39,7 @@ namespace eLog.Controllers
                                 VesselName = reader.IsDBNull(reader.GetOrdinal("VesselName")) ? null : reader.GetString(reader.GetOrdinal("VesselName")),
                                 IMONumber = reader.IsDBNull(reader.GetOrdinal("IMONumber")) ? 0 : reader.GetInt32(reader.GetOrdinal("IMONumber")),
                                 ActiveId = reader.IsDBNull(reader.GetOrdinal("ActiveId")) ? 0 : reader.GetInt32(reader.GetOrdinal("ActiveId")),
-                                Flag = reader.GetBoolean(reader.GetOrdinal("Flag")), // Ensure correct column type
+                                Flag = reader.IsDBNull(reader.GetOrdinal("Flag")) ? null : reader.GetString(reader.GetOrdinal("Flag")),
                                 LastEntryDate = reader.IsDBNull(reader.GetOrdinal("LastEntryDate")) ? DateTime.MinValue : reader.GetDateTime(reader.GetOrdinal("LastEntryDate")),
                                 LastApprovedDate = reader.IsDBNull(reader.GetOrdinal("LastApprovedDate")) ? DateTime.MinValue : reader.GetDateTime(reader.GetOrdinal("LastApprovedDate")),
                                 SubscriptionStartDate = reader.IsDBNull(reader.GetOrdinal("SubscriptionStartDate")) ? DateTime.MinValue : reader.GetDateTime(reader.GetOrdinal("SubscriptionStartDate")),
@@ -154,7 +154,7 @@ namespace eLog.Controllers
                                 VesselName = reader.IsDBNull(reader.GetOrdinal("VesselName")) ? null : reader.GetString(reader.GetOrdinal("VesselName")),
                                 IMONumber = reader.IsDBNull(reader.GetOrdinal("IMONumber")) ? 0 : reader.GetInt32(reader.GetOrdinal("IMONumber")),
                                 ActiveId = reader.IsDBNull(reader.GetOrdinal("ActiveId")) ? 0 : reader.GetInt32(reader.GetOrdinal("ActiveId")),
-                                Flag = reader.GetBoolean(reader.GetOrdinal("Flag")),
+                                Flag = reader.IsDBNull(reader.GetOrdinal("Flag")) ? null : reader.GetString(reader.GetOrdinal("Flag")),
                                 LastEntryDate = reader.IsDBNull(reader.GetOrdinal("LastEntryDate")) ? DateTime.MinValue : reader.GetDateTime(reader.GetOrdinal("LastEntryDate")),
                                 LastApprovedDate = reader.IsDBNull(reader.GetOrdinal("LastApprovedDate")) ? DateTime.MinValue : reader.GetDateTime(reader.GetOrdinal("LastApprovedDate")),
                                 SubscriptionStartDate = reader.IsDBNull(reader.GetOrdinal("SubscriptionStartDate")) ? DateTime.MinValue : reader.GetDateTime(reader.GetOrdinal("SubscriptionStartDate")),
