@@ -37,8 +37,8 @@ namespace eLog.Controllers
 
             var parameters = new SqlParameter[]
             {
-                new SqlParameter("@Username", username),
-                new SqlParameter("@Password", password)
+        new SqlParameter("@Username", username),
+        new SqlParameter("@Password", password)
             };
 
             DataTable dt = _db.ExecuteStoredProcedure(storedProcedure, parameters);
@@ -49,22 +49,9 @@ namespace eLog.Controllers
                 return View();
             }
 
-            // Fetch UserID and Role from the database
+            // Fetch UserID and Role Name from the database directly
             int userId = Convert.ToInt32(dt.Rows[0]["UserID"]);
-            int userRoleId = Convert.ToInt32(dt.Rows[0]["UserRoleId"]);
-            string userRoleName = string.Empty;
-            if (userRoleId == 1)
-            {
-                userRoleName = "SuperAdmin";
-            }
-            if (userRoleId == 2)
-            {
-                userRoleName = "Level 2- Approver";
-            }
-            if (userRoleId == 3)
-            {
-                userRoleName = "Level 1- Entry";
-            }
+            string userRoleName = dt.Rows[0]["UserRoleName"].ToString();
 
             // Set session values
             HttpContext.Session.SetInt32("UserID", userId);
@@ -76,15 +63,16 @@ namespace eLog.Controllers
             TempData["UserRoleName"] = userRoleName;
 
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, userRoleName)
-            };
+    {
+        new Claim(ClaimTypes.Name, username),
+        new Claim(ClaimTypes.Role, userRoleName)
+    };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
 
-            if (userRoleId == 1)
+            // Redirect based on UserRoleName instead of UserRoleId
+            if (userRoleName == "SuperAdmin")
             {
                 return RedirectToAction("GetISMCompanyDetails", "ISMCompanyDetails");
             }
