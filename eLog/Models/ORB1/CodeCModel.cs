@@ -24,7 +24,6 @@ namespace eLog.Models.ORB1
         public string IncineratorOperationType { get; set; }
         public decimal? IncineratorQuantity { get; set; }
         public string IncineratorTanksFrom { get; set; }
-        public string IncineratorRetainedIn { get; set; }
         public decimal? IncineratorTotalRetainedContent { get; set; }
         public TimeSpan? IncineratorStartTime { get; set; }
         public TimeSpan? IncineratorStopTime { get; set; }

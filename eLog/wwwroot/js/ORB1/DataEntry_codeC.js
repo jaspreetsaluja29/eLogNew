@@ -140,7 +140,6 @@
                 formData.append("IncineratorOperationType", $('#IncineratorOperationType').val());
                 formData.append("IncineratorQuantity", $('#IncineratorQuantity').val());
                 formData.append("IncineratorTanksFrom", $('#IncineratorTanksFrom').val());
-                formData.append("IncineratorRetainedIn", $('#IncineratorRetainedIn').val());
                 formData.append("IncineratorTotalRetainedContent", $('#IncineratorTotalRetainedContent').val());
                 formData.append("IncineratorStartTime", $('#IncineratorStartTime').val());
                 formData.append("IncineratorStopTime", $('#IncineratorStopTime').val());

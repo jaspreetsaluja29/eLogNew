@@ -202,11 +202,6 @@ function setupFormValidation() {
                     return $("#CollectionType").val() === "Incinerator";
                 }
             },
-            IncineratorRetainedIn: {
-                required: function () {
-                    return $("#CollectionType").val() === "Incinerator";
-                }
-            },
             IncineratorTotalRetainedContent: {
                 required: function () {
                     return $("#CollectionType").val() === "Incinerator";
@@ -329,7 +324,6 @@ function submitForm() {
         IncineratorOperationType: $('#IncineratorOperationType').val() || null,
         IncineratorQuantity: parseFloat($('#IncineratorQuantity').val()) || null,
         IncineratorTanksFrom: $('#IncineratorTanksFrom').val() || null,
-        IncineratorRetainedIn: $('#IncineratorRetainedIn').val() || null,
         IncineratorTotalRetainedContent: parseFloat($('#IncineratorTotalRetainedContent').val()) || null,
         IncineratorStartTime: $('#IncineratorStartTime').val() || null,
         IncineratorStopTime: $('#IncineratorStopTime').val() || null,
