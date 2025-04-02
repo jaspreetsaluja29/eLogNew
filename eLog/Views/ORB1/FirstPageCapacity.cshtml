@@ -2,64 +2,130 @@
 
 @{
     Layout = "_Layout";  // Use the layout file from /Views/Shared/_Layout.cshtml
-    ViewData["Title"] = "FirstPageCapacity";
+    ViewData["Title"] = "Add Tank Capacity";
 }
 
-<div style="text-align: center; margin-bottom: 20px;">
-    <h2 style="margin-bottom: 10px;">First Page Capacity</h2>
-    <h4 style="margin-bottom: 20px;">As per IOPP Form B - holding tank(s) for the total retention on board of all oily bilge water as follows:</h4>
+<link rel="stylesheet" href="~/css/ORB1/FirstPageCapacity.css" />
+
+<div class="page-title">
+    <h2>Tank Capacity</h2>
 </div>
 
-<form id="capacityForm" method="post" asp-action="SaveData">
-    <h4>Oily Bilge Water Retention</h4>
-    <table id="retentionTable" class="table">
-        <thead>
-            <tr>
-                <th style="padding: 10px;">Tank Identification</th>
-                <th style="padding: 10px;">Tank Location (Frames: From-To)</th>
-                <th style="padding: 10px;">Volume (m3)</th>
-                <th style="padding: 10px;">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><input type="text" name="retentions[0].TankIdentification" class="form-control" /></td>
-                <td><input type="text" name="retentions[0].TankLocation_Frames_From_To" class="form-control" /></td>
-                <td><input type="number" step="0.01" name="retentions[0].Volume_m3" class="form-control" /></td>
-                <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
-            </tr>
-        </tbody>
-    </table>
-    <button type="button" id="addRowButton" class="btn btn-primary">Add Row</button>
+<div class="form-container">
+    <form id="capacityForm" method="post" asp-action="SaveData">
+        <table id="retentionTable" class="table">
+            <thead>
+                <tr>
+                    <th colspan="5" class="section-header">
+                        Oil Residues (sludge) tanks for retention of oil Residue (Residue) / Section-3.1
+                    </th>
+                </tr>
+                <tr>
+                    <th>Tank Identification</th>
+                    <th colspan="2" style="text-align: center;">Tank Location</th>
+                    <th>Volume (m3)</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>(Frames: From-To)</th>
+                    <th>Lateral Position</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" name="retentions[0].TankIdentification" class="form-control" /></td>
+                    <td><input type="text" name="retentions[0].TankLocation_Frames_From_To" class="form-control" /></td>
+                    <td><input type="text" name="retentions[0].TankLocation_LateralPosition" class="form-control" /></td>
+                    <td><input type="number" step="0.01" name="retentions[0].Volume_m3" class="form-control" /></td>
+                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                </tr>
+            </tbody>
+        </table>
 
-    <div style="text-align: center; margin-bottom: 20px; margin-top: 40px;">
-        <h4>Means for retention and disposal of oil residues (sludge)(regulation 12) and bilge water holding tanks :</h4>
-    </div>
+        <div class="button-container">
+            <button type="button" id="addRowButton" class="btn btn-primary">Add Row</button>
+        </div>
 
-    <table id="sludgeTable" class="table">
-        <thead>
-            <tr>
-                <th style="padding: 10px;">Tank Identification</th>
-                <th style="padding: 10px;">Tank Location (Frames: From-To)</th>
-                <th style="padding: 10px;">Volume (m3)</th>
-                <th style="padding: 10px;">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><input type="text" name="sludges[0].TankIdentification" class="form-control" /></td>
-                <td><input type="text" name="sludges[0].TankLocation_Frames_From_To" class="form-control" /></td>
-                <td><input type="number" step="0.01" name="sludges[0].Volume_m3" class="form-control" /></td>
-                <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
-            </tr>
-        </tbody>
-    </table>
-    <button type="button" id="addSludgeRowButton" class="btn btn-primary">Add Row</button>
+        <table id="sludgeTable" class="table">
+            <thead>
+                <tr>
+                    <th colspan="5" class="section-header">
+                        Holding Tank(s) for the retention on baord of Oily bilge water / Section 3.3
+                    </th>
+                </tr>
+                <tr>
+                    <th>Tank Identification</th>
+                    <th colspan="2" style="text-align: center;">Tank Location</th>
+                    <th>Volume (m3)</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>(Frames: From-To)</th>
+                    <th>Lateral Position</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" name="sludges[0].TankIdentification" class="form-control" /></td>
+                    <td><input type="text" name="sludges[0].TankLocation_Frames_From_To" class="form-control" /></td>
+                    <td><input type="text" name="sludges[0].TankLocation_LateralPosition" class="form-control" /></td>
+                    <td><input type="number" step="0.01" name="sludges[0].Volume_m3" class="form-control" /></td>
+                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                </tr>
+            </tbody>
+        </table>
 
-    <div style="display: flex; justify-content: center; margin-top: 20px;">
-        <button type="submit" class="btn btn-success">Save</button>
-    </div>
-</form>
+        <div class="button-container">
+            <button type="button" id="addSludgeRowButton" class="btn btn-primary">Add Row</button>
+        </div>
+
+        <table id="meanTable" class="table">
+            <thead>
+                <tr>
+                    <th colspan="5" class="section-header">
+                        Means for disposal of oil residues retained in Oil Residue Tanks / Other acceptable means/ Section 3.2.3
+                    </th>
+                </tr>
+                <tr>
+                    <th>Tank Identification</th>
+                    <th colspan="2" style="text-align: center;">Tank Location</th>
+                    <th>Volume (m3)</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>(Frames: From-To)</th>
+                    <th>Lateral Position</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" name="means[0].TankIdentification" class="form-control" /></td>
+                    <td><input type="text" name="means[0].TankLocation_Frames_From_To" class="form-control" /></td>
+                    <td><input type="text" name="means[0].TankLocation_LateralPosition" class="form-control" /></td>
+                    <td><input type="number" step="0.01" name="means[0].Volume_m3" class="form-control" /></td>
+                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="button-container">
+            <button type="button" id="addmeanRowButton" class="btn btn-primary">Add Row</button>
+        </div>
+
+        <div class="save-container">
+            <button type="submit" class="btn btn-success">Save</button>
+        </div>
+    </form>
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="~/js/ORB1/FirstPageCapacity.js"></script>

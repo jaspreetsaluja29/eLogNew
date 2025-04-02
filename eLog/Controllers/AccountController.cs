@@ -62,33 +62,52 @@ namespace eLog.Controllers
             HttpContext.Session.SetString("UserName", username);
             HttpContext.Session.SetString("UserRoleName", userRoleName);
 
-            // Generate OTP
-            Random random = new Random();
-            int otp = random.Next(100000, 999999);
-            int otpTimeout = Convert.ToInt32(_configuration["OTPTimeout"]);
-            DateTime expiryTime = DateTime.UtcNow.AddSeconds(otpTimeout);
-
-            // Store OTP in the database
-            string otpQuery = "INSERT INTO UserOTP (UserID, OTP, ExpiryTime) VALUES (@UserID, @OTP, @ExpiryTime)";
-            var otpParams = new SqlParameter[]
-            {
-                new SqlParameter("@UserID", userId),
-                new SqlParameter("@OTP", otp.ToString()),
-                new SqlParameter("@ExpiryTime", expiryTime)
-            };
-            _db.ExecuteQuery(otpQuery, otpParams);
-
-            // Send OTP to User
-            string message = SendOtpToUser(username, otp);
-
             // Store TempData for OTP verification
             TempData["UserID"] = userId;
             TempData["UserName"] = username;
             TempData["UserRoleName"] = userRoleName;
 
-            ViewBag.SuccessMessage = $"{message} Please enter OTP to verify.";
-            ViewBag.OTPExpiryTime = otpTimeout;
-            return View();
+            // Check if OTP is enabled
+            bool isOtpEnabled = Convert.ToBoolean(_configuration["EnableOTP"]);
+            ViewBag.EnableOTP = isOtpEnabled;
+            if (isOtpEnabled)
+            {
+                // Generate OTP
+                Random random = new Random();
+                int otp = random.Next(100000, 999999);
+                int otpTimeout = Convert.ToInt32(_configuration["OTPTimeout"]);
+                DateTime expiryTime = DateTime.UtcNow.AddSeconds(otpTimeout);
+
+                // Store OTP in the database
+                string otpQuery = "INSERT INTO UserOTP (UserID, OTP, ExpiryTime) VALUES (@UserID, @OTP, @ExpiryTime)";
+                var otpParams = new SqlParameter[]
+                {
+                new SqlParameter("@UserID", userId),
+                new SqlParameter("@OTP", otp.ToString()),
+                new SqlParameter("@ExpiryTime", expiryTime)
+                };
+                _db.ExecuteQuery(otpQuery, otpParams);
+
+                // Send OTP to User
+                string message = SendOtpToUser(username, otp);
+
+                ViewBag.SuccessMessage = $"{message} Please enter OTP to verify.";
+                ViewBag.OTPExpiryTime = otpTimeout;
+                return View();
+            }
+            else
+            {
+                if (TempData["UserRoleName"]?.ToString() == "SuperAdmin")
+                {
+                    return RedirectToAction("GetISMCompanyDetails", "ISMCompanyDetails");
+                }
+                else
+                {
+                    return RedirectToAction("FirstPageCapacity", "FirstPageCapacity");
+                }
+            }
+
+
         }
 
         public IActionResult Reset()

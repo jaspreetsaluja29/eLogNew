@@ -1,6 +1,6 @@
 ﻿namespace eLog.Models.ORB1
 {
-    public class FirstPage_OilyBilgeRetention
+    public class FirstPage_MeanOilResidue
     {
         public int Id { get; set; }
         public string TankIdentification { get; set; }
