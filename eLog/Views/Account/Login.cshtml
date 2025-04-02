@@ -13,10 +13,22 @@
 <body>
     <div class="login-container">
         <h1>Login</h1>
+
+        @if (ViewBag.SuccessMessage != null)
+        {
+            <div class="success-message" style="color: green; text-align: center;">@ViewBag.SuccessMessage</div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    document.getElementById("otp-section").style.display = "block";
+                });
+            </script>
+        }
+
         @if (ViewBag.ErrorMessage != null)
         {
-            <div style="color: red;">@ViewBag.ErrorMessage</div>
+            <div class="error-message">@ViewBag.ErrorMessage</div>
         }
+
         <form method="post" asp-controller="Account" asp-action="Login">
             @Html.AntiForgeryToken()
             <div class="form-group">
@@ -33,11 +45,49 @@
             </div>
 
             <div class="button-group">
-                <button type="submit" id="loginButton" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">Login</button>
                 <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>
+
+        <!-- OTP Verification Section -->
+        <div id="otp-section" class="otp-container" style="display: none;">
+            <h2 style="text-align: center;">Enter OTP</h2>
+            <p id="otp-timer" style="text-align: center; color: red;"></p>
+            <form method="post" asp-controller="Account" asp-action="VerifyOtp">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label for="otp">OTP</label>
+                    <input type="text" id="otp" name="otp" placeholder="Enter OTP" required>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-success">Verify</button>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var expiryTime = @ViewBag.OTPExpiryTime; // Get expiry time in seconds
+            var timerElement = document.getElementById("otp-timer");
+
+            if (expiryTime > 0) {
+                var countdown = setInterval(function () {
+                    timerElement.textContent = "OTP expires in " + expiryTime + "s";
+
+                    if (expiryTime <= 0) {
+                        clearInterval(countdown);
+                        timerElement.textContent = "OTP has expired!";
+                        document.getElementById("otp").disabled = true; // Disable OTP input
+                    }
+
+                    expiryTime--;
+                }, 1000);
+            }
+        });
+    </script>
+
 
     <script src="~/js/Account/login.js"></script>
 </body>
