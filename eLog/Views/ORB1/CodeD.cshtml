@@ -1,0 +1,166 @@
+﻿@model IEnumerable<eLog.ViewModels.ORB1.CodeDViewModel>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Code D Records";
+}
+
+<!-- Include CodeA.css -->
+<link href="~/css/ORB1/CodeA.css" rel="stylesheet" />
+
+<div style="text-align: center; margin-bottom: 20px;">
+    <h2 class="mb-4">Code D Records</h2>
+</div>
+<div class="container mt-4 text-center">
+    <div class="row justify-content-between align-items-center mb-3">
+        <div class="col-auto">
+            <button class="btn btn-primary" onclick="openAddWindow()">Add</button>
+        </div>
+        <div class="col-auto">
+            <input type="text" id="searchInput" class="form-control" style="width: 200px;" placeholder="Search..." onkeyup="filterTable()" />
+        </div>
+    </div>
+
+    <!-- Row count display -->
+    <div class="record-controls d-flex justify-content-between align-items-center mb-3 p-2">
+        <div class="record-count">
+            <strong>Total Records:</strong> @ViewBag.TotalRecords
+        </div>
+        <div class="pagination-controls d-flex align-items-center gap-2">
+            <label for="pageSize" class="fw-semibold" style="white-space: nowrap;">Page Size:</label>
+            <select id="pageSize" class="form-select form-select-sm" onchange="changePage(0)">
+                <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
+                <option value="20" selected="@(ViewBag.PageSize == 20)">20</option>
+                <option value="50" selected="@(ViewBag.PageSize == 50)">50</option>
+                <option value="100" selected="@(ViewBag.PageSize == 100)">100</option>
+                <option value="500" selected="@(ViewBag.PageSize == 500)">500</option>
+            </select>
+
+            <button class="btn btn-outline-primary btn-sm" id="prevPage" onclick="changePage(-1)"
+            @(ViewBag.PageNumber == 1 ? "disabled" : "")>
+                Previous
+            </button>
+
+            <span id="currentPage" class="fw-bold">@ViewBag.PageNumber</span> /
+            <span id="totalPages">@ViewBag.TotalPages</span>
+
+            <button class="btn btn-outline-primary btn-sm" id="nextPage" onclick="changePage(1)"
+            @(ViewBag.PageNumber >= ViewBag.TotalPages ? "disabled" : "")>
+                Next
+            </button>
+        </div>
+    </div>
+
+
+
+    <!-- Table container -->
+    <div class="table-container">
+        <table id="codeDTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Entered By</th>
+                    <th onclick="sortTable(1)">Entry Date</th>
+                    <th onclick="sortTable(2)">Method of Discharge, transfer or Disposal</th>
+
+                    <!-- 15 PPM Equipment Fields -->
+                    <th onclick="sortTable(3)">Equipment Quantity (m³)</th>
+                    <th onclick="sortTable(4)">Equipment Residue</th>
+                    <th onclick="sortTable(5)">Equipment Transferred From</th>
+                    <th onclick="sortTable(6)">Equipment Quantity Retained in Holding Tank</th>
+                    <th onclick="sortTable(7)">Equipment Start Time</th>
+                    <th onclick="sortTable(8)">Equipment Position Start</th>
+                    <th onclick="sortTable(9)">Equipment Stop Time</th>
+                    <th onclick="sortTable(10)">Equipment Position Stop</th>
+
+                    <!-- Reception Facilities Fields -->
+                    <th onclick="sortTable(11)">Reception Quantity (m³)</th>
+                    <th onclick="sortTable(12)">Reception Residue</th>
+                    <th onclick="sortTable(13)">Reception Transferred From</th>
+                    <th onclick="sortTable(14)">Reception Quantity Retained</th>
+                    <th onclick="sortTable(15)">Reception Start Time</th>
+                    <th onclick="sortTable(16)">Reception Stop Time</th>
+                    <th onclick="sortTable(17)">Reception Port Facilities</th>
+                    <th onclick="sortTable(18)">Reception Receipt No.</th>
+
+                    <!-- Slop/Tank Fields -->
+                    <th onclick="sortTable(19)">Slop Transferred To</th>
+                    <th onclick="sortTable(20)">Slop Quantity (m³)</th>
+                    <th onclick="sortTable(21)">Slop Residue</th>
+                    <th onclick="sortTable(22)">Slop Transferred From</th>
+                    <th onclick="sortTable(23)">Slop Quantity Retained- "Transfer from" Tank</th>
+                    <th onclick="sortTable(24)">Slop Start Time</th>
+                    <th onclick="sortTable(25)">Slop Stop Time</th>
+                    <th onclick="sortTable(26)">Slop Quantity Retained- "Transfer To" Tanks</th>
+
+                    <!-- Status Fields -->
+                    <th onclick="sortTable(27)">Status</th>
+                    <th onclick="sortTable(28)">Approved By</th>
+                    <th onclick="sortTable(29)">Comments</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.UserId.Trim()</td>
+                            <td>@item.EntryDate.ToShortDateString()</td>
+                            <td>@item.MethodDischargeTransferDisposal</td>
+                            <td>@item.EquipmentQuantity</td>
+                            <td>@item.EquipmentResidue</td>
+                            <td>@item.EquipmentTransferredFrom</td>
+                            <td>@item.EquipmentQuantityRetained</td>
+                            <td>@(item.EquipmentStartTime.HasValue ? item.EquipmentStartTime.Value.ToString(@"hh\:mm") : "")</td>
+                            <td>@item.EquipmentPositionStart</td>
+                            <td>@(item.EquipmentStopTime.HasValue ? item.EquipmentStopTime.Value.ToString(@"hh\:mm") : "")</td>
+                            <td>@item.EquipmentPositionStop</td>
+                            <td>@item.ReceptionQuantity</td>
+                            <td>@item.ReceptionResidue</td>
+                            <td>@item.ReceptionTransferredFrom</td>
+                            <td>@item.ReceptionQuantityRetained</td>
+                            <td>@(item.ReceptionStartTime.HasValue ? item.ReceptionStartTime.Value.ToString(@"hh\:mm") : "")</td>
+                            <td>@(item.ReceptionStopTime.HasValue ? item.ReceptionStopTime.Value.ToString(@"hh\:mm") : "")</td>
+                            <td>@item.ReceptionPortFacilities</td>
+                            <td>@item.ReceptionReceiptNo</td>
+                            <td>@item.SlopTransferredTo</td>
+                            <td>@item.SlopQuantity</td>
+                            <td>@item.SlopResidue</td>
+                            <td>@item.SlopTransferredFrom</td>
+                            <td>@item.SlopQuantityRetainedFrom</td>
+                            <td>@(item.SlopStartTime.HasValue ? item.SlopStartTime.Value.ToString(@"hh\:mm") : "")</td>
+                            <td>@(item.SlopStopTime.HasValue ? item.SlopStopTime.Value.ToString(@"hh\:mm") : "")</td>
+                            <td>@item.SlopQuantityRetainedTo</td>
+                            <td>@item.StatusName</td>
+                            <td>@item.ApprovedBy</td>
+                            <td>@item.Comments</td>
+                            <td>
+                                <button class="btn btn-info btn-sm @if (item.StatusName != "Pending") {
+                        <text>disabled btn-secondary</text>
+ } else {
+                        <text>btn-info</text>
+ }"
+                                        onclick="editRecord(@item.Id)" @if (item.StatusName != "Pending")
+                                {
+                                    <text>disabled</text>
+                                }>
+                Edit
+            </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="25" class="text-center">No records found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Reference to CodeC.js -->
+<script src="~/js/ORB1/CodeD.js"></script>

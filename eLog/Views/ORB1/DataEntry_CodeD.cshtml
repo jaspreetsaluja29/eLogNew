@@ -1,0 +1,162 @@
+﻿@{
+    Layout = "_BlankLayout";
+ }
+@{
+    ViewData["Title"] = "DataEntry_CodeD";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter CodeD Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/ORB1/DataEntry_CodeA.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h2 class="text-center mb-4">OILY BILGE WATER HANDLING</h2>
+
+    <form id="DataEntryCodeDForm" class="p-4 border rounded bg-light">
+        <div class="mb-3">
+            <label for="EntryDate" class="form-label">Date (YYYY-MM-DD):</label>
+            <input type="date" class="form-control" id="EntryDate" name="EntryDate" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="MethodDischargeTransferDisposal" class="form-label">Method of Discharge, transfer or Disposal:</label>
+            <select class="form-select" id="MethodDischargeTransferDisposal" name="MethodDischargeTransferDisposal" required>
+                <option value="Select" selected>Select</option>
+                <option value="Through 15 PPM Equipment">Through 15 PPM Equipment</option>
+                <option value="To Reception facilities">To Reception facilities</option>
+                <option value="To Slop, holding or other tank">To Slop, holding or other tank</option>
+            </select>
+        </div>
+
+        <!-- Equipment Initially hidden -->
+        <div id="EquipmentFields">
+            <div class="mb-3">
+                <label for="EquipmentQuantity" class="form-label">Quantity (m³):</label>
+                <input type="text" class="form-control" id="EquipmentQuantity" name="EquipmentQuantity" required>
+            </div>
+            <div class="mb-3">
+                <label for="EquipmentResidue" class="form-label">Residue:</label>
+                <input type="text" class="form-control" id="EquipmentResidue" name="EquipmentResidue" required>
+            </div>
+            <div class="mb-3">
+                <label for="EquipmentTransferredFrom" class="form-label">Transferred From:</label>
+                <select class="form-select" id="EquipmentTransferredFrom" name="EquipmentTransferredFrom" required>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="EquipmentQuantityRetained" class="form-label">Quantity Retained in holding tank:</label>
+                <input type="text" class="form-control" id="EquipmentQuantityRetained" name="EquipmentQuantityRetained" required>
+            </div>
+            <div class="mb-3">
+                <label for="EquipmentStartTime" class="form-label">Start Time:</label>
+                <input type="time" class="form-control" id="EquipmentStartTime" name="EquipmentStartTime" required>
+            </div>
+            <div class="mb-3">
+                <label for="EquipmentPositionStart" class="form-label">Position at Start:</label>
+                <input type="text" class="form-control" id="EquipmentPositionStart" name="EquipmentPositionStart" required>
+            </div>
+            <div class="mb-3">
+                <label for="EquipmentStopTime" class="form-label">Stop Time:</label>
+                <input type="time" class="form-control" id="EquipmentStopTime" name="EquipmentStopTime" required>
+            </div>
+            <div class="mb-3">
+                <label for="EquipmentPositionStop" class="form-label">Position at Stop:</label>
+                <input type="text" class="form-control" id="EquipmentPositionStop" name="EquipmentPositionStop" required>
+            </div>
+        </div>
+
+        <!-- Reception Initially hidden -->
+        <div id="ReceptionFields">
+            <div class="mb-3">
+                <label for="ReceptionQuantity" class="form-label">Quantity (m³):</label>
+                <input type="text" class="form-control" id="ReceptionQuantity" name="ReceptionQuantity" required>
+            </div>
+            <div class="mb-3">
+                <label for="ReceptionResidue" class="form-label">Residue:</label>
+                <input type="text" class="form-control" id="ReceptionResidue" name="ReceptionResidue" required>
+            </div>
+            <div class="mb-3">
+                <label for="ReceptionTransferredFrom" class="form-label">Transferred From:</label>
+                <select class="form-select" id="ReceptionTransferredFrom" name="ReceptionTransferredFrom" required>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="ReceptionQuantityRetained" class="form-label">Quantity Retained:</label>
+                <input type="text" class="form-control" id="ReceptionQuantityRetained" name="ReceptionQuantityRetained" required>
+            </div>
+            <div class="mb-3">
+                <label for="ReceptionStartTime" class="form-label">Start Time:</label>
+                <input type="time" class="form-control" id="ReceptionStartTime" name="ReceptionStartTime" required>
+            </div>
+            <div class="mb-3">
+                <label for="ReceptionStopTime" class="form-label">Stop Time:</label>
+                <input type="time" class="form-control" id="ReceptionStopTime" name="ReceptionStopTime" required>
+            </div>
+            <div class="mb-3">
+                <label for="ReceptionPortFacilities" class="form-label">Port Reception Facilities:</label>
+                <input type="text" class="form-control" id="ReceptionPortFacilities" name="ReceptionPortFacilities" required>
+            </div>
+            <div class="mb-3">
+                <label for="ReceptionReceiptNo" class="form-label">Receipt No.:</label>
+                <input type="text" class="form-control" id="ReceptionReceiptNo" name="ReceptionReceiptNo" required>
+            </div>
+            <div class="mb-3">
+                <label for="ReceptionAttachment" class="form-label">Upload Attachment:</label>
+                <input type="file" class="form-control" id="ReceptionAttachment" name="ReceptionAttachment" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx, .xlsm">
+            </div>
+        </div>
+
+        <!-- Slop Initially hidden -->
+        <div id="SlopFields">
+            <div class="mb-3">
+                <label for="SlopTransferredTo" class="form-label">Transferred To:</label>
+                <select class="form-select" id="SlopTransferredTo" name="SlopTransferredTo" required>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="SlopQuantity" class="form-label">Quantity (m³):</label>
+                <input type="text" class="form-control" id="SlopQuantity" name="SlopQuantity" required>
+            </div>
+            <div class="mb-3">
+                <label for="SlopResidue" class="form-label">Residue:</label>
+                <input type="text" class="form-control" id="SlopResidue" name="SlopResidue" required>
+            </div>
+            <div class="mb-3">
+                <label for="SlopTransferredFrom" class="form-label">Transferred From:</label>
+                <select class="form-select" id="SlopTransferredFrom" name="SlopTransferredFrom" required>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="SlopQuantityRetainedFrom" class="form-label">Quantity Retained- "Transfer From" Tanks:</label>
+                <input type="text" class="form-control" id="SlopQuantityRetainedFrom" name="SlopQuantityRetainedFrom" required>
+            </div>
+            <div class="mb-3">
+                <label for="SlopStartTime" class="form-label">Start Time:</label>
+                <input type="time" class="form-control" id="SlopStartTime" name="SlopStartTime" required>
+            </div>
+            <div class="mb-3">
+                <label for="SlopStopTime" class="form-label">Stop Time:</label>
+                <input type="time" class="form-control" id="SlopStopTime" name="SlopStopTime" required>
+            </div>
+            <div class="mb-3">
+                <label for="SlopQuantityRetainedTo" class="form-label">Quantity Retained- "Transfer To" Tanks:</label>
+                <input type="text" class="form-control" id="SlopQuantityRetainedTo" name="SlopQuantityRetainedTo" required>
+            </div>
+        </div>
+
+        <button type="submit" id="saveButton" class="btn btn-primary">Save</button>
+        <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
+        <button type="button" id="cancelButton" class="btn btn-danger">Cancel</button>
+    </form>
+
+    <p id="message" class="mt-3 text-center"></p>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/ORB1/DataEntry_codeD.js"></script>
+</body>
+</html>

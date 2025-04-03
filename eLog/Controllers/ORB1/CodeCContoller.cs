@@ -300,7 +300,6 @@ namespace eLog.Controllers.ORB1
                 {
                     "Level 1- Entry" => View("~/Views/ORB1/DataEdit_CodeC.cshtml", recordToEdit),
                     "Level 2- Approver" => View("~/Views/ORB1/Approver_DataEdit_CodeC.cshtml", recordToEdit),
-                    "SuperAdmin" => View("~/Views/ORB1/Approver_DataEdit_CodeC.cshtml", recordToEdit),
                     _ => Forbid() // Handle unexpected roles
                 };
             }

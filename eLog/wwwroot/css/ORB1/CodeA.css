@@ -1,63 +1,288 @@
-﻿/* Improved Table Layout */
+﻿/* Overall page styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* Footer specific styling */
+.footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text */
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+.footer-container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    max-width: 1200px; /* Limit width of footer content */
+}
+
+/* Main container - full width for content */
+.container {
+    max-width: 100%;
+    margin: 0;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* All other styles remain unchanged */
+h2 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin: 30px 0 20px;
+    font-size: 28px;
+}
+
+.record-controls {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    padding: 12px 15px !important;
+    margin-bottom: 20px;
+}
+
+.record-count {
+    font-size: 15px;
+    color: #495057;
+}
+
+.pagination-controls {
+    font-size: 14px;
+}
+
+    .pagination-controls .form-select {
+        width: auto;
+        min-width: 70px;
+    }
+
+    .pagination-controls .btn {
+        padding: 5px 10px;
+        margin: 0 5px;
+    }
+
+    .pagination-controls span {
+        margin: 0 5px;
+    }
+
+/* Table Container - Keeping original scrollable behavior */
 .table-container {
     margin-top: 20px;
     overflow-x: auto;
     max-width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Table Styling */
+/* Tables - Keeping all original table styles */
 .table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 30px;
     table-layout: auto;
     word-wrap: break-word;
 }
 
-    /* Table Header Styling */
-    .table thead th {
-        cursor: pointer;
-        text-align: center;
-        background-color: #007bff;
-        color: white;
-        font-weight: bold;
-        padding: 10px;
-        border: 1px solid #dee2e6;
-        white-space: nowrap; /* Prevent header text from breaking */
-        font-size: 14px;
-    }
-
-    /* Table Body Styling */
-    .table tbody td {
+    .table th,
+    .table td {
+        padding: 12px 18px;
         text-align: center;
         vertical-align: middle;
-        padding: 10px;
         border: 1px solid #dee2e6;
         font-size: 14px;
         word-break: break-word;
     }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
     .table thead th {
-        font-size: 12px;
-        padding: 8px;
+        background-color: #007bff;
+        color: #ffffff;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+        cursor: pointer;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
-    .table tbody td {
-        font-size: 12px;
-        padding: 8px;
-    }
+        .table thead th:hover {
+            background-color: #0069d9;
+        }
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
 }
 
-/* Row Hover Effect */
 .table tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #f1f8e9;
+    transition: background-color 0.2s ease;
+}
+
+/* Action buttons in table */
+.btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: white;
+}
+
+    .btn-info:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
 }
 
 /* Custom style for the disabled button */
-.btn-disabled {
-    background-color: lightgrey !important;
-    border-color: lightgrey !important;
-    color: #6c757d; /* Optional: light grey text */
+button:disabled,
+.disabled {
+    background-color: #e9ecef !important;
+    border-color: #dee2e6 !important;
+    color: #6c757d !important;
     pointer-events: none;
+    opacity: 0.65;
+}
+
+/* Search input styling */
+#searchInput {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 8px 12px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+    #searchInput:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        outline: 0;
+    }
+
+/* Add button styling */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+    .btn-primary:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .container {
+        padding: 20px;
+    }
+
+    .table th,
+    .table td {
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .record-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .pagination-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table,
+    .table tbody,
+    .table tr,
+    .table td {
+        display: block;
+        width: 100%;
+    }
+
+        .table tr {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .table td {
+            text-align: left;
+            position: relative;
+            padding: 12px 10px 12px 40%;
+            border-bottom: 1px solid #eee;
+        }
+
+            .table td:last-child {
+                border-bottom: none;
+            }
+
+            .table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 12px;
+                width: 35%;
+                padding-right: 10px;
+                font-weight: bold;
+                text-align: left;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+}
+
+/* Print styling */
+@media print {
+    body {
+        background-color: #fff;
+    }
+
+    .container {
+        box-shadow: none;
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .table {
+        box-shadow: none;
+    }
+
+        .table th {
+            background-color: #f2f2f2 !important;
+            color: #333 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+    .record-controls,
+    button,
+    .btn,
+    #searchInput {
+        display: none;
+    }
 }

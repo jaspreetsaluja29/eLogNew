@@ -16,6 +16,7 @@ namespace eLog.Controllers.ORB1
             _httpClient = httpClient;
             _basePath = configuration["BasePath"] ?? "";
         }
+        //Code A Start
         public IActionResult CodeA()
         {
             return RedirectToAction("GetCodeAData", "CodeA");
@@ -118,6 +119,9 @@ namespace eLog.Controllers.ORB1
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        //Code A Ends
+
+        //Code C Start
         public IActionResult CodeC()
         {
             return RedirectToAction("GetCodeCData", "CodeC");
@@ -253,7 +257,9 @@ namespace eLog.Controllers.ORB1
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        //Code C Ends
 
+        //Code H Start
         public IActionResult CodeH()
         {
             return RedirectToAction("GetCodeHData", "CodeH");
@@ -350,6 +356,144 @@ namespace eLog.Controllers.ORB1
                 else
                 {
                     return StatusCode((int)response.StatusCode, "Error in CodeHController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        //Code H Ends
+
+        //Code D Start
+        public IActionResult CodeD()
+        {
+            return RedirectToAction("GetCodeDData", "CodeD");
+        }
+
+        [Route("ORB1/CodeD/CreateCodeD")]
+        [HttpPost]
+        public async Task<IActionResult> CreateCodeD([FromForm] CodeDModel model, IFormFile? ReceptionAttachment)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                // For direct file handling approach
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+
+                // Create a new HttpClient instance for this specific request
+                using (var client = new HttpClient())
+                {
+                    using (var multipartContent = new MultipartFormDataContent())
+                    {
+                        // Add the model data
+                        // Convert model properties to string form values
+                        foreach (var prop in typeof(CodeDModel).GetProperties())
+                        {
+                            var value = prop.GetValue(model)?.ToString();
+                            if (value != null)
+                            {
+                                multipartContent.Add(new StringContent(value), prop.Name);
+                            }
+                        }
+
+                        // Add the file if it exists
+                        if (ReceptionAttachment != null && ReceptionAttachment.Length > 0)
+                        {
+                            // Create a byte array and read all file content into it
+                            var fileBytes = new byte[ReceptionAttachment.Length];
+                            using (var stream = ReceptionAttachment.OpenReadStream())
+                            {
+                                await stream.ReadAsync(fileBytes, 0, (int)ReceptionAttachment.Length);
+                            }
+
+                            // Create a ByteArrayContent from the bytes we just read
+                            var fileContent = new ByteArrayContent(fileBytes);
+                            multipartContent.Add(fileContent, "attachment", ReceptionAttachment.FileName);
+                        }
+
+                        var response = await client.PostAsync($"{baseUrl}/ORB1/CodeD/Create", multipartContent);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return Json(new { success = true, message = "Data submitted successfully!" });
+                        }
+                        else
+                        {
+                            var errorContent = await response.Content.ReadAsStringAsync();
+                            return StatusCode((int)response.StatusCode, $"Error in CodeDController: {errorContent}");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Route("ORB1/CodeD/UpdateCodeD")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateCodeD([FromBody] CodeDViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeDController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeD/Update", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeDController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Route("ORB1/CodeD/ApproverUpdateCodeD")]
+        [HttpPost]
+        public async Task<IActionResult> ApproverUpdateCodeD([FromBody] CodeDViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeDController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeD/ApproverUpdate", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeDController.");
                 }
             }
             catch (Exception ex)
