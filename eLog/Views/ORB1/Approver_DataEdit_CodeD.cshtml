@@ -1,7 +1,7 @@
-﻿@model eLog.ViewModels.ORB1.CodeCViewModel
+﻿@model eLog.ViewModels.ORB1.CodeDViewModel
 @{
     Layout = "_BlankLayout";
-    ViewData["Title"] = "Approver_Edit_CodeC";
+    ViewData["Title"] = "Approver_Edit_CodeD";
 }
 
 <!DOCTYPE html>
@@ -9,14 +9,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Approver Edit CodeC Data</title>
+    <title>Approver Edit CodeD Data</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/css/ORB1/DataEntry_CodeA.css" rel="stylesheet">
 </head>
 <body class="container mt-5">
-    <h2 class="text-center mb-4">APPROVER - WEEKLY- COLLECTION, TRANSFER AND DISPOSAL OF OIL RESIDUES (SLUDGE)</h2>
+    <h2 class="text-center mb-4">APPROVER - OILY BILGE WATER HANDLING</h2>
 
-    <form asp-action="Edit" asp-controller="CodeC" method="post" id="EditCodeCForm" class="p-4 border rounded bg-light">
+    <form asp-action="Edit" asp-controller="CodeD" method="post" id="EditCodeDForm" class="p-4 border rounded bg-light">
         <input type="hidden" asp-for="Id" />
 
         <div class="mb-3">
@@ -26,201 +26,144 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="CollectionType" class="form-label">Collection / transfer / disposal:</label>
-            <select class="form-select" asp-for="CollectionType" required disabled>
-                <option value="WeeklyInventory">Weekly Inventory</option>
-                <option value="Collection">Collection</option>
-                <option value="Transfer">Transfer</option>
-                <option value="Incinerator">Incinerator</option>
-                <option value="DisposalShip">Disposal Ship</option>
-                <option value="DisposalShore">Disposal Shore</option>
+            <label asp-for="MethodDischargeTransferDisposal" class="form-label">Method of Discharge, transfer or Disposal:</label>
+            <select class="form-select" asp-for="MethodDischargeTransferDisposal" required disabled>
+                <option value="Through 15 PPM Equipment">Through 15 PPM Equipment</option>
+                <option value="To Reception facilities">To Reception facilities</option>
+                <option value="To Slop, holding or other tank">To Slop, holding or other tank</option>
             </select>
-            <span asp-validation-for="CollectionType" class="text-danger"></span>
+            <span asp-validation-for="MethodDischargeTransferDisposal" class="text-danger"></span>
         </div>
 
-        <!-- Weekly Inventory Fields -->
-        <div id="WeeklyInventoryFields">
+        <!-- Equipment Fields -->
+        <div id="EquipmentFields">
             <div class="mb-3">
-                <label asp-for="WeeklyIdentityOfTanks" class="form-label">Identity of Tank(s):</label>
-                <input type="text" class="form-control" asp-for="WeeklyIdentityOfTanks" id="WeeklyIdentityOfTanks" value="@Model.WeeklyIdentityOfTanks" required disabled>
-                <span asp-validation-for="WeeklyIdentityOfTanks" class="text-danger"></span>
+                <label asp-for="EquipmentQuantity" class="form-label">Quantity (m³):</label>
+                <input type="text" class="form-control" asp-for="EquipmentQuantity" required>
+                <span asp-validation-for="EquipmentQuantity" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="WeeklyCapacityOfTanks" class="form-label">Capacity of Tanks(s) in m³:</label>
-                <input type="text" class="form-control" asp-for="WeeklyCapacityOfTanks" id="WeeklyCapacityOfTanks" value="@Model.WeeklyCapacityOfTanks" required disabled>
-                <span asp-validation-for="WeeklyCapacityOfTanks" class="text-danger"></span>
+                <label asp-for="EquipmentResidue" class="form-label">Residue:</label>
+                <input type="text" class="form-control" asp-for="EquipmentResidue" required>
+                <span asp-validation-for="EquipmentResidue" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="WeeklyTotalQuantityOfRetention" class="form-label">Total quantity of retention in m³:</label>
-                <input type="text" class="form-control" asp-for="WeeklyTotalQuantityOfRetention" required>
-                <span asp-validation-for="WeeklyTotalQuantityOfRetention" class="text-danger"></span>
-            </div>
-        </div>
-
-        <!-- Collection Fields -->
-        <div id="CollectionFields" style="display: none;">
-            <div class="mb-3">
-                <label asp-for="CollectionIdentityOfTanks" class="form-label">Identity of Tank(s):</label>
-                <input type="text" class="form-control" asp-for="CollectionIdentityOfTanks" id="CollectionIdentityOfTanks" value="@Model.CollectionIdentityOfTanks" required disabled>
-                <span asp-validation-for="CollectionIdentityOfTanks" class="text-danger"></span>
+                <label asp-for="EquipmentTransferredFrom" class="form-label">Transferred From:</label>
+                <input type="text" class="form-control" asp-for="EquipmentTransferredFrom" id="EquipmentTransferredFrom" value="@Model.EquipmentTransferredFrom" required disabled>
+                <span asp-validation-for="EquipmentTransferredFrom" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="CollectionCapacityOfTanks" class="form-label">Capacity of Tanks(s) in m³:</label>
-                <input type="text" class="form-control" asp-for="CollectionCapacityOfTanks" id="CollectionCapacityOfTanks" value="@Model.CollectionCapacityOfTanks" required disabled>
-                <span asp-validation-for="CollectionCapacityOfTanks" class="text-danger"></span>
+                <label asp-for="EquipmentQuantityRetained" class="form-label">Quantity Retained in holding tank:</label>
+                <input type="text" class="form-control" asp-for="EquipmentQuantityRetained" required>
+                <span asp-validation-for="EquipmentQuantityRetained" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="CollectionTotalQuantityOfRetention" class="form-label">Total quantity of retention in m³:</label>
-                <input type="text" class="form-control" asp-for="CollectionTotalQuantityOfRetention" required>
-                <span asp-validation-for="CollectionTotalQuantityOfRetention" class="text-danger"></span>
+                <label asp-for="EquipmentStartTime" class="form-label">Start Time:</label>
+                <input type="time" class="form-control" asp-for="EquipmentStartTime" required>
+                <span asp-validation-for="EquipmentStartTime" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="CollectionManualResidueQuantity" class="form-label">Quantity of residue collected by manual operation:</label>
-                <input type="text" class="form-control" asp-for="CollectionManualResidueQuantity" required>
-                <span asp-validation-for="CollectionManualResidueQuantity" class="text-danger"></span>
+                <label asp-for="EquipmentPositionStart" class="form-label">Position at Start:</label>
+                <input type="text" class="form-control" asp-for="EquipmentPositionStart" required>
+                <span asp-validation-for="EquipmentPositionStart" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="CollectionCollectedFromTank" class="form-label">Collected from (Tank):</label>
-                <input type="text" class="form-control" asp-for="CollectionCollectedFromTank" required>
-                <span asp-validation-for="CollectionCollectedFromTank" class="text-danger"></span>
+                <label asp-for="EquipmentStopTime" class="form-label">Stop Time:</label>
+                <input type="time" class="form-control" asp-for="EquipmentStopTime" required>
+                <span asp-validation-for="EquipmentStopTime" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EquipmentPositionStop" class="form-label">Position at Stop:</label>
+                <input type="text" class="form-control" asp-for="EquipmentPositionStop" required>
+                <span asp-validation-for="EquipmentPositionStop" class="text-danger"></span>
             </div>
         </div>
 
-        <!-- Transfer Fields -->
-        <div id="TransferFields" style="display: none;">
+        <!-- Reception Fields -->
+        <div id="ReceptionFields" style="display: none;">
             <div class="mb-3">
-                <label asp-for="TransferOperationType" class="form-label">Type of Operation:</label>
-                <input type="text" class="form-control" asp-for="TransferOperationType" id="TransferOperationType" value="@Model.TransferOperationType" required disabled>
-                <span asp-validation-for="TransferOperationType" class="text-danger"></span>
+                <label asp-for="ReceptionQuantity" class="form-label">Quantity (m³):</label>
+                <input type="text" class="form-control" asp-for="ReceptionQuantity" required>
+                <span asp-validation-for="ReceptionQuantity" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="TransferQuantity" class="form-label">Quantity:</label>
-                <input type="text" class="form-control" asp-for="TransferQuantity" required>
-                <span asp-validation-for="TransferQuantity" class="text-danger"></span>
+                <label asp-for="ReceptionResidue" class="form-label">Residue:</label>
+                <input type="text" class="form-control" asp-for="ReceptionResidue" required>
+                <span asp-validation-for="ReceptionResidue" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="TransferTanksFrom" class="form-label">Tanks (from):</label>
-                <input type="text" class="form-control" asp-for="TransferTanksFrom" id="TransferTanksFrom" value="@Model.TransferTanksFrom" required disabled>
-                <span asp-validation-for="TransferTanksFrom" class="text-danger"></span>
+                <label asp-for="ReceptionTransferredFrom" class="form-label">Transferred From:</label>
+                <input type="text" class="form-control" asp-for="ReceptionTransferredFrom" id="ReceptionTransferredFrom" value="@Model.ReceptionTransferredFrom" required disabled>
+                <span asp-validation-for="ReceptionTransferredFrom" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="TransferRetainedInTransfer" class="form-label">Retained In "Transfer Tank":</label>
-                <input type="text" class="form-control" asp-for="TransferRetainedInTransfer" required>
-                <span asp-validation-for="TransferRetainedInTransfer" class="text-danger"></span>
+                <label asp-for="ReceptionQuantityRetained" class="form-label">Quantity Retained:</label>
+                <input type="text" class="form-control" asp-for="ReceptionQuantityRetained" required>
+                <span asp-validation-for="ReceptionQuantityRetained" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="TransferTanksTo" class="form-label">Tanks (to):</label>
-                <input type="text" class="form-control" asp-for="TransferTanksTo" id="TransferTanksTo" value="@Model.TransferTanksTo" required disabled>
-                <span asp-validation-for="TransferTanksTo" class="text-danger"></span>
+                <label asp-for="ReceptionStartTime" class="form-label">Start Time:</label>
+                <input type="time" class="form-control" asp-for="ReceptionStartTime" required>
+                <span asp-validation-for="ReceptionStartTime" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="TransferRetainedInReceiving" class="form-label">Retained In "Receiving Tank":</label>
-                <input type="text" class="form-control" asp-for="TransferRetainedInReceiving" required>
-                <span asp-validation-for="TransferRetainedInReceiving" class="text-danger"></span>
-            </div>
-        </div>
-
-        <!-- Incinerator Fields -->
-        <div id="IncineratorFields" style="display: none;">
-            <div class="mb-3">
-                <label asp-for="IncineratorOperationType" class="form-label">Type of Operation:</label>
-                <select class="form-select" asp-for="IncineratorOperationType" required>
-                    <option value="Incineration">Incineration</option>
-                </select>
-                <span asp-validation-for="IncineratorOperationType" class="text-danger"></span>
+                <label asp-for="ReceptionStopTime" class="form-label">Stop Time:</label>
+                <input type="time" class="form-control" asp-for="ReceptionStopTime" required>
+                <span asp-validation-for="ReceptionStopTime" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="IncineratorQuantity" class="form-label">Quantity:</label>
-                <input type="text" class="form-control" asp-for="IncineratorQuantity" value="@Model.IncineratorQuantity" required>
-                <span asp-validation-for="IncineratorQuantity" class="text-danger"></span>
+                <label asp-for="ReceptionPortFacilities" class="form-label">Port Reception Facilities:</label>
+                <input type="text" class="form-control" asp-for="ReceptionPortFacilities" required>
+                <span asp-validation-for="ReceptionPortFacilities" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="IncineratorTanksFrom" class="form-label">Tanks (from):</label>
-                <input type="text" class="form-control" asp-for="IncineratorTanksFrom" required>
-                <span asp-validation-for="IncineratorTanksFrom" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="IncineratorTotalRetainedContent" class="form-label">Total content of tank(s)- Retained:</label>
-                <input type="text" class="form-control" asp-for="IncineratorTotalRetainedContent" required>
-                <span asp-validation-for="IncineratorTotalRetainedContent" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="IncineratorStartTime" class="form-label">Start Time:</label>
-                <input type="time" class="form-control" asp-for="IncineratorStartTime" required>
-                <span asp-validation-for="IncineratorStartTime" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="IncineratorStopTime" class="form-label">Stop Time:</label>
-                <input type="time" class="form-control" asp-for="IncineratorStopTime" required>
-                <span asp-validation-for="IncineratorStopTime" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="IncineratorTotalOperationTime" class="form-label">Total time of operation (hrs):</label>
-                <input type="text" class="form-control" asp-for="IncineratorTotalOperationTime" required>
-                <span asp-validation-for="IncineratorTotalOperationTime" class="text-danger"></span>
+                <label asp-for="ReceptionReceiptNo" class="form-label">Receipt No.:</label>
+                <input type="text" class="form-control" asp-for="ReceptionReceiptNo" required>
+                <span asp-validation-for="ReceptionReceiptNo" class="text-danger"></span>
             </div>
         </div>
 
-        <!-- Disposal Ship Fields -->
-        <div id="DisposalShipFields" style="display: none;">
+        <!-- Slop Fields -->
+        <div id="SlopFields" style="display: none;">
             <div class="mb-3">
-                <label asp-for="DisposalShipQuantity" class="form-label">Quantity:</label>
-                <input type="text" class="form-control" asp-for="DisposalShipQuantity" required>
-                <span asp-validation-for="DisposalShipQuantity" class="text-danger"></span>
+                <label asp-for="SlopTransferredTo" class="form-label">Transferred To:</label>
+                <input type="text" class="form-control" asp-for="SlopTransferredTo" id="SlopTransferredTo" value="@Model.SlopTransferredTo" required disabled>
+                <span asp-validation-for="SlopTransferredTo" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="DisposalShipTanksFrom" class="form-label">Tanks (from):</label>
-                <input type="text" class="form-control" asp-for="DisposalShipTanksFrom" required>
-                <span asp-validation-for="DisposalShipTanksFrom" class="text-danger"></span>
+                <label asp-for="SlopQuantity" class="form-label">Quantity (m³):</label>
+                <input type="text" class="form-control" asp-for="SlopQuantity" required>
+                <span asp-validation-for="SlopQuantity" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="DisposalShipRetainedIn" class="form-label">Retained In:</label>
-                <input type="text" class="form-control" asp-for="DisposalShipRetainedIn" required>
-                <span asp-validation-for="DisposalShipRetainedIn" class="text-danger"></span>
+                <label asp-for="SlopResidue" class="form-label">Residue:</label>
+                <input type="text" class="form-control" asp-for="SlopResidue" required>
+                <span asp-validation-for="SlopResidue" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="DisposalShipTanksTo" class="form-label">Tanks (to):</label>
-                <input type="text" class="form-control" asp-for="DisposalShipTanksTo" required>
-                <span asp-validation-for="DisposalShipTanksTo" class="text-danger"></span>
+                <label asp-for="SlopTransferredFrom" class="form-label">Transferred From:</label>
+                <input type="text" class="form-control" asp-for="SlopTransferredFrom" id="SlopTransferredFrom" value="@Model.SlopTransferredFrom" required disabled>
+                <span asp-validation-for="SlopTransferredFrom" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="DisposalShipRetainedTo" class="form-label">Retained To:</label>
-                <input type="text" class="form-control" asp-for="DisposalShipRetainedTo" required>
-                <span asp-validation-for="DisposalShipRetainedTo" class="text-danger"></span>
-            </div>
-        </div>
-
-        <!-- Disposal Shore Fields -->
-        <div id="DisposalShoreFields" style="display: none;">
-            <div class="mb-3">
-                <label asp-for="DisposalShoreQuantity" class="form-label">Quantity:</label>
-                <input type="text" class="form-control" asp-for="DisposalShoreQuantity" required>
-                <span asp-validation-for="DisposalShoreQuantity" class="text-danger"></span>
+                <label asp-for="SlopQuantityRetainedFrom" class="form-label">Quantity Retained- "Transfer From" Tanks:</label>
+                <input type="text" class="form-control" asp-for="SlopQuantityRetainedFrom" required>
+                <span asp-validation-for="SlopQuantityRetainedFrom" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="DisposalShoreTanksFrom" class="form-label">Tanks (from):</label>
-                <input type="text" class="form-control" asp-for="DisposalShoreTanksFrom" required>
-                <span asp-validation-for="DisposalShoreTanksFrom" class="text-danger"></span>
+                <label asp-for="SlopStartTime" class="form-label">Start Time:</label>
+                <input type="time" class="form-control" asp-for="SlopStartTime" required>
+                <span asp-validation-for="SlopStartTime" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="DisposalShoreRetainedInDischargeTanks" class="form-label">Retained In Discharge Tanks:</label>
-                <input type="text" class="form-control" asp-for="DisposalShoreRetainedInDischargeTanks" required>
-                <span asp-validation-for="DisposalShoreRetainedInDischargeTanks" class="text-danger"></span>
+                <label asp-for="SlopStopTime" class="form-label">Stop Time:</label>
+                <input type="time" class="form-control" asp-for="SlopStopTime" required>
+                <span asp-validation-for="SlopStopTime" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="DisposalShoreBargeName" class="form-label">Barge Name:</label>
-                <input type="text" class="form-control" asp-for="DisposalShoreBargeName" required>
-                <span asp-validation-for="DisposalShoreBargeName" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="DisposalShoreReceptionFacility" class="form-label">To reception facilities:</label>
-                <input type="text" class="form-control" asp-for="DisposalShoreReceptionFacility" required>
-                <span asp-validation-for="DisposalShoreReceptionFacility" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="DisposalShoreReceiptNo" class="form-label">Receipt No.:</label>
-                <input type="text" class="form-control" asp-for="DisposalShoreReceiptNo" required>
-                <span asp-validation-for="DisposalShoreReceiptNo" class="text-danger"></span>
+                <label asp-for="SlopQuantityRetainedTo" class="form-label">Quantity Retained- "Transfer To" Tanks:</label>
+                <input type="text" class="form-control" asp-for="SlopQuantityRetainedTo" required>
+                <span asp-validation-for="SlopQuantityRetainedTo" class="text-danger"></span>
             </div>
         </div>
 
@@ -245,6 +188,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/js/ORB1/Approver_DataEdit_codeC.js"></script>
+    <script src="~/js/ORB1/Approver_DataEdit_codeD.js"></script>
 </body>
 </html>

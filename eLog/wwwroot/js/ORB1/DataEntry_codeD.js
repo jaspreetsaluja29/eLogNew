@@ -159,7 +159,7 @@ function fetchTankData() {
                 optionsHtml += `<option value="${tank.tankIdentification}">${formattedText}</option>`;
             });
             // Populate dropdown fields
-            $('#EquipmentTransferredFrom, #ReceptionTransferredFrom, #SlopTransferredFrom').html(optionsHtml);
+            $('#EquipmentTransferredFrom, #ReceptionTransferredFrom, #SlopTransferredTo, #SlopTransferredFrom').html(optionsHtml);
 
             // Check if dropdowns were populated successfully
             console.log("Dropdowns populated with options:", optionsHtml);

@@ -186,7 +186,7 @@ namespace eLog.Controllers.ORB1
                                     SlopStopTime = reader.IsDBNull(26) ? (TimeSpan?)null : reader.GetTimeSpan(26),
                                     SlopQuantityRetainedTo = reader.IsDBNull(27) ? (decimal?)null : reader.GetDecimal(27),
                                     StatusName = reader.IsDBNull(28) ? null : reader.GetString(28),
-                                    ApprovedBy = reader.IsDBNull(29) ? null : reader.GetString(29),
+                                    ApprovedBy = reader.IsDBNull(28) ? null : reader.GetString(28),
                                     Comments = reader.IsDBNull(30) ? null : reader.GetString(30)
                                 };
                             }
@@ -418,7 +418,9 @@ namespace eLog.Controllers.ORB1
                     new SqlParameter("@SlopQuantityRetainedFrom", model.SlopQuantityRetainedFrom ?? (object)DBNull.Value),
                     new SqlParameter("@SlopStartTime", (object)model.SlopStartTime ?? DBNull.Value),
                     new SqlParameter("@SlopStopTime", (object)model.SlopStopTime ?? DBNull.Value),
-                    new SqlParameter("@SlopQuantityRetainedTo", model.SlopQuantityRetainedTo ?? (object)DBNull.Value)
+                    new SqlParameter("@SlopQuantityRetainedTo", model.SlopQuantityRetainedTo ?? (object)DBNull.Value),
+                    new SqlParameter("@StatusName", (object)model.StatusName ?? DBNull.Value),
+                    new SqlParameter("@Comments", (object)model.Comments ?? DBNull.Value)
                 };
 
                 int result = _db.ExecuteUpdateStoredProcedure(storedProcedure, parameters);
