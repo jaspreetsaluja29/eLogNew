@@ -501,5 +501,111 @@ namespace eLog.Controllers.ORB1
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        //Code D Ends
+
+        //Code G Start
+        public IActionResult CodeG()
+        {
+            return RedirectToAction("GetCodeGData", "CodeG");
+        }
+        [Route("ORB1/CodeG/CreateCodeG")]
+        [HttpPost]
+        public async Task<IActionResult> CreateCodeG([FromBody] CodeGModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeGController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeG/Create", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeGController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Route("ORB1/CodeG/UpdateCodeG")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateCodeG([FromBody] CodeGViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeGController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeG/Update", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeGController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Route("ORB1/CodeG/ApproverUpdateCodeG")]
+        [HttpPost]
+        public async Task<IActionResult> ApproverUpdateCodeG([FromBody] CodeGViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeGController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeG/ApproverUpdate", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeGController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        //Code G Ends
     }
 }

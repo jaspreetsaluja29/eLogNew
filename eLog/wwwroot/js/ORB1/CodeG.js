@@ -8,7 +8,7 @@ function openAddWindow() {
     var userRoleName = document.getElementById('hiddenUserRole')?.value || '';
 
     // Encode the values to handle spaces and special characters
-    var url = `${basePath}/CodeA/DataEntry_CodeA?userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}`;
+    var url = `${basePath}/CodeG/DataEntry_CodeG?userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}`;
 
     window.open(url, 'AddRecord');
 }
@@ -16,7 +16,7 @@ function openAddWindow() {
 // Track sorting order
 let sortOrder = {};
 function sortTable(columnIndex) {
-    var table = document.getElementById("codeATable");
+    var table = document.getElementById("codeGTable");
     var rows = Array.from(table.rows).slice(1); // Skip header row
     var sortedRows;
 
@@ -63,7 +63,7 @@ function sortTable(columnIndex) {
 // Filter the table based on the search input
 function filterTable() {
     var input = document.getElementById("searchInput").value.toLowerCase();
-    var rows = document.querySelectorAll("#codeATable tbody tr");
+    var rows = document.querySelectorAll("#codeGTable tbody tr");
 
     rows.forEach(row => {
         row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
@@ -79,7 +79,7 @@ function editRecord(id) {
     var userRoleName = document.getElementById('hiddenUserRole')?.value || '';
 
     // Encode the values to handle spaces and special characters
-    var url = `${basePath}/CodeA/Edit/${id}?userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}`;
+    var url = `${basePath}/CodeG/Edit/${id}?userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}`;
 
     window.open(url, 'EditRecord'); // Open in new window/tab
 }
@@ -96,6 +96,6 @@ function changePage(offset) {
 
     if (newPage >= 1 && newPage <= totalPages) {
         var basePath = document.querySelector('base')?.getAttribute('href') || '/';
-        window.location.href = `${basePath}/ORB1/CodeA/GetCodeAData?pageNumber=${newPage}&pageSize=${pageSize}`;
+        window.location.href = `${basePath}/ORB1/CodeG/GetCodeGData?pageNumber=${newPage}&pageSize=${pageSize}`;
     }
 }
