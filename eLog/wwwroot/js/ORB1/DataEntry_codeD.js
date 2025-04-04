@@ -32,6 +32,11 @@
         }
     });
 
+    // Add this to your existing document.ready function
+    $('#ReceptionAttachment').change(function () {
+        previewAttachment(this);
+    });
+
     // Call the function to fetch and populate dropdowns on page load
     fetchTankData();
 
@@ -168,4 +173,52 @@ function fetchTankData() {
             console.error("AJAX Error:", xhr.responseText);
         }
     });
+}
+
+// Function to preview attachment before upload
+function previewAttachment(input) {
+    $('#attachmentPreview').empty();
+
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const fileName = file.name;
+        const fileSize = Math.round(file.size / 1024) + ' KB';
+        const fileExt = fileName.split('.').pop().toLowerCase();
+
+        let previewHtml = `
+            <div class="card p-2">
+                <div class="d-flex align-items-center">
+                    <div class="attachment-icon me-2">`;
+
+        // Show different icons based on file type
+        if (['jpg', 'jpeg', 'png'].includes(fileExt)) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#attachmentPreview .attachment-icon').html(`
+                    <img src="${e.target.result}" class="img-thumbnail" style="max-height: 80px;" alt="Preview">
+                `);
+            };
+            reader.readAsDataURL(file);
+            previewHtml += `<span class="spinner-border spinner-border-sm" role="status"></span>`;
+        } else if (fileExt === 'pdf') {
+            previewHtml += `<i class="bi bi-file-earmark-pdf text-danger fs-3"></i>`;
+        } else if (['doc', 'docx'].includes(fileExt)) {
+            previewHtml += `<i class="bi bi-file-earmark-word text-primary fs-3"></i>`;
+        } else if (['xlsx', 'xlsm'].includes(fileExt)) {
+            previewHtml += `<i class="bi bi-file-earmark-excel text-success fs-3"></i>`;
+        } else {
+            previewHtml += `<i class="bi bi-file-earmark fs-3"></i>`;
+        }
+
+        previewHtml += `
+                    </div>
+                    <div>
+                        <p class="mb-0 fw-bold">${fileName}</p>
+                        <small class="text-muted">${fileSize}</small>
+                    </div>
+                </div>
+            </div>`;
+
+        $('#attachmentPreview').html(previewHtml);
+    }
 }
