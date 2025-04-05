@@ -607,5 +607,110 @@ namespace eLog.Controllers.ORB1
             }
         }
         //Code G Ends
+
+        //Code F Start
+        public IActionResult CodeF()
+        {
+            return RedirectToAction("GetCodeFData", "CodeF");
+        }
+        [Route("ORB1/CodeF/CreateCodeF")]
+        [HttpPost]
+        public async Task<IActionResult> CreateCodeF([FromBody] CodeFModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeFController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeF/Create", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeFController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Route("ORB1/CodeF/UpdateCodeF")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateCodeF([FromBody] CodeFViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeFController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeF/Update", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeFController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Route("ORB1/CodeF/ApproverUpdateCodeF")]
+        [HttpPost]
+        public async Task<IActionResult> ApproverUpdateCodeF([FromBody] CodeFViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeFController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeF/ApproverUpdate", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeFController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        //Code G Ends
     }
 }
