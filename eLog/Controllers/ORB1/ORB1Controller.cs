@@ -712,5 +712,143 @@ namespace eLog.Controllers.ORB1
             }
         }
         //Code G Ends
+
+        //Code B Start
+        public IActionResult CodeB()
+        {
+            return RedirectToAction("GetCodeBData", "CodeB");
+        }
+
+        [Route("ORB1/CodeB/CreateCodeB")]
+        [HttpPost]
+        public async Task<IActionResult> CreateCodeB([FromForm] CodeBModel model, IFormFile? ReceptionAttachment)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                // For direct file handling approach
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+
+                // Create a new HttpClient instance for this specific request
+                using (var client = new HttpClient())
+                {
+                    using (var multipartContent = new MultipartFormDataContent())
+                    {
+                        // Add the model data
+                        // Convert model properties to string form values
+                        foreach (var prop in typeof(CodeBModel).GetProperties())
+                        {
+                            var value = prop.GetValue(model)?.ToString();
+                            if (value != null)
+                            {
+                                multipartContent.Add(new StringContent(value), prop.Name);
+                            }
+                        }
+
+                        // Add the file if it exists
+                        if (ReceptionAttachment != null && ReceptionAttachment.Length > 0)
+                        {
+                            // Create a byte array and read all file content into it
+                            var fileBytes = new byte[ReceptionAttachment.Length];
+                            using (var stream = ReceptionAttachment.OpenReadStream())
+                            {
+                                await stream.ReadAsync(fileBytes, 0, (int)ReceptionAttachment.Length);
+                            }
+
+                            // Create a ByteArrayContent from the bytes we just read
+                            var fileContent = new ByteArrayContent(fileBytes);
+                            multipartContent.Add(fileContent, "attachment", ReceptionAttachment.FileName);
+                        }
+
+                        var response = await client.PostAsync($"{baseUrl}/ORB1/CodeB/Create", multipartContent);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return Json(new { success = true, message = "Data submitted successfully!" });
+                        }
+                        else
+                        {
+                            var errorContent = await response.Content.ReadAsStringAsync();
+                            return StatusCode((int)response.StatusCode, $"Error in CodeBController: {errorContent}");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Route("ORB1/CodeB/UpdateCodeB")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateCodeB([FromBody] CodeBViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeBController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeB/Update", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeBController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Route("ORB1/CodeB/ApproverUpdateCodeB")]
+        [HttpPost]
+        public async Task<IActionResult> ApproverUpdateCodeB([FromBody] CodeBViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeBController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeB/ApproverUpdate", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeBController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        //Code B Ends
     }
 }
