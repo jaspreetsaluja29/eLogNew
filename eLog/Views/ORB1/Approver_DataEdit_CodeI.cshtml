@@ -1,0 +1,164 @@
+﻿@model eLog.ViewModels.ORB1.CodeIViewModel
+@{
+    Layout = "_BlankLayout";
+    ViewData["Title"] = "Approver_Edit_CodeI";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approver Edit CodeI Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/ORB1/DataEntry_CodeA.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h2 class="text-center mb-4">APPROVER - VOLUNTARY DECLARATION OF QUANTITIES "RETAINED ON BOARD" IN OILY BILGE WATER HOLDING TANKS</h2>
+
+    <form asp-action="Edit" asp-controller="CodeI" method="post" id="EditCodeIForm" class="p-4 border rounded bg-light">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label asp-for="EntryDate" class="form-label">Date (YYYY-MM-DD):</label>
+            <input type="date" class="form-control" asp-for="EntryDate" required>
+            <span asp-validation-for="EntryDate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="SelectType" class="form-label">Select:</label>
+            <select class="form-select" asp-for="SelectType" required disabled>
+                <option value="Select" selected>Select</option>
+                <option value="Debunkering">Debunkering</option>
+                <option value="Sealing of Valve">Sealing of Valve</option>
+                <option value="Breaking of Seal">Breaking of Seal</option>
+            </select>
+            <span asp-validation-for="SelectType" class="text-danger"></span>
+        </div>
+
+        <!-- Debunkering Fields -->
+        <div id="DebunkeringFields" style="display:none;">
+            <div class="mb-3">
+                <label asp-for="DebunkeringQuantity" class="form-label">Quantity(MT):</label>
+                <input type="text" class="form-control" asp-for="DebunkeringQuantity">
+                <span asp-validation-for="DebunkeringQuantity" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DebunkeringGrade" class="form-label">Grade:</label>
+                <input type="text" class="form-control" asp-for="DebunkeringGrade">
+                <span asp-validation-for="DebunkeringGrade" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DebunkeringSulphurContent" class="form-label">Sulphur Content:</label>
+                <input type="text" class="form-control" asp-for="DebunkeringSulphurContent">
+                <span asp-validation-for="DebunkeringSulphurContent" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DebunkeringFrom" class="form-label">Debunkered From:</label>
+                <input type="text" class="form-control" asp-for="DebunkeringFrom">
+                <span asp-validation-for="DebunkeringFrom" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DebunkeringQuantityRetained" class="form-label">Quantity Retained in Debunkered Tank:</label>
+                <input type="text" class="form-control" asp-for="DebunkeringQuantityRetained">
+                <span asp-validation-for="DebunkeringQuantityRetained" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DebunkeringTo" class="form-label">Debunkered To:</label>
+                <input type="text" class="form-control" asp-for="DebunkeringTo">
+                <span asp-validation-for="DebunkeringTo" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DebunkeringPortFacility" class="form-label">Port Facility:</label>
+                <input type="text" class="form-control" asp-for="DebunkeringPortFacility">
+                <span asp-validation-for="DebunkeringPortFacility" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DebunkeringStartDateTime" class="form-label">Start Date & Time:</label>
+                <input type="datetime-local" class="form-control" asp-for="DebunkeringStartDateTime">
+                <span asp-validation-for="DebunkeringStartDateTime" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DebunkeringStopDateTime" class="form-label">Stop Date & Time:</label>
+                <input type="datetime-local" class="form-control" asp-for="DebunkeringStopDateTime">
+                <span asp-validation-for="DebunkeringStopDateTime" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Sealing Fields -->
+        <div id="SealingFields" style="display:none;">
+            <div class="mb-3">
+                <label asp-for="ValveName" class="form-label">Valve Name:</label>
+                <input type="text" class="form-control" asp-for="ValveName">
+                <span asp-validation-for="ValveName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ValveNo" class="form-label">Valve No.:</label>
+                <input type="text" class="form-control" asp-for="ValveNo">
+                <span asp-validation-for="ValveNo" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ValveAssociatedEquipment" class="form-label">Associated Equipment:</label>
+                <input type="text" class="form-control" asp-for="ValveAssociatedEquipment">
+                <span asp-validation-for="ValveAssociatedEquipment" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ValveSealNo" class="form-label">Seal No.:</label>
+                <input type="text" class="form-control" asp-for="ValveSealNo">
+                <span asp-validation-for="ValveSealNo" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Breaking Fields -->
+        <div id="BreakingFields" style="display:none;">
+            <div class="mb-3">
+                <label asp-for="BreakingValveName" class="form-label">Valve Name:</label>
+                <input type="text" class="form-control" asp-for="BreakingValveName">
+                <span asp-validation-for="BreakingValveName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BreakingValveNo" class="form-label">Valve No.:</label>
+                <input type="text" class="form-control" asp-for="BreakingValveNo">
+                <span asp-validation-for="BreakingValveNo" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BreakingAssociatedEquipment" class="form-label">Associated Equipment:</label>
+                <input type="text" class="form-control" asp-for="BreakingAssociatedEquipment">
+                <span asp-validation-for="BreakingAssociatedEquipment" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BreakingReason" class="form-label">Reason for Breaking of Optional Seal:</label>
+                <input type="text" class="form-control" asp-for="BreakingReason">
+                <span asp-validation-for="BreakingReason" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BreakingSealNo" class="form-label">Seal No.:</label>
+                <input type="text" class="form-control" asp-for="BreakingSealNo">
+                <span asp-validation-for="BreakingSealNo" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- New Required Comment Field -->
+        <div class="mb-3">
+            <label asp-for="Comments" class="form-label">Approver Comment:</label>
+            <textarea class="form-control" asp-for="Comments" rows="3" required placeholder="Enter your comments"></textarea>
+            <span asp-validation-for="Comments" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <button type="submit" id="approveButton" name="action" value="Approved" class="btn btn-success">Approve</button>
+            <button type="submit" id="rejectButton" name="action" value="Rejected" class="btn btn-danger">Reject</button>
+            <button type="button" id="cancelButton" class="btn btn-secondary">Cancel</button>
+        </div>
+        <input type="hidden" id="actionType" name="actionType" />
+    </form>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <p id="message" class="mt-3 text-center"></p>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/ORB1/Approver_DataEdit_codeI.js"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+﻿@{
+    Layout = "_BlankLayout";
+ }
+@{
+    ViewData["Title"] = "DataEntry_CodeI";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter CodeI Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/ORB1/DataEntry_CodeA.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h2 class="text-center mb-4">VOLUNTARY DECLARATION OF QUANTITIES "RETAINED ON BOARD" IN OILY BILGE WATER HOLDING TANKS</h2>
+
+    <form id="DataEntryCodeIForm" class="p-4 border rounded bg-light">
+        <div class="mb-3">
+            <label for="EntryDate" class="form-label">Date (YYYY-MM-DD):</label>
+            <input type="date" class="form-control" id="EntryDate" name="EntryDate" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="SelectType" class="form-label">Select:</label>
+            <select class="form-select" id="SelectType" name="SelectType" required>
+                <option value="Select" selected>Select</option>
+                <option value="Debunkering">Debunkering</option>
+                <option value="Sealing of Valve">Sealing of Valve</option>
+                <option value="Breaking of Seal">Breaking of Seal</option>
+            </select>
+        </div>
+
+        <div id="DebunkeringFields" style="display:none;">
+            <div class="mb-3">
+                <label for="DebunkeringQuantity" class="form-label">Quantity(MT):</label>
+                <input type="text" class="form-control" id="DebunkeringQuantity" name="DebunkeringQuantity">
+            </div>
+            <div class="mb-3">
+                <label for="DebunkeringGrade" class="form-label">Grade:</label>
+                <input type="text" class="form-control" id="DebunkeringGrade" name="DebunkeringGrade">
+            </div>
+            <div class="mb-3">
+                <label for="DebunkeringSulphurContent" class="form-label">Sulphur Content:</label>
+                <input type="text" class="form-control" id="DebunkeringSulphurContent" name="DebunkeringSulphurContent">
+            </div>
+            <div class="mb-3">
+                <label for="DebunkeringFrom" class="form-label">Debunkered From:</label>
+                <input type="text" class="form-control" id="DebunkeringFrom" name="DebunkeringFrom">
+            </div>
+            <div class="mb-3">
+                <label for="DebunkeringQuantityRetained" class="form-label">Quantity Retained in Debunkered Tank:</label>
+                <input type="text" class="form-control" id="DebunkeringQuantityRetained" name="DebunkeringQuantityRetained">
+            </div>
+            <div class="mb-3">
+                <label for="DebunkeringTo" class="form-label">Debunkered To:</label>
+                <input type="text" class="form-control" id="DebunkeringTo" name="DebunkeringTo">
+            </div>
+            <div class="mb-3">
+                <label for="DebunkeringPortFacility" class="form-label">Port Facility:</label>
+                <input type="text" class="form-control" id="DebunkeringPortFacility" name="DebunkeringPortFacility">
+            </div>
+            <div class="mb-3">
+                <label for="DebunkeringStartDateTime" class="form-label">Start Date & Time:</label>
+                <input type="datetime-local" class="form-control" id="DebunkeringStartDateTime" name="DebunkeringStartDateTime">
+            </div>
+            <div class="mb-3">
+                <label for="DebunkeringStopDateTime" class="form-label">Stop Date & Time:</label>
+                <input type="datetime-local" class="form-control" id="DebunkeringStopDateTime" name="DebunkeringStopDateTime">
+            </div>
+        </div>
+
+        <div id="SealingFields" style="display:none;">
+            <div class="mb-3">
+                <label for="ValveName" class="form-label">Valve Name:</label>
+                <input type="text" class="form-control" id="ValveName" name="ValveName">
+            </div>
+            <div class="mb-3">
+                <label for="ValveNo" class="form-label">Valve No.:</label>
+                <input type="text" class="form-control" id="ValveNo" name="ValveNo">
+            </div>
+            <div class="mb-3">
+                <label for="ValveAssociatedEquipment" class="form-label">Associated Equipment:</label>
+                <input type="text" class="form-control" id="ValveAssociatedEquipment" name="ValveAssociatedEquipment">
+            </div>
+            <div class="mb-3">
+                <label for="ValveSealNo" class="form-label">Seal No.:</label>
+                <input type="text" class="form-control" id="ValveSealNo" name="ValveSealNo">
+            </div>
+        </div>
+
+        <div id="BreakingFields" style="display:none;">
+            <div class="mb-3">
+                <label for="BreakingValveName" class="form-label">Valve Name:</label>
+                <input type="text" class="form-control" id="BreakingValveName" name="BreakingValveName">
+            </div>
+            <div class="mb-3">
+                <label for="BreakingValveNo" class="form-label">Valve No.:</label>
+                <input type="text" class="form-control" id="BreakingValveNo" name="BreakingValveNo">
+            </div>
+            <div class="mb-3">
+                <label for="BreakingAssociatedEquipment" class="form-label">Associated Equipment:</label>
+                <input type="text" class="form-control" id="BreakingAssociatedEquipment" name="BreakingAssociatedEquipment">
+            </div>
+            <div class="mb-3">
+                    <label for="BreakingReason" class="form-label">Reason for Breaking of Optional Seal:</label>
+                <input type="text" class="form-control" id="BreakingReason" name="BreakingReason">
+            </div>
+            <div class="mb-3">
+                <label for="BreakingSealNo" class="form-label">Seal No.:</label>
+                <input type="text" class="form-control" id="BreakingSealNo" name="BreakingSealNo">
+            </div>
+        </div>
+
+        <button type="submit" id="saveButton" class="btn btn-primary">Save</button>
+        <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
+        <button type="button" id="cancelButton" class="btn btn-danger">Cancel</button>
+    </form>
+
+    <p id="message" class="mt-3 text-center"></p>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/ORB1/DataEntry_codeI.js"></script>
+</body>
+</html>

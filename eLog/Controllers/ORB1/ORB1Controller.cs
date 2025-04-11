@@ -954,6 +954,111 @@ namespace eLog.Controllers.ORB1
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        //Code F Ends
+        //Code E Ends
+
+        //Code I Start
+        public IActionResult CodeI()
+        {
+            return RedirectToAction("GetCodeIData", "CodeI");
+        }
+        [Route("ORB1/CodeI/CreateCodeI")]
+        [HttpPost]
+        public async Task<IActionResult> CreateCodeI([FromBody] CodeIModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeIController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeI/Create", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeIController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Route("ORB1/CodeI/UpdateCodeI")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateCodeI([FromBody] CodeIViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeIController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeI/Update", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeIController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Route("ORB1/CodeI/ApproverUpdateCodeI")]
+        [HttpPost]
+        public async Task<IActionResult> ApproverUpdateCodeI([FromBody] CodeIViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid data received.");
+            }
+
+            try
+            {
+                string json = JsonSerializer.Serialize(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Call CodeIController.Create via HTTP POST
+                var baseUrl = $"{Request.Scheme}://{Request.Host}{_basePath}";
+                var response = await _httpClient.PostAsync($"{baseUrl}/ORB1/CodeI/ApproverUpdate", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Data submitted successfully!" });
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error in CodeIController.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        //Code I Ends
     }
 }

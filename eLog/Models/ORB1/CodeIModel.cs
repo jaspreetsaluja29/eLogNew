@@ -1,0 +1,37 @@
+﻿    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+namespace eLog.Models.ORB1
+{
+    public class CodeIModel
+    {
+        public int UserId { get; set; }
+        public DateTime EntryDate { get; set; }
+        public string SelectType { get; set; }
+
+        //Debunkering
+        public decimal? DebunkeringQuantity { get; set; }
+        public string DebunkeringGrade { get; set; }
+        public string DebunkeringSulphurContent { get; set; }
+        public string DebunkeringFrom { get; set; }
+        public decimal? DebunkeringQuantityRetained { get; set; }
+        public string DebunkeringTo { get; set; }
+        public string DebunkeringPortFacility { get; set; }
+        public DateTime? DebunkeringStartDateTime { get; set; }
+        public DateTime? DebunkeringStopDateTime { get; set; }
+
+        //Sealing of Valve
+        public string ValveName { get; set; }
+        public string ValveNo { get; set; }
+        public string ValveAssociatedEquipment { get; set; }
+        public string ValveSealNo { get; set; }
+
+        //Breaking of Seal
+        public string BreakingValveName { get; set; }
+        public string BreakingValveNo { get; set; }
+        public string BreakingAssociatedEquipment { get; set; }
+        public string BreakingReason { get; set; }
+        public string BreakingSealNo { get; set; }
+    }
+}
