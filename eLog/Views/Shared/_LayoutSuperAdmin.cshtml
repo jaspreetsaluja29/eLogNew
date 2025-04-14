@@ -48,6 +48,12 @@
             padding-bottom: 10px;
             margin-bottom: 10px;
         }
+
+        .dropdown-menu .dropdown-item:hover {
+            font-weight: bold;
+            background-color: #e9ecef; /* Light gray background on hover */
+            color: #000; /* Optional: makes text color black */
+        }
     </style>
 </head>
 <body>
@@ -79,7 +85,7 @@
                         @if (TempData["UserID"] != null)
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle text-dark fw-bold" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     👤 @TempData["UserName"] (@TempData["UserRoleName"])
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="userDropdown">

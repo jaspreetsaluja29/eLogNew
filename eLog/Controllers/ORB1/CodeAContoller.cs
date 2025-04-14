@@ -1,6 +1,9 @@
-﻿using eLog.Models;
+﻿using ClosedXML.Excel;
+using eLog.Models;
 using eLog.Models.ORB1;
 using eLog.ViewModels.ORB1;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -335,5 +338,284 @@ namespace eLog.Controllers.ORB1
             }
         }
 
+        // Add this method to your existing CodeAController
+        [HttpGet]
+        [Route("ORB1/CodeA/Download")]
+        public async Task<IActionResult> Download(string format, string searchTerm = "", int pageSize = 0, int pageNumber = 1)
+        {
+            try
+            {
+                // Get the data using the new method (pageSize = 0 to get all records)
+                var data = await GetCodeAForExport(searchTerm, pageNumber, pageSize);
+
+                // Based on the format, call the appropriate export method
+                switch (format.ToLower())
+                {
+                    case "xlsx":
+                        return await ExportToExcel(data);
+                    //case "pdf":
+                    //    return ExportToPdf(data);
+                    default:
+                        return BadRequest("Unsupported format");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        private async Task<IActionResult> ExportToExcel(IEnumerable<CodeAViewModel> data)
+        {
+            using var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Code A Records");
+
+            // Define headers
+            var headers = new List<string>
+            {
+                "Entered By", "Entry Date", "Ballasting/Cleaning", "Last Cleaning Date",
+                "Oil Commercial Name", "Density/Viscosity", "Identity of Tanks Ballasted",
+                "Cleaned Last Contained Oil", "Previous Oil Type", "Quantity Ballast",
+                "Start Cleaning Time", "Position Start", "Stop Cleaning Time", "Position Stop",
+                "Identify Tanks", "Method Cleaning", "Chemical Type", "Chemical Quantity",
+                "Start Ballasting Time", "Ballasting Position Start", "Completion Ballasting Time",
+                "Ballasting Position Completion", "Status Name", "Approved By", "Comments"
+            };
+
+            // Write headers
+            for (int i = 0; i < headers.Count; i++)
+            {
+                worksheet.Cell(1, i + 1).Value = headers[i];
+                worksheet.Cell(1, i + 1).Style.Font.Bold = true;
+            }
+
+            // Write data
+            int row = 2;
+            foreach (var item in data)
+            {
+                worksheet.Cell(row, 1).Value = item.UserId?.Trim() ?? string.Empty;
+                worksheet.Cell(row, 2).Value = item.EntryDate.ToShortDateString();
+                worksheet.Cell(row, 3).Value = item.BallastingOrCleaning ?? string.Empty;
+                worksheet.Cell(row, 4).Value = item.LastCleaningDate?.ToShortDateString() ?? string.Empty;
+                worksheet.Cell(row, 5).Value = item.OilCommercialName ?? string.Empty;
+                worksheet.Cell(row, 6).Value = item.DensityViscosity ?? string.Empty;
+                worksheet.Cell(row, 7).Value = item.IdentityOfTanksBallasted ?? string.Empty;
+                worksheet.Cell(row, 8).Value = item.CleanedLastContainedOil.HasValue ? (item.CleanedLastContainedOil.Value ? "Yes" : "No") : string.Empty;
+                worksheet.Cell(row, 9).Value = item.PreviousOilType ?? string.Empty;
+                worksheet.Cell(row, 10).Value = item.QuantityBallast?.ToString() ?? string.Empty;
+                worksheet.Cell(row, 11).Value = item.StartCleaningTime?.ToString(@"hh\:mm") ?? string.Empty;
+                worksheet.Cell(row, 12).Value = item.PositionStart ?? string.Empty;
+                worksheet.Cell(row, 13).Value = item.StopCleaningTime?.ToString(@"hh\:mm") ?? string.Empty;
+                worksheet.Cell(row, 14).Value = item.PositionStop ?? string.Empty;
+                worksheet.Cell(row, 15).Value = item.IdentifyTanks ?? string.Empty;
+                worksheet.Cell(row, 16).Value = item.MethodCleaning ?? string.Empty;
+                worksheet.Cell(row, 17).Value = item.ChemicalType ?? string.Empty;
+                worksheet.Cell(row, 18).Value = item.ChemicalQuantity?.ToString() ?? string.Empty;
+                worksheet.Cell(row, 19).Value = item.StartBallastingTime?.ToString(@"hh\:mm") ?? string.Empty;
+                worksheet.Cell(row, 20).Value = item.BallastingPositionStart ?? string.Empty;
+                worksheet.Cell(row, 21).Value = item.CompletionBallastingTime?.ToString(@"hh\:mm") ?? string.Empty;
+                worksheet.Cell(row, 22).Value = item.BallastingPositionCompletion ?? string.Empty;
+                worksheet.Cell(row, 23).Value = item.StatusName ?? string.Empty;
+                worksheet.Cell(row, 24).Value = item.ApprovedBy ?? string.Empty;
+                worksheet.Cell(row, 25).Value = item.Comments ?? string.Empty;
+                row++;
+            }
+
+            worksheet.Columns().AdjustToContents(); // Auto-fit columns
+
+            // Save to memory stream
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            stream.Position = 0;
+
+            // Set the correct headers to force download
+            var fileName = $"CodeA_Records_{DateTime.Now:yyyyMMdd}.xlsx";
+            return File(
+                stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                fileName
+            );
+        }
+
+        //private FileContentResult ExportToPdf(IEnumerable<CodeAViewModel> data)
+        //{
+        //    // Create a memory stream for the PDF file
+        //    using var stream = new MemoryStream();
+
+        //    // Create a document with landscape orientation
+        //    var document = new Document(PageSize.A3.Rotate());
+        //    var writer = PdfWriter.GetInstance(document, stream);
+
+        //    document.Open();
+
+        //    // Add title
+        //    var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+        //    var title = new Paragraph("Code A Records", titleFont)
+        //    {
+        //        Alignment = Element.ALIGN_CENTER
+        //    };
+        //    document.Add(title);
+        //    document.Add(new Paragraph(" ")); // Add space
+
+        //    // Create table
+        //    var table = new PdfPTable(25) // Number of columns
+        //    {
+        //        WidthPercentage = 100
+        //    };
+
+        //    // Define headers
+        //    var headers = new List<string>
+        //    {
+        //        "Entered By", "Entry Date", "Ballasting/Cleaning", "Last Cleaning Date",
+        //        "Oil Commercial Name", "Density/Viscosity", "Identity of Tanks Ballasted",
+        //        "Cleaned Last Contained Oil", "Previous Oil Type", "Quantity Ballast",
+        //        "Start Cleaning Time", "Position Start", "Stop Cleaning Time", "Position Stop",
+        //        "Identify Tanks", "Method Cleaning", "Chemical Type", "Chemical Quantity",
+        //        "Start Ballasting Time", "Ballasting Position Start", "Completion Ballasting Time",
+        //        "Ballasting Position Completion", "Status Name", "Approved By", "Comments"
+        //    };
+
+        //    // Set column widths (adjust as needed)
+        //    float[] columnWidths = new float[25];
+        //    for (int i = 0; i < 25; i++)
+        //    {
+        //        columnWidths[i] = 4f;
+        //    }
+        //    table.SetWidths(columnWidths);
+
+        //    // Add header cells
+        //    var headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
+        //    foreach (var header in headers)
+        //    {
+        //        var cell = new PdfPCell(new Phrase(header, headerFont))
+        //        {
+        //            BackgroundColor = BaseColor.LIGHT_GRAY,
+        //            HorizontalAlignment = Element.ALIGN_CENTER,
+        //            VerticalAlignment = Element.ALIGN_MIDDLE,
+        //            Padding = 5
+        //        };
+        //        table.AddCell(cell);
+        //    }
+
+        //    // Add data cells
+        //    var dataFont = FontFactory.GetFont(FontFactory.HELVETICA, 7);
+        //    foreach (var item in data)
+        //    {
+        //        AddCell(table, item.UserId?.Trim() ?? string.Empty, dataFont);
+        //        AddCell(table, item.EntryDate.ToShortDateString(), dataFont);
+        //        AddCell(table, item.BallastingOrCleaning ?? string.Empty, dataFont);
+        //        AddCell(table, item.LastCleaningDate?.ToShortDateString() ?? string.Empty, dataFont);
+        //        AddCell(table, item.OilCommercialName ?? string.Empty, dataFont);
+        //        AddCell(table, item.DensityViscosity ?? string.Empty, dataFont);
+        //        AddCell(table, item.IdentityOfTanksBallasted ?? string.Empty, dataFont);
+        //        AddCell(table, item.CleanedLastContainedOil.HasValue ? (item.CleanedLastContainedOil.Value ? "Yes" : "No") : string.Empty, dataFont);
+        //        AddCell(table, item.PreviousOilType ?? string.Empty, dataFont);
+        //        AddCell(table, item.QuantityBallast?.ToString() ?? string.Empty, dataFont);
+        //        AddCell(table, item.StartCleaningTime?.ToString(@"hh\:mm") ?? string.Empty, dataFont);
+        //        AddCell(table, item.PositionStart ?? string.Empty, dataFont);
+        //        AddCell(table, item.StopCleaningTime?.ToString(@"hh\:mm") ?? string.Empty, dataFont);
+        //        AddCell(table, item.PositionStop ?? string.Empty, dataFont);
+        //        AddCell(table, item.IdentifyTanks ?? string.Empty, dataFont);
+        //        AddCell(table, item.MethodCleaning ?? string.Empty, dataFont);
+        //        AddCell(table, item.ChemicalType ?? string.Empty, dataFont);
+        //        AddCell(table, item.ChemicalQuantity?.ToString() ?? string.Empty, dataFont);
+        //        AddCell(table, item.StartBallastingTime?.ToString(@"hh\:mm") ?? string.Empty, dataFont);
+        //        AddCell(table, item.BallastingPositionStart ?? string.Empty, dataFont);
+        //        AddCell(table, item.CompletionBallastingTime?.ToString(@"hh\:mm") ?? string.Empty, dataFont);
+        //        AddCell(table, item.BallastingPositionCompletion ?? string.Empty, dataFont);
+        //        AddCell(table, item.StatusName ?? string.Empty, dataFont);
+        //        AddCell(table, item.ApprovedBy ?? string.Empty, dataFont);
+        //        AddCell(table, item.Comments ?? string.Empty, dataFont);
+        //    }
+
+        //    document.Add(table);
+        //    document.Close();
+
+        //    // Reset stream position
+        //    stream.Position = 0;
+
+        //    // Return the PDF file
+        //    return File(
+        //        stream.ToArray(),
+        //        "application/pdf",
+        //        $"CodeA_Records_{DateTime.Now:yyyyMMdd}.pdf"
+        //    );
+        //}
+
+        private void AddCell(PdfPTable table, string text, iTextSharp.text.Font font)
+        {
+            var cell = new PdfPCell(new Phrase(text, font))
+            {
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_MIDDLE,
+                Padding = 3
+            };
+            table.AddCell(cell);
+        }
+
+        public async Task<List<CodeAViewModel>> GetCodeAForExport(string searchTerm = "", int pageNumber = 1, int pageSize = 10)
+        {
+            List<CodeAViewModel> records = new List<CodeAViewModel>();
+
+            using (SqlConnection connection = _db.CreateConnection())
+            {
+                await connection.OpenAsync();
+                using (var command = new SqlCommand("proc_GetORB1_CodeA", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Add search parameter if provided
+                    if (!string.IsNullOrEmpty(searchTerm))
+                    {
+                        command.Parameters.AddWithValue("@SearchTerm", searchTerm);
+                    }
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            records.Add(new CodeAViewModel
+                            {
+                                Id = reader.GetInt32(0),
+                                UserId = reader.IsDBNull(1) ? null : reader.GetString(1),
+                                EntryDate = reader.GetDateTime(2),
+                                BallastingOrCleaning = reader.GetString(3),
+                                LastCleaningDate = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
+                                OilCommercialName = reader.IsDBNull(5) ? null : reader.GetString(5),
+                                DensityViscosity = reader.IsDBNull(6) ? null : reader.GetString(6),
+                                IdentityOfTanksBallasted = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                CleanedLastContainedOil = reader.IsDBNull(8) ? (bool?)null : reader.GetBoolean(8),
+                                PreviousOilType = reader.IsDBNull(9) ? null : reader.GetString(9),
+                                QuantityBallast = reader.IsDBNull(10) ? (decimal?)null : reader.GetDecimal(10),
+                                StartCleaningTime = reader.IsDBNull(11) ? (TimeSpan?)null : reader.GetTimeSpan(11),
+                                PositionStart = reader.IsDBNull(12) ? null : reader.GetString(12),
+                                StopCleaningTime = reader.IsDBNull(13) ? (TimeSpan?)null : reader.GetTimeSpan(13),
+                                PositionStop = reader.IsDBNull(14) ? null : reader.GetString(14),
+                                IdentifyTanks = reader.IsDBNull(15) ? null : reader.GetString(15),
+                                MethodCleaning = reader.IsDBNull(16) ? null : reader.GetString(16),
+                                ChemicalType = reader.IsDBNull(17) ? null : reader.GetString(17),
+                                ChemicalQuantity = reader.IsDBNull(18) ? (decimal?)null : reader.GetDecimal(18),
+                                StartBallastingTime = reader.IsDBNull(19) ? (TimeSpan?)null : reader.GetTimeSpan(19),
+                                BallastingPositionStart = reader.IsDBNull(20) ? null : reader.GetString(20),
+                                CompletionBallastingTime = reader.IsDBNull(21) ? (TimeSpan?)null : reader.GetTimeSpan(21),
+                                BallastingPositionCompletion = reader.IsDBNull(22) ? null : reader.GetString(22),
+                                StatusName = reader.IsDBNull(23) ? null : reader.GetString(23),
+                                ApprovedBy = reader.IsDBNull(24) ? null : reader.GetString(24),
+                                Comments = reader.IsDBNull(25) ? null : reader.GetString(25)
+                            });
+                        }
+                    }
+                }
+            }
+
+            // Apply pagination if needed - for exports, you might want all data
+            if (pageSize > 0)
+            {
+                return records.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            }
+
+            return records;
+        }
     }
 }
