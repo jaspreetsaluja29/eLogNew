@@ -121,6 +121,33 @@
             <button type="button" id="addmeanRowButton" class="btn btn-primary">Add Row</button>
         </div>
 
+        <table id="bunkerTable" class="table">
+            <thead>
+                <tr>
+                    <th colspan="5" class="section-header">
+                        Bunker Tanks
+                    </th>
+                </tr>
+                <tr>
+                    <th>Tank Identification</th>
+                    <th>Capacity (100%)</th>
+                    <th>Action</th>
+                </tr>
+                
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" name="bunkers[0].TankIdentification" class="form-control" /></td>
+                    <td><input type="number" step="0.01" name="bunkers[0].Capacity" class="form-control" /></td>
+                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="button-container">
+            <button type="button" id="addBunkerRowButton" class="btn btn-primary">Add Row</button>
+        </div>
+
         <div class="save-container">
             <button type="submit" class="btn btn-success">Save</button>
         </div>

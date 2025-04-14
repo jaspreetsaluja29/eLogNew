@@ -129,4 +129,35 @@
             <p>No tank capacity data Means for disposal of oil residues retained in Oil Residue Tanks.</p>
         </div>
     }
+
+    <h4 style="margin-bottom: 20px; margin-top: 40px;">Bunker Tanks</h4>
+
+    @if (Model.BunkerTanks != null && Model.BunkerTanks.Any())
+    {
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th style="padding: 10px;">Tank Identification</th>
+                    <th style="padding: 10px;">Capacity (100%)</th>
+                    <th style="padding: 10px;">Capacity (90%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.BunkerTanks)
+                {
+                    <tr>
+                        <td>@item.TankIdentification</td>
+                        <td>@item.Capacity100</td>
+                        <td>@item.Capacity90</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <p>No tank for Bunker.</p>
+        </div>
+    }
 </div>

@@ -2,21 +2,74 @@
     let retentionIndex = 1;
     let sludgeIndex = 1;
     let meanIndex = 1;
+    let bunkerIndex = 1;
+
+    //function addNewRow(tableId, type) {
+    //    let index = type === 'retentions' ? retentionIndex++ :
+    //        (type === 'sludges' ? sludgeIndex++ : meanIndex++);
+    //    let newRow = `
+    //        <tr>
+    //            <td><input type="text" name="${type}[${index}].TankIdentification" class="form-control" /></td>
+    //            <td><input type="text" name="${type}[${index}].TankLocation_Frames_From_To" class="form-control" /></td>
+    //            <td><input type="text" name="${type}[${index}].TankLocation_LateralPosition" class="form-control" /></td>
+    //            <td><input type="number" step="0.01" name="${type}[${index}].Volume_m3" class="form-control" /></td>
+    //            <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+    //        </tr>
+    //    `;
+    //    $(tableId + ' tbody').append(newRow);
+    //}
 
     function addNewRow(tableId, type) {
-        let index = type === 'retentions' ? retentionIndex++ :
-            (type === 'sludges' ? sludgeIndex++ : meanIndex++);
-        let newRow = `
-            <tr>
-                <td><input type="text" name="${type}[${index}].TankIdentification" class="form-control" /></td>
-                <td><input type="text" name="${type}[${index}].TankLocation_Frames_From_To" class="form-control" /></td>
-                <td><input type="text" name="${type}[${index}].TankLocation_LateralPosition" class="form-control" /></td>
-                <td><input type="number" step="0.01" name="${type}[${index}].Volume_m3" class="form-control" /></td>
-                <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
-            </tr>
-        `;
+        let index;
+        let newRow;
+
+        if (type === 'retentions') {
+            index = retentionIndex++;
+            newRow = `
+                <tr>
+                    <td><input type="text" name="${type}[${index}].TankIdentification" class="form-control" /></td>
+                    <td><input type="text" name="${type}[${index}].TankLocation_Frames_From_To" class="form-control" /></td>
+                    <td><input type="text" name="${type}[${index}].TankLocation_LateralPosition" class="form-control" /></td>
+                    <td><input type="number" step="0.01" name="${type}[${index}].Volume_m3" class="form-control" /></td>
+                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                </tr>
+            `;
+        } else if (type === 'sludges') {
+            index = sludgeIndex++;
+            newRow = `
+                <tr>
+                    <td><input type="text" name="${type}[${index}].TankIdentification" class="form-control" /></td>
+                    <td><input type="text" name="${type}[${index}].TankLocation_Frames_From_To" class="form-control" /></td>
+                    <td><input type="text" name="${type}[${index}].TankLocation_LateralPosition" class="form-control" /></td>
+                    <td><input type="number" step="0.01" name="${type}[${index}].Volume_m3" class="form-control" /></td>
+                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                </tr>
+            `;
+        } else if (type === 'means') {
+            index = meanIndex++;
+            newRow = `
+                <tr>
+                    <td><input type="text" name="${type}[${index}].TankIdentification" class="form-control" /></td>
+                    <td><input type="text" name="${type}[${index}].TankLocation_Frames_From_To" class="form-control" /></td>
+                    <td><input type="text" name="${type}[${index}].TankLocation_LateralPosition" class="form-control" /></td>
+                    <td><input type="number" step="0.01" name="${type}[${index}].Volume_m3" class="form-control" /></td>
+                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                </tr>
+            `;
+        } else if (type === 'bunkers') {
+            index = bunkerIndex++;
+            newRow = `
+                <tr>
+                    <td><input type="text" name="${type}[${index}].TankIdentification" class="form-control" /></td>
+                    <td><input type="number" step="0.01" name="${type}[${index}].Capacity" class="form-control" /></td>
+                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                </tr>
+            `;
+        }
+
         $(tableId + ' tbody').append(newRow);
     }
+
 
     $('#addRowButton').on('click', function () {
         addNewRow('#retentionTable', 'retentions');
@@ -28,6 +81,10 @@
 
     $('#addmeanRowButton').on('click', function () {
         addNewRow('#meanTable', 'means');
+    });
+
+    $('#addBunkerRowButton').on('click', function () {
+        addNewRow('#bunkerTable', 'bunkers');
     });
 
     $('.table').on('click', '.remove-row', function () {
@@ -82,13 +139,26 @@
             }
         });
 
+        let bunkerData = [];
+        $('#bunkerTable tbody tr').each(function () {
+            let capacity = $(this).find('input[name^="bunkers"]').eq(1).val();
+
+            // Only add the row if at least one field is filled
+            if ($(this).find('input').filter(function () { return this.value.trim() !== ""; }).length > 0) {
+                bunkerData.push({
+                    TankIdentification: $(this).find('input[name^="bunkers"]').eq(0).val(),
+                    Capacity100: capacity !== "" ? parseFloat(capacity) : null // Use null instead of 0 for empty values
+                });
+            }
+        });
+
         var basePath = document.querySelector('base')?.getAttribute('href') || '/';
 
         $.ajax({
             url: basePath + "/FirstPageCapacity/SaveData",
             type: 'POST',
             contentType: 'application/x-www-form-urlencoded',
-            data: { retentions: retentionData, sludges: sludgeData, means: meanData},
+            data: { retentions: retentionData, sludges: sludgeData, means: meanData, bunkers: bunkerData },
             success: function (response) {
                 alert('Data saved successfully!');
                 window.location.href = `${basePath}/FirstPageCapacity/FirstPageCapacity`;

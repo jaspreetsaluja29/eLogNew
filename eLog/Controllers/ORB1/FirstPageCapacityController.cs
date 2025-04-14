@@ -21,6 +21,7 @@ namespace eLog.Controllers.ORB1
             List<FirstPage_OilyBilgeRetention> retentionData = new List<FirstPage_OilyBilgeRetention>();
             List<FirstPage_OilResidueBilge> sludgeData = new List<FirstPage_OilResidueBilge>();
             List <FirstPage_MeanOilResidue> meanOilResidueData = new List<FirstPage_MeanOilResidue>();
+            List<FirstPage_BunkerTanks> bunkerTanksData = new List<FirstPage_BunkerTanks>();
 
             using (SqlConnection connection = _db.CreateConnection())
             {
@@ -86,17 +87,37 @@ namespace eLog.Controllers.ORB1
                         }
                     }
                 }
+
+                // Fetching Bunker Tanks Data
+                using (var command = new SqlCommand("proc_GetORB1_FirstPage_BunkerTanks", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            bunkerTanksData.Add(new FirstPage_BunkerTanks
+                            {
+                                Id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0),
+                                TankIdentification = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
+                                Capacity100 = reader.IsDBNull(2) ? 0 : reader.GetDecimal(2),
+                                Capacity90 = reader.IsDBNull(2) ? 0 : (reader.GetDecimal(2) * 0.9m)
+                            });
+                        }
+                    }
+                }
             }
 
-        var viewModel = new FirstPageCapacityViewModel
+            var viewModel = new FirstPageCapacityViewModel
             {
                 OilyBilgeRetentions = retentionData,
                 OilResidueBilges = sludgeData,
-                MeanOilResidue = meanOilResidueData
+                MeanOilResidue = meanOilResidueData,
+                BunkerTanks = bunkerTanksData
 
-        };
+            };
 
-            if (retentionData.Any() || sludgeData.Any() || meanOilResidueData.Any())
+            if (retentionData.Any() || sludgeData.Any() || meanOilResidueData.Any() || bunkerTanksData.Any())
             {
                 return View("~/Views/ORB1/Display_FirstPageCapacity.cshtml", viewModel);
             }
@@ -107,9 +128,9 @@ namespace eLog.Controllers.ORB1
         }
 
         [HttpPost]
-        public IActionResult SaveData(List<FirstPage_OilyBilgeRetention> retentions, List<FirstPage_OilResidueBilge> sludges, List<FirstPage_MeanOilResidue> means)
+        public IActionResult SaveData(List<FirstPage_OilyBilgeRetention> retentions, List<FirstPage_OilResidueBilge> sludges, List<FirstPage_MeanOilResidue> means, List<FirstPage_BunkerTanks> bunkers)
         {
-            if ((retentions == null || !retentions.Any()) && (sludges == null || !sludges.Any()) && (means == null || !means.Any()))
+            if ((retentions == null || !retentions.Any()) && (sludges == null || !sludges.Any()) && (means == null || !means.Any()) && (bunkers == null || !bunkers.Any()))
             {
                 return BadRequest("No data received.");
             }
@@ -176,6 +197,25 @@ namespace eLog.Controllers.ORB1
                             command.Parameters.AddWithValue("@TankLocation", meanOil.TankLocation_Frames_From_To ?? (object)DBNull.Value);
                             command.Parameters.AddWithValue("@TankLateralPosition", meanOil.TankLocation_LateralPosition ?? (object)DBNull.Value);
                             command.Parameters.AddWithValue("@Volume", (object)meanOil.Volume_m3);
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+
+                // Save Bunker Tanks data
+                if (bunkers != null)
+                {
+                    foreach (var bunkertanks in bunkers)
+                    {
+                        var query = @"
+                            INSERT INTO ORB1_FirstPage_BunkerTanks 
+                            (TankIdentification, Capacity) 
+                            VALUES (@TankIdentification, @Capacity)";
+
+                        using (var command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@TankIdentification", bunkertanks.TankIdentification ?? (object)DBNull.Value);
+                            command.Parameters.AddWithValue("@Capacity", (object)bunkertanks.Capacity100);
                             command.ExecuteNonQuery();
                         }
                     }
