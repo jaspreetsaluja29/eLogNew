@@ -175,7 +175,7 @@ function loadTanks() {
             // Add tanks to both dropdowns
             data.forEach(tank => {
                 const tankId = tank.tankIdentification || "";
-                const capacity = tank.volumeCapacity || "";
+                //const capacity = tank.volumeCapacity || "";
 
                 if (!tankId) {
                     return;
@@ -183,23 +183,23 @@ function loadTanks() {
 
                 let option1 = $("<option>")
                     .val(tankId)
-                    .text(tankId)
-                    .attr("data-capacity", capacity);
+                    .text(tankId);
+                    //.attr("data-capacity", capacity);
 
                 let option2 = $("<option>")
                     .val(tankId)
-                    .text(tankId)
-                    .attr("data-capacity", capacity);
+                    .text(tankId);
+                    //.attr("data-capacity", capacity);
 
                 let option3 = $("<option>")
                     .val(tankId)
-                    .text(tankId)
-                    .attr("data-capacity", capacity);
+                    .text(tankId);
+                    //.attr("data-capacity", capacity);
 
                 let option4 = $("<option>")
                     .val(tankId)
-                    .text(tankId)
-                    .attr("data-capacity", capacity);
+                    .text(tankId);
+                    //.attr("data-capacity", capacity);
 
                 TankLoaded1.append(option1);
                 TankLoaded2.append(option2);

@@ -318,7 +318,7 @@ namespace eLog.Controllers.ORB1
             {
                 using (SqlConnection connection = _db.CreateConnection())
                 {
-                    using (SqlCommand cmd = new SqlCommand("proc_GetORB1_FirstPageOilyBilgeRetention", connection))
+                    using (SqlCommand cmd = new SqlCommand("proc_GetORB1_FirstPage_BunkerTanks", connection))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         connection.Open();
@@ -329,8 +329,7 @@ namespace eLog.Controllers.ORB1
                             {
                                 tanks.Add(new
                                 {
-                                    TankIdentification = reader["TankIdentification"].ToString(),
-                                    VolumeCapacity = Convert.ToDecimal(reader["Volume_m3"])
+                                    TankIdentification = reader["TankIdentification"].ToString()
                                 });
                             }
                         }
