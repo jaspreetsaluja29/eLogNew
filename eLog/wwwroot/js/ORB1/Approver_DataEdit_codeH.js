@@ -1,7 +1,18 @@
 ﻿$(document).ready(function () {
+    initializeFormState();
     setupEventListeners();
     setupPortLocationHandling();
 });
+
+function initializeFormState() {
+    // Show appropriate fields based on initial values
+    const initialAction = $("#SelectType").val();
+    if (initialAction === "Bunkering of Fuel") {
+        $('#BunkeringLubricatingOilField').show();
+    } else {
+        $('#BunkeringLubricatingOilField').hide();
+    }
+}
 
 function setupEventListeners() {
     // Handle cancel button click
@@ -81,6 +92,7 @@ function submitForm() {
         Id: $('#Id').val(),
         UserId: userId, // Assuming userId is defined globally
         EntryDate: $('#EntryDate').val(),
+        SelectType: $('#SelectType').val() || null,
         Port: $('#Port').val() || null,
         Location: $('#Location').val() || null,
         StartDateTime: $('#StartDateTime').val() || null,
@@ -113,6 +125,7 @@ function submitForm() {
         success: function (response) {
             $('#EditCodeHForm')[0].reset();
             resetFormDate();
+            $('#BunkeringLubricatingOilField').hide();
             alert(response.message);
             const { pageNumber, pageSize } = getQueryParams();
             var basePath = document.querySelector('base')?.getAttribute('href') || '/';

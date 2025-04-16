@@ -1,8 +1,19 @@
 ﻿$(document).ready(function () {
+    initializeFormState();
     setupEventListeners();
     setupPortLocationHandling();
     // No custom validation since both fields can be empty
 });
+
+function initializeFormState() {
+    // Show appropriate fields based on initial values
+    const initialAction = $("#SelectType").val();
+    if (initialAction === "Bunkering of Fuel") {
+        $('#BunkeringLubricatingOilField').show();
+    } else {
+        $('#BunkeringLubricatingOilField').hide();
+    }
+}
 
 function setupEventListeners() {
     $("#cancelButton").click(function () {
@@ -49,6 +60,7 @@ function submitForm() {
         Id: $('#Id').val(),
         UserId: userId, // Assuming userId is defined globally
         EntryDate: $('#EntryDate').val(),
+        SelectType: $('#SelectType').val() || null,
         Port: $('#Port').val() || null,
         Location: $('#Location').val() || null,
         StartDateTime: $('#StartDateTime').val() || null,
@@ -82,6 +94,7 @@ function submitForm() {
             // Reset the form and apply UI changes before showing the alert
             $('#EditCodeHForm')[0].reset();
             resetFormDate();
+            $('#BunkeringLubricatingOilField').hide();
             // Show message in an alert popup and redirect when the user clicks "OK"
             alert(response.message);
             const { pageNumber, pageSize } = getQueryParams();

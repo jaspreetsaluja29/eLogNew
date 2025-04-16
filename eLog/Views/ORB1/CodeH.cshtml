@@ -63,24 +63,25 @@
                 <tr>
                     <th onclick="sortTable(0)">Entered By</th>
                     <th onclick="sortTable(1)">Entry Date</th>
-                    <th onclick="sortTable(2)">Port</th>
-                    <th onclick="sortTable(3)">Location</th>
-                    <th onclick="sortTable(4)">Start DateTime</th>
-                    <th onclick="sortTable(5)">Stop DateTime</th>
-                    <th onclick="sortTable(6)">Quantity</th>
-                    <th onclick="sortTable(7)">Grade</th>
-                    <th onclick="sortTable(8)">Sulphur Content</th>
-                    <th onclick="sortTable(9)">Tank Loaded1</th>
-                    <th onclick="sortTable(10)">Total Retained1</th>
-                    <th onclick="sortTable(11)">Tank Loaded2</th>
-                    <th onclick="sortTable(12)">Total Retained2</th>
-                    <th onclick="sortTable(13)">Tank Loaded3</th>
-                    <th onclick="sortTable(14)">Total Retained3</th>
-                    <th onclick="sortTable(15)">Tank Loaded4</th>
-                    <th onclick="sortTable(16)">Total Retained4</th>
-                    <th onclick="sortTable(17)">Status Name</th>
-                    <th onclick="sortTable(18)">Approved By</th>
-                    <th onclick="sortTable(19)">Comments</th>
+                    <th onclick="sortTable(2)">Select</th>
+                    <th onclick="sortTable(3)">Port</th>
+                    <th onclick="sortTable(4)">Location</th>
+                    <th onclick="sortTable(5)">Start DateTime</th>
+                    <th onclick="sortTable(6)">Stop DateTime</th>
+                    <th onclick="sortTable(7)">Quantity</th>
+                    <th onclick="sortTable(8)">Grade</th>
+                    <th onclick="sortTable(9)">Sulphur Content</th>
+                    <th onclick="sortTable(10)">Tank Loaded 1</th>
+                    <th onclick="sortTable(11)">Total Retained 1</th>
+                    <th onclick="sortTable(12)">Tank Loaded 2</th>
+                    <th onclick="sortTable(13)">Total Retained 2</th>
+                    <th onclick="sortTable(14)">Tank Loaded 3</th>
+                    <th onclick="sortTable(15)">Total Retained 3</th>
+                    <th onclick="sortTable(16)">Tank Loaded 4</th>
+                    <th onclick="sortTable(17)">Total Retained 4</th>
+                    <th onclick="sortTable(18)">Status Name</th>
+                    <th onclick="sortTable(19)">Approved By</th>
+                    <th onclick="sortTable(20)">Comments</th>
                     @if (TempData["UserRoleName"]?.ToString() != "Admin")
                     {
                         <th>Actions</th>
@@ -95,6 +96,7 @@
                         <tr>
                             <td>@item.UserId.Trim()</td>
                             <td>@item.EntryDate.ToShortDateString()</td>
+                            <td>@item.SelectType</td>
                             <td>@item.Port</td>
                             <td>@item.Location</td>
                             <td>@item.StartDateTime</td>

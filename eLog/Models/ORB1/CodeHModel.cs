@@ -8,6 +8,7 @@ namespace eLog.Models.ORB1
     {
         public int UserId { get; set; }
         public DateTime EntryDate { get; set; }
+        public string SelectType { get; set; }
         public string Port { get; set; }
         public string Location { get; set; }
         public DateTime StartDateTime { get; set; }

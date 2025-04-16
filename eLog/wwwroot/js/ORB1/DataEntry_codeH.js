@@ -38,27 +38,40 @@ $(document).ready(function () {
     });
 
     // Populate capacity when tank is selected in Weekly section
-    $('#TankLoaded1').change(function () {
-        var capacity = $(this).find('option:selected').data('capacity');
-        $('#TankRetained1').val(capacity ? capacity : '');
-    });
+    //$('#TankLoaded1').change(function () {
+    //    var capacity = $(this).find('option:selected').data('capacity');
+    //    $('#TankRetained1').val(capacity ? capacity : '');
+    //});
 
     // Populate capacity when tank is selected in Collection section
-    $('#TankLoaded2').change(function () {
-        var capacity = $(this).find('option:selected').data('capacity');
-        $('#TankRetained2').val(capacity ? capacity : '');
-    });
+    //$('#TankLoaded2').change(function () {
+    //    var capacity = $(this).find('option:selected').data('capacity');
+    //    $('#TankRetained2').val(capacity ? capacity : '');
+    //});
 
     // Populate capacity when tank is selected in Collection section
-    $('#TankLoaded3').change(function () {
-        var capacity = $(this).find('option:selected').data('capacity');
-        $('#TankRetained3').val(capacity ? capacity : '');
-    });
+    //$('#TankLoaded3').change(function () {
+    //    var capacity = $(this).find('option:selected').data('capacity');
+    //    $('#TankRetained3').val(capacity ? capacity : '');
+    //});
 
     // Populate capacity when tank is selected in Collection section
-    $('#TankLoaded4').change(function () {
-        var capacity = $(this).find('option:selected').data('capacity');
-        $('#TankRetained4').val(capacity ? capacity : '');
+    //$('#TankLoaded4').change(function () {
+    //    var capacity = $(this).find('option:selected').data('capacity');
+    //    $('#TankRetained4').val(capacity ? capacity : '');
+    //});
+
+    // Hide all fields except Date & Ballasting or Cleaning at the start
+    $('#BunkeringLubricatingOilField').hide();
+
+    // Show respective fields based on selection
+    $('#SelectType').change(function () {
+        var selectedValue = $(this).val();
+        if (selectedValue === 'Bunkering of Fuel') {
+            $('#BunkeringLubricatingOilField').show();
+        } else {
+            $('#BunkeringLubricatingOilField').hide();
+        }
     });
 
     // Save form data via AJAX
@@ -68,6 +81,7 @@ $(document).ready(function () {
         var formData = {
             UserId: userId, // Assuming userId is defined globally
             EntryDate: $('#EntryDate').val(),
+            SelectType: $('#SelectType').val() || null,
             Port: $('#Port').val() || null,
             Location: $('#Location').val() || null,
             StartDateTime: $('#StartDateTime').val() || null,
@@ -125,6 +139,7 @@ $(document).ready(function () {
 
         // Reset date to today
         setTodayDate();
+        $('#BunkeringLubricatingOilField').hide();
 
         // Reload tanks to ensure dropdowns are populated correctly
         loadTanks();

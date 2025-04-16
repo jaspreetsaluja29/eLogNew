@@ -24,6 +24,15 @@
         </div>
 
         <div class="mb-3">
+            <label for="SelectType" class="form-label">Select:</label>
+            <select class="form-select" id="SelectType" name="SelectType" required>
+                <option value="Select" selected>Select</option>
+                <option value="Bunkering of Fuel">Bunkering of Fuel</option>
+                <option value="Bunkering of Lubricating Oil in Bulk">Bunkering of Lubricating Oil in Bulk</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
             <label for="Port" class="form-label">Port:</label>
             <input type="text" class="form-control" id="Port" name="Port" required>
         </div>
@@ -48,9 +57,11 @@
             <input type="text" class="form-control" id="Quantity" name="Quantity" required>
         </div>
 
-        <div class="mb-3">
-            <label for="Grade" class="form-label">Grade:</label>
-            <input type="text" class="form-control" id="Grade" name="Grade" required>
+        <div id="BunkeringLubricatingOilField" style="display:none;">
+            <div class="mb-3">
+                <label for="Grade" class="form-label">Grade:</label>
+                <input type="text" class="form-control" id="Grade" name="Grade" required>
+            </div>
         </div>
 
         <div class="mb-3">

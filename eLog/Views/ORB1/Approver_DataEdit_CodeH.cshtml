@@ -26,6 +26,16 @@
         </div>
 
         <div class="mb-3">
+            <label asp-for="SelectType" class="form-label">Select:</label>
+            <select class="form-select" asp-for="SelectType" required disabled>
+                <option value="Select" selected>Select</option>
+                <option value="Bunkering of Fuel">Bunkering of Fuel</option>
+                <option value="Bunkering of Lubricating Oil in Bulk">Bunkering of Lubricating Oil in Bulk</option>
+            </select>
+            <span asp-validation-for="SelectType" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
             <label asp-for="Port" class="form-label">Port:</label>
             <input type="text" class="form-control" asp-for="Port" name="Port" id="Port">
         </div>
@@ -53,10 +63,12 @@
             <span asp-validation-for="Quantity" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Grade" class="form-label">Grade:</label>
-            <input type="text" class="form-control" asp-for="Grade" required>
-            <span asp-validation-for="Grade" class="text-danger"></span>
+        <div id="BunkeringLubricatingOilField" style="display:none;">
+            <div class="mb-3">
+                <label asp-for="Grade" class="form-label">Grade:</label>
+                <input type="text" class="form-control" asp-for="Grade" required>
+                <span asp-validation-for="Grade" class="text-danger"></span>
+            </div>
         </div>
 
         <div class="mb-3">
