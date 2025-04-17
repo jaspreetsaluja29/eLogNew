@@ -17,6 +17,13 @@ function initializeFormState() {
         $("#SlopFields").show();
         $("#EquipmentFields, #ReceptionFields").hide();
     }
+
+    const initialAction = $("#SlopTransferredFrom").val();
+    if (initialAction === "E/RM Bilge Wells") {
+        $('#SlopTransferredFromField').hide();
+    } else {
+        $('#SlopTransferredFromField').show();
+    }
 }
 
 function setupEventListeners() {

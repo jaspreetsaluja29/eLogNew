@@ -145,10 +145,12 @@
                 <input type="text" class="form-control" asp-for="SlopTransferredFrom" id="SlopTransferredFrom" value="@Model.SlopTransferredFrom" required disabled>
                 <span asp-validation-for="SlopTransferredFrom" class="text-danger"></span>
             </div>
-            <div class="mb-3">
-                <label asp-for="SlopQuantityRetainedFrom" class="form-label">Quantity Retained- "Transfer From" Tanks:</label>
-                <input type="text" class="form-control" asp-for="SlopQuantityRetainedFrom" required>
-                <span asp-validation-for="SlopQuantityRetainedFrom" class="text-danger"></span>
+            <div id="SlopTransferredFromField" style="display:none;">
+                <div class="mb-3">
+                    <label asp-for="SlopQuantityRetainedFrom" class="form-label">Quantity Retained- "Transfer From" Tanks:</label>
+                    <input type="text" class="form-control" asp-for="SlopQuantityRetainedFrom" required>
+                    <span asp-validation-for="SlopQuantityRetainedFrom" class="text-danger"></span>
+                </div>
             </div>
             <div class="mb-3">
                 <label asp-for="SlopStartTime" class="form-label">Start Time:</label>

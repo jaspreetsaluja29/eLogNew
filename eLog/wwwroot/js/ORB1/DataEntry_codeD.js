@@ -32,6 +32,16 @@
         }
     });
 
+    // Show respective fields based on selection
+    $('#SlopTransferredFrom').change(function () {
+        var selectedValue = $(this).val();
+        if (selectedValue === 'E/RM Bilge Wells') {
+            $('#SlopTransferredFromField').hide();
+        } else {
+            $('#SlopTransferredFromField').show();
+        }
+    });
+
     // Add this to your existing document.ready function
     $('#ReceptionAttachment').change(function () {
         previewAttachment(this);
@@ -143,9 +153,40 @@ function getQueryParams() {
     return { pageNumber, pageSize };
 }
 
+//function fetchTankData() {
+//    var basePath = document.querySelector('base')?.getAttribute('href') || ''; // Get base path
+
+//    $.ajax({
+//        url: basePath + "/ORB1/CodeD/GetTanks",
+//        type: "GET",
+//        dataType: "json",
+//        success: function (response) {
+//            console.log("Response received:", response);
+//            if (response.error) {
+//                console.error("Error fetching tanks:", response.error);
+//                return;
+//            }
+//            // Generate dropdown options
+//            var optionsHtml = '<option value="">Select Tank</option>'; // Default option
+//            response.forEach(function (tank) {
+//                // Use the correct property names as shown in the console
+//                var formattedText = `${tank.tankIdentification}, Frames: ${tank.tankLocation_Frames_From_To}, Capacity: ${tank.volumeCapacity} m³`;
+//                optionsHtml += `<option value="${tank.tankIdentification}">${formattedText}</option>`;
+//            });
+//            // Populate dropdown fields
+//            $('#EquipmentTransferredFrom, #ReceptionTransferredFrom, #SlopTransferredTo, #SlopTransferredFrom').html(optionsHtml);
+
+//            // Check if dropdowns were populated successfully
+//            console.log("Dropdowns populated with options:", optionsHtml);
+//        },
+//        error: function (xhr, status, error) {
+//            console.error("AJAX Error:", xhr.responseText);
+//        }
+//    });
+//}
+
 function fetchTankData() {
     var basePath = document.querySelector('base')?.getAttribute('href') || ''; // Get base path
-
     $.ajax({
         url: basePath + "/ORB1/CodeD/GetTanks",
         type: "GET",
@@ -163,11 +204,20 @@ function fetchTankData() {
                 var formattedText = `${tank.tankIdentification}, Frames: ${tank.tankLocation_Frames_From_To}, Capacity: ${tank.volumeCapacity} m³`;
                 optionsHtml += `<option value="${tank.tankIdentification}">${formattedText}</option>`;
             });
-            // Populate dropdown fields
-            $('#EquipmentTransferredFrom, #ReceptionTransferredFrom, #SlopTransferredTo, #SlopTransferredFrom').html(optionsHtml);
+
+            // Populate dropdown fields with base options
+            $('#EquipmentTransferredFrom, #ReceptionTransferredFrom').html(optionsHtml);
+
+            // Add SLOP Tank(s) option to SlopTransferredTo dropdown
+            var slopTransferredToOptions = optionsHtml + '<option value="SLOP Tank(s)">SLOP Tank(s)</option>';
+            $('#SlopTransferredTo').html(slopTransferredToOptions);
+
+            // Add E/RM Bilge Wells option to SlopTransferredFrom dropdown
+            var slopTransferredFromOptions = optionsHtml + '<option value="E/RM Bilge Wells">E/RM Bilge Wells</option>';
+            $('#SlopTransferredFrom').html(slopTransferredFromOptions);
 
             // Check if dropdowns were populated successfully
-            console.log("Dropdowns populated with options:", optionsHtml);
+            console.log("Dropdowns populated with options");
         },
         error: function (xhr, status, error) {
             console.error("AJAX Error:", xhr.responseText);
