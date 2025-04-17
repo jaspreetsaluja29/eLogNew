@@ -10,16 +10,24 @@ function initializeFormState() {
         $('#DebunkeringFields').show();
         $('#SealingFields').hide();
         $('#BreakingFields').hide();
+        $('#WeeklyInventoryFields').hide();
     } else if (initialAction === "Sealing of Valve") {
         $('#DebunkeringFields').hide();
         $('#SealingFields').show();
         $('#BreakingFields').hide();
+        $('#WeeklyInventoryFields').hide();
     } else if (initialAction === "Breaking of Seal") {
         $('#DebunkeringFields').hide();
         $('#SealingFields').hide();
         $('#BreakingFields').show();
+        $('#WeeklyInventoryFields').hide();
+    } else if (initialAction === "Weekly Inventory of IOPP Tank 3.3") {
+        $('#DebunkeringFields').hide();
+        $('#SealingFields').hide();
+        $('#BreakingFields').hide();
+        $('#WeeklyInventoryFields').show();
     } else {
-        $('#DebunkeringFields, #SealingFields, #BreakingFields').hide();
+        $('#WeeklyInventoryFields, #DebunkeringFields, #SealingFields, #BreakingFields').hide();
     }
 }
 
@@ -47,6 +55,11 @@ function submitForm() {
         UserId: userId,
         EntryDate: $('#EntryDate').val(),
         SelectType: $('#SelectType').val() || null,
+
+        // Weekly Inventory
+        WeeklyInventoryTanks: $('#WeeklyInventoryTanks').val() || null,
+        WeeklyInventoryCapacity: parseFloat($('#WeeklyInventoryCapacity').val()) || null,
+        WeeklyInventoryRetained: parseFloat($('#WeeklyInventoryRetained').val()) || null,
 
         // Debunkering
         DebunkeringQuantity: parseFloat($('#DebunkeringQuantity').val()) || null,
@@ -81,7 +94,7 @@ function submitForm() {
         success: function (response) {
             $('#EditCodeIForm')[0].reset();
             resetFormDate();
-            $('#DebunkeringFields, #SealingFields, #BreakingFields').hide();
+            $('#WeeklyInventoryFields, #DebunkeringFields, #SealingFields, #BreakingFields').hide();
 
             alert(response.message);
 

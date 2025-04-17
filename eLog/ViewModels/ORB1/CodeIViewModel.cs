@@ -7,6 +7,11 @@
         public DateTime EntryDate { get; set; }
         public string SelectType { get; set; }
 
+        //Weekly Inventory
+        public string WeeklyInventoryTanks { get; set; }
+        public decimal? WeeklyInventoryCapacity { get; set; }
+        public decimal? WeeklyInventoryRetained { get; set; }
+
         //Debunkering
         public decimal? DebunkeringQuantity { get; set; }
         public string DebunkeringGrade { get; set; }

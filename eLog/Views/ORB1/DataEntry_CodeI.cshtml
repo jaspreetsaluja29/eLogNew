@@ -27,90 +27,107 @@
             <label for="SelectType" class="form-label">Select:</label>
             <select class="form-select" id="SelectType" name="SelectType" required>
                 <option value="Select" selected>Select</option>
+                <option value="Weekly Inventory of IOPP Tank 3.3">Weekly Inventory of IOPP Tank 3.3</option>
                 <option value="Debunkering">Debunkering</option>
                 <option value="Sealing of Valve">Sealing of Valve</option>
                 <option value="Breaking of Seal">Breaking of Seal</option>
             </select>
         </div>
 
+        <div id="WeeklyInventoryFields" style="display:none;">
+            <div class="mb-3">
+                <label for="WeeklyInventoryTanks" class="form-label">Tank:</label>
+                <select class="form-select" id="WeeklyInventoryTanks" name="WeeklyInventoryTanks" required>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="WeeklyInventoryCapacity" class="form-label">Capacity:</label>
+                <input type="text" class="form-control" id="WeeklyInventoryCapacity" name="WeeklyInventoryCapacity" required readonly>
+            </div>
+            <div class="mb-3">
+                <label for="WeeklyInventoryRetained" class="form-label">Retained:</label>
+                <input type="text" class="form-control" id="WeeklyInventoryRetained" name="WeeklyInventoryRetained" required>
+            </div>
+        </div>
+
         <div id="DebunkeringFields" style="display:none;">
             <div class="mb-3">
                 <label for="DebunkeringQuantity" class="form-label">Quantity(MT):</label>
-                <input type="text" class="form-control" id="DebunkeringQuantity" name="DebunkeringQuantity">
+                <input type="text" class="form-control" id="DebunkeringQuantity" name="DebunkeringQuantity" required>
             </div>
             <div class="mb-3">
                 <label for="DebunkeringGrade" class="form-label">Grade:</label>
-                <input type="text" class="form-control" id="DebunkeringGrade" name="DebunkeringGrade">
+                <input type="text" class="form-control" id="DebunkeringGrade" name="DebunkeringGrade" required>
             </div>
             <div class="mb-3">
                 <label for="DebunkeringSulphurContent" class="form-label">Sulphur Content:</label>
-                <input type="text" class="form-control" id="DebunkeringSulphurContent" name="DebunkeringSulphurContent">
+                <input type="text" class="form-control" id="DebunkeringSulphurContent" name="DebunkeringSulphurContent" required>
             </div>
             <div class="mb-3">
                 <label for="DebunkeringFrom" class="form-label">Debunkered From:</label>
-                <input type="text" class="form-control" id="DebunkeringFrom" name="DebunkeringFrom">
+                <input type="text" class="form-control" id="DebunkeringFrom" name="DebunkeringFrom" required>
             </div>
             <div class="mb-3">
                 <label for="DebunkeringQuantityRetained" class="form-label">Quantity Retained in Debunkered Tank:</label>
-                <input type="text" class="form-control" id="DebunkeringQuantityRetained" name="DebunkeringQuantityRetained">
+                <input type="text" class="form-control" id="DebunkeringQuantityRetained" name="DebunkeringQuantityRetained" required>
             </div>
             <div class="mb-3">
                 <label for="DebunkeringTo" class="form-label">Debunkered To:</label>
-                <input type="text" class="form-control" id="DebunkeringTo" name="DebunkeringTo">
+                <input type="text" class="form-control" id="DebunkeringTo" name="DebunkeringTo" required>
             </div>
             <div class="mb-3">
                 <label for="DebunkeringPortFacility" class="form-label">Port Facility:</label>
-                <input type="text" class="form-control" id="DebunkeringPortFacility" name="DebunkeringPortFacility">
+                <input type="text" class="form-control" id="DebunkeringPortFacility" name="DebunkeringPortFacility" required>
             </div>
             <div class="mb-3">
                 <label for="DebunkeringStartDateTime" class="form-label">Start Date & Time:</label>
-                <input type="datetime-local" class="form-control" id="DebunkeringStartDateTime" name="DebunkeringStartDateTime">
+                <input type="datetime-local" class="form-control" id="DebunkeringStartDateTime" name="DebunkeringStartDateTime" required>
             </div>
             <div class="mb-3">
                 <label for="DebunkeringStopDateTime" class="form-label">Stop Date & Time:</label>
-                <input type="datetime-local" class="form-control" id="DebunkeringStopDateTime" name="DebunkeringStopDateTime">
+                <input type="datetime-local" class="form-control" id="DebunkeringStopDateTime" name="DebunkeringStopDateTime" required>
             </div>
         </div>
 
         <div id="SealingFields" style="display:none;">
             <div class="mb-3">
                 <label for="ValveName" class="form-label">Valve Name:</label>
-                <input type="text" class="form-control" id="ValveName" name="ValveName">
+                <input type="text" class="form-control" id="ValveName" name="ValveName" required>
             </div>
             <div class="mb-3">
                 <label for="ValveNo" class="form-label">Valve No.:</label>
-                <input type="text" class="form-control" id="ValveNo" name="ValveNo">
+                <input type="text" class="form-control" id="ValveNo" name="ValveNo" required>
             </div>
             <div class="mb-3">
                 <label for="ValveAssociatedEquipment" class="form-label">Associated Equipment:</label>
-                <input type="text" class="form-control" id="ValveAssociatedEquipment" name="ValveAssociatedEquipment">
+                <input type="text" class="form-control" id="ValveAssociatedEquipment" name="ValveAssociatedEquipment" required>
             </div>
             <div class="mb-3">
                 <label for="ValveSealNo" class="form-label">Seal No.:</label>
-                <input type="text" class="form-control" id="ValveSealNo" name="ValveSealNo">
+                <input type="text" class="form-control" id="ValveSealNo" name="ValveSealNo" required>
             </div>
         </div>
 
         <div id="BreakingFields" style="display:none;">
             <div class="mb-3">
                 <label for="BreakingValveName" class="form-label">Valve Name:</label>
-                <input type="text" class="form-control" id="BreakingValveName" name="BreakingValveName">
+                <input type="text" class="form-control" id="BreakingValveName" name="BreakingValveName" required>
             </div>
             <div class="mb-3">
                 <label for="BreakingValveNo" class="form-label">Valve No.:</label>
-                <input type="text" class="form-control" id="BreakingValveNo" name="BreakingValveNo">
+                <input type="text" class="form-control" id="BreakingValveNo" name="BreakingValveNo" required>
             </div>
             <div class="mb-3">
                 <label for="BreakingAssociatedEquipment" class="form-label">Associated Equipment:</label>
-                <input type="text" class="form-control" id="BreakingAssociatedEquipment" name="BreakingAssociatedEquipment">
+                <input type="text" class="form-control" id="BreakingAssociatedEquipment" name="BreakingAssociatedEquipment" required>
             </div>
             <div class="mb-3">
                     <label for="BreakingReason" class="form-label">Reason for Breaking of Optional Seal:</label>
-                <input type="text" class="form-control" id="BreakingReason" name="BreakingReason">
+                <input type="text" class="form-control" id="BreakingReason" name="BreakingReason" required>
             </div>
             <div class="mb-3">
                 <label for="BreakingSealNo" class="form-label">Seal No.:</label>
-                <input type="text" class="form-control" id="BreakingSealNo" name="BreakingSealNo">
+                <input type="text" class="form-control" id="BreakingSealNo" name="BreakingSealNo" required>
             </div>
         </div>
 

@@ -43,30 +43,35 @@ namespace eLog.Controllers.ORB1
                                 EntryDate = reader.GetDateTime(2),
                                 SelectType = reader.IsDBNull(3) ? null : reader.GetString(3),
 
-                                DebunkeringQuantity = reader.IsDBNull(4) ? null : reader.GetDecimal(4),
-                                DebunkeringGrade = reader.IsDBNull(5) ? null : reader.GetString(5),
-                                DebunkeringSulphurContent = reader.IsDBNull(6) ? null : reader.GetString(6),
-                                DebunkeringFrom = reader.IsDBNull(7) ? null : reader.GetString(7),
-                                DebunkeringQuantityRetained = reader.IsDBNull(8) ? null : reader.GetDecimal(8),
-                                DebunkeringTo = reader.IsDBNull(9) ? null : reader.GetString(9),
-                                DebunkeringPortFacility = reader.IsDBNull(10) ? null : reader.GetString(10),
-                                DebunkeringStartDateTime = reader.IsDBNull(11) ? (DateTime?)null : reader.GetDateTime(11),
-                                DebunkeringStopDateTime = reader.IsDBNull(12) ? (DateTime?)null : reader.GetDateTime(12),
+                                WeeklyInventoryTanks = reader.IsDBNull(4) ? null : reader.GetString(4),
+                                WeeklyInventoryCapacity = reader.IsDBNull(5) ? null : reader.GetDecimal(5),
+                                WeeklyInventoryRetained = reader.IsDBNull(6) ? null : reader.GetDecimal(6),
 
-                                ValveName = reader.IsDBNull(13) ? null : reader.GetString(13),
-                                ValveNo = reader.IsDBNull(14) ? null : reader.GetString(14),
-                                ValveAssociatedEquipment = reader.IsDBNull(15) ? null : reader.GetString(15),
-                                ValveSealNo = reader.IsDBNull(16) ? null : reader.GetString(16),
+                                DebunkeringQuantity = reader.IsDBNull(7) ? null : reader.GetDecimal(7),
+                                DebunkeringGrade = reader.IsDBNull(8) ? null : reader.GetString(8),
+                                DebunkeringSulphurContent = reader.IsDBNull(9) ? null : reader.GetString(9),
+                                DebunkeringFrom = reader.IsDBNull(10) ? null : reader.GetString(10),
+                                DebunkeringQuantityRetained = reader.IsDBNull(11) ? null : reader.GetDecimal(11),
+                                DebunkeringTo = reader.IsDBNull(12) ? null : reader.GetString(12),
+                                DebunkeringPortFacility = reader.IsDBNull(13) ? null : reader.GetString(13),
+                                DebunkeringStartDateTime = reader.IsDBNull(14) ? (DateTime?)null : reader.GetDateTime(14),
+                                DebunkeringStopDateTime = reader.IsDBNull(15) ? (DateTime?)null : reader.GetDateTime(15),
 
-                                BreakingValveName = reader.IsDBNull(17) ? null : reader.GetString(17),
-                                BreakingValveNo = reader.IsDBNull(18) ? null : reader.GetString(18),
-                                BreakingAssociatedEquipment = reader.IsDBNull(19) ? null : reader.GetString(19),
-                                BreakingReason = reader.IsDBNull(20) ? null : reader.GetString(20),
-                                BreakingSealNo = reader.IsDBNull(21) ? null : reader.GetString(21),
+                                ValveName = reader.IsDBNull(16) ? null : reader.GetString(16),
+                                ValveNo = reader.IsDBNull(17) ? null : reader.GetString(17),
+                                ValveAssociatedEquipment = reader.IsDBNull(18) ? null : reader.GetString(18),
+                                ValveSealNo = reader.IsDBNull(19) ? null : reader.GetString(19),
 
-                                StatusName = reader.IsDBNull(22) ? null : reader.GetString(22),
-                                ApprovedBy = reader.IsDBNull(23) ? null : reader.GetString(23),
-                                Comments = reader.IsDBNull(24) ? null : reader.GetString(24)
+                                BreakingValveName = reader.IsDBNull(20) ? null : reader.GetString(20),
+                                BreakingValveNo = reader.IsDBNull(21) ? null : reader.GetString(21),
+                                BreakingAssociatedEquipment = reader.IsDBNull(22) ? null : reader.GetString(22),
+                                BreakingReason = reader.IsDBNull(23) ? null : reader.GetString(23),
+                                BreakingSealNo = reader.IsDBNull(24) ? null : reader.GetString(24),
+
+                                StatusName = reader.IsDBNull(25) ? null : reader.GetString(25),
+                                ApprovedBy = reader.IsDBNull(26) ? null : reader.GetString(26),
+                                Comments = reader.IsDBNull(27) ? null : reader.GetString(27)
+
                             });
                         }
                     }
@@ -84,6 +89,44 @@ namespace eLog.Controllers.ORB1
             return View("~/Views/ORB1/CodeI.cshtml", paginatedRecords);
         }
 
+        // Make sure this method has the correct attribute and route
+        [HttpGet]
+        [Route("ORB1/CodeI/GetTanks")] // Add this if missing
+        public JsonResult GetTanks()
+        {
+            List<object> tanks = new List<object>();
+
+            try // Add error handling
+            {
+                using (SqlConnection connection = _db.CreateConnection())
+                {
+                    using (SqlCommand cmd = new SqlCommand("proc_GetORB1_FirstPage_OilResidueBilge", connection))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        connection.Open();
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                tanks.Add(new
+                                {
+                                    TankIdentification = reader["TankIdentification"].ToString(),
+                                    TankLocation_Frames_From_To = reader["TankLocation_Frames_From_To"].ToString(),
+                                    VolumeCapacity = Convert.ToDecimal(reader["Volume_m3"])
+                                });
+                            }
+                        }
+                    }
+                }
+                return Json(tanks);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception and return an error message
+                return Json(new { error = ex.Message });
+            }
+        }
 
         // Data Entry Page
         public IActionResult DataEntry_CodeI(string userId, string userName, string userRoleName)
@@ -122,27 +165,35 @@ namespace eLog.Controllers.ORB1
                                 UserId = reader.IsDBNull(1) ? null : reader.GetValue(1).ToString(),
                                 EntryDate = reader.GetDateTime(2),
                                 SelectType = reader.IsDBNull(3) ? null : reader.GetValue(3).ToString(),
-                                DebunkeringQuantity = reader.IsDBNull(4) ? (decimal?)null : reader.GetDecimal(4),
-                                DebunkeringGrade = reader.IsDBNull(5) ? null : reader.GetValue(5).ToString(),
-                                DebunkeringSulphurContent = reader.IsDBNull(6) ? null : reader.GetValue(6).ToString(),
-                                DebunkeringFrom = reader.IsDBNull(7) ? null : reader.GetValue(7).ToString(),
-                                DebunkeringQuantityRetained = reader.IsDBNull(8) ? (decimal?)null : reader.GetDecimal(8),
-                                DebunkeringTo = reader.IsDBNull(9) ? null : reader.GetValue(9).ToString(),
-                                DebunkeringPortFacility = reader.IsDBNull(10) ? null : reader.GetValue(10).ToString(),
-                                DebunkeringStartDateTime = reader.IsDBNull(11) ? (DateTime?)null : reader.GetDateTime(11),
-                                DebunkeringStopDateTime = reader.IsDBNull(12) ? (DateTime?)null : reader.GetDateTime(12),
-                                ValveName = reader.IsDBNull(13) ? null : reader.GetValue(13).ToString(),
-                                ValveNo = reader.IsDBNull(14) ? null : reader.GetValue(14).ToString(),
-                                ValveAssociatedEquipment = reader.IsDBNull(15) ? null : reader.GetValue(15).ToString(),
-                                ValveSealNo = reader.IsDBNull(16) ? null : reader.GetValue(16).ToString(),
-                                BreakingValveName = reader.IsDBNull(17) ? null : reader.GetValue(18).ToString(),
-                                BreakingValveNo = reader.IsDBNull(18) ? null : reader.GetValue(18).ToString(),
-                                BreakingAssociatedEquipment = reader.IsDBNull(19) ? null : reader.GetValue(19).ToString(),
-                                BreakingReason = reader.IsDBNull(20) ? null : reader.GetValue(20).ToString(),
-                                BreakingSealNo = reader.IsDBNull(21) ? null : reader.GetValue(21).ToString(),
-                                StatusName = reader.IsDBNull(22) ? null : reader.GetValue(22).ToString(),
-                                ApprovedBy = reader.IsDBNull(23) ? null : reader.GetValue(23).ToString(),
-                                Comments = reader.IsDBNull(24) ? null : reader.GetValue(24).ToString()
+
+                                WeeklyInventoryTanks = reader.IsDBNull(4) ? null : reader.GetValue(4).ToString(),
+                                WeeklyInventoryCapacity = reader.IsDBNull(5) ? (decimal?)null : reader.GetDecimal(5),
+                                WeeklyInventoryRetained = reader.IsDBNull(6) ? (decimal?)null : reader.GetDecimal(6),
+
+                                DebunkeringQuantity = reader.IsDBNull(7) ? (decimal?)null : reader.GetDecimal(7),
+                                DebunkeringGrade = reader.IsDBNull(8) ? null : reader.GetValue(8).ToString(),
+                                DebunkeringSulphurContent = reader.IsDBNull(9) ? null : reader.GetValue(9).ToString(),
+                                DebunkeringFrom = reader.IsDBNull(10) ? null : reader.GetValue(10).ToString(),
+                                DebunkeringQuantityRetained = reader.IsDBNull(11) ? (decimal?)null : reader.GetDecimal(11),
+                                DebunkeringTo = reader.IsDBNull(12) ? null : reader.GetValue(12).ToString(),
+                                DebunkeringPortFacility = reader.IsDBNull(13) ? null : reader.GetValue(13).ToString(),
+                                DebunkeringStartDateTime = reader.IsDBNull(14) ? (DateTime?)null : reader.GetDateTime(14),
+                                DebunkeringStopDateTime = reader.IsDBNull(15) ? (DateTime?)null : reader.GetDateTime(15),
+
+                                ValveName = reader.IsDBNull(16) ? null : reader.GetValue(16).ToString(),
+                                ValveNo = reader.IsDBNull(17) ? null : reader.GetValue(17).ToString(),
+                                ValveAssociatedEquipment = reader.IsDBNull(18) ? null : reader.GetValue(18).ToString(),
+                                ValveSealNo = reader.IsDBNull(19) ? null : reader.GetValue(19).ToString(),
+
+                                BreakingValveName = reader.IsDBNull(20) ? null : reader.GetValue(20).ToString(),
+                                BreakingValveNo = reader.IsDBNull(21) ? null : reader.GetValue(21).ToString(),
+                                BreakingAssociatedEquipment = reader.IsDBNull(22) ? null : reader.GetValue(22).ToString(),
+                                BreakingReason = reader.IsDBNull(23) ? null : reader.GetValue(23).ToString(),
+                                BreakingSealNo = reader.IsDBNull(24) ? null : reader.GetValue(24).ToString(),
+
+                                StatusName = reader.IsDBNull(25) ? null : reader.GetValue(25).ToString(),
+                                ApprovedBy = reader.IsDBNull(26) ? null : reader.GetValue(26).ToString(),
+                                Comments = reader.IsDBNull(27) ? null : reader.GetValue(27).ToString()
                             };
                         }
                     }
@@ -179,6 +230,11 @@ namespace eLog.Controllers.ORB1
                     new SqlParameter("@UserId", model.UserId),
                     new SqlParameter("@EntryDate", model.EntryDate),
                     new SqlParameter("@SelectType", model.SelectType ?? (object)DBNull.Value),
+
+                    // Weekly Inventory
+                    new SqlParameter("@WeeklyInventoryTanks", model.WeeklyInventoryTanks ?? (object)DBNull.Value),
+                    new SqlParameter("@WeeklyInventoryCapacity", (object)model.WeeklyInventoryCapacity ?? DBNull.Value),
+                    new SqlParameter("@WeeklyInventoryRetained", (object)model.WeeklyInventoryRetained ?? DBNull.Value),
 
                     // Debunkering
                     new SqlParameter("@DebunkeringQuantity", (object)model.DebunkeringQuantity ?? DBNull.Value),
@@ -242,6 +298,11 @@ namespace eLog.Controllers.ORB1
                     new SqlParameter("@EntryDate", model.EntryDate),
                     new SqlParameter("@SelectType", model.SelectType ?? (object)DBNull.Value),
 
+                    // Weekly Inventory
+                    new SqlParameter("@WeeklyInventoryTanks", model.WeeklyInventoryTanks ?? (object)DBNull.Value),
+                    new SqlParameter("@WeeklyInventoryCapacity", (object)model.WeeklyInventoryCapacity ?? DBNull.Value),
+                    new SqlParameter("@WeeklyInventoryRetained", (object)model.WeeklyInventoryRetained ?? DBNull.Value),
+
                     // Debunkering
                     new SqlParameter("@DebunkeringQuantity", (object)model.DebunkeringQuantity ?? DBNull.Value),
                     new SqlParameter("@DebunkeringGrade", model.DebunkeringGrade ?? (object)DBNull.Value),
@@ -302,6 +363,11 @@ namespace eLog.Controllers.ORB1
                     new SqlParameter("@UserId", model.UserId),
                     new SqlParameter("@EntryDate", model.EntryDate),
                     new SqlParameter("@SelectType", model.SelectType ?? (object)DBNull.Value),
+
+                    // Weekly Inventory
+                    new SqlParameter("@WeeklyInventoryTanks", model.WeeklyInventoryTanks ?? (object)DBNull.Value),
+                    new SqlParameter("@WeeklyInventoryCapacity", (object)model.WeeklyInventoryCapacity ?? DBNull.Value),
+                    new SqlParameter("@WeeklyInventoryRetained", (object)model.WeeklyInventoryRetained ?? DBNull.Value),
 
                     // Debunkering
                     new SqlParameter("@DebunkeringQuantity", (object)model.DebunkeringQuantity ?? DBNull.Value),

@@ -32,8 +32,28 @@
                 <option value="Debunkering">Debunkering</option>
                 <option value="Sealing of Valve">Sealing of Valve</option>
                 <option value="Breaking of Seal">Breaking of Seal</option>
+                <option value="Weekly Inventory of IOPP Tank 3.3">Weekly Inventory of IOPP Tank 3.3</option>
             </select>
             <span asp-validation-for="SelectType" class="text-danger"></span>
+        </div>
+
+        <!-- Weekly Inventory Fields -->
+        <div id="WeeklyInventoryFields">
+            <div class="mb-3">
+                <label asp-for="WeeklyInventoryTanks" class="form-label">Tank:</label>
+                <input type="text" class="form-control" asp-for="WeeklyInventoryTanks" id="WeeklyInventoryTanks" value="@Model.WeeklyInventoryTanks" required disabled>
+                <span asp-validation-for="WeeklyInventoryTanks" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="WeeklyInventoryCapacity" class="form-label">Capacity of Tanks(s) in m³:</label>
+                <input type="text" class="form-control" asp-for="WeeklyInventoryCapacity" id="WeeklyInventoryCapacity" value="@Model.WeeklyInventoryCapacity" required disabled>
+                <span asp-validation-for="WeeklyInventoryCapacity" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="WeeklyInventoryRetained" class="form-label">Retained:</label>
+                <input type="text" class="form-control" asp-for="WeeklyInventoryRetained" required>
+                <span asp-validation-for="WeeklyInventoryRetained" class="text-danger"></span>
+            </div>
         </div>
 
         <!-- Debunkering Fields -->

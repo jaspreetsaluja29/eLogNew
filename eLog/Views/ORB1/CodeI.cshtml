@@ -64,27 +64,30 @@
                     <th onclick="sortTable(0)">Entered By</th>
                     <th onclick="sortTable(1)">Entry Date</th>
                     <th onclick="sortTable(2)">Selected</th>
-                    <th onclick="sortTable(3)">Quantity (MT)</th>
-                    <th onclick="sortTable(4)">Grade</th>
-                    <th onclick="sortTable(5)">Sulphur Content</th>
-                    <th onclick="sortTable(6)">Debunkered From</th>
-                    <th onclick="sortTable(7)">Quantity retained in Debunkered Tank</th>
-                    <th onclick="sortTable(8)">Debunkered To</th>
-                    <th onclick="sortTable(9)">Port Facility</th>
-                    <th onclick="sortTable(10)">Start Date & Time</th>
-                    <th onclick="sortTable(11)">Stop Date & Time</th>
-                    <th onclick="sortTable(12)">Sealing Valve Name</th>
-                    <th onclick="sortTable(13)">Sealing Valve No.</th>
-                    <th onclick="sortTable(14)">Sealing Associated Equipment</th>
-                    <th onclick="sortTable(15)">Sealing Seal No.</th>
-                    <th onclick="sortTable(16)">Breaking Valve Name</th>
-                    <th onclick="sortTable(17)">Breaking Valve No.</th>
-                    <th onclick="sortTable(18)">Breaking Associated Equipment</th>
-                    <th onclick="sortTable(19)">Breaking Reason for Breaking of Optional Seal</th>
-                    <th onclick="sortTable(20)">Breaking Seal No.</th>
-                    <th onclick="sortTable(21)">Status Name</th>
-                    <th onclick="sortTable(22)">Approved By</th>
-                    <th onclick="sortTable(23)">Comments</th>
+                    <th onclick="sortTable(3)">Weekly Inventory Tank</th>
+                    <th onclick="sortTable(4)">Weekly Inventory Capacity</th>
+                    <th onclick="sortTable(5)">Weekly Inventory Retained</th>
+                    <th onclick="sortTable(6)">Debunkering Quantity (MT)</th>
+                    <th onclick="sortTable(7)">Debunkering Grade</th>
+                    <th onclick="sortTable(8)">Debunkering Sulphur Content</th>
+                    <th onclick="sortTable(9)">Debunkered From</th>
+                    <th onclick="sortTable(10)">Quantity retained in Debunkered Tank</th>
+                    <th onclick="sortTable(11)">Debunkered To</th>
+                    <th onclick="sortTable(12)">Debunkering Port Facility</th>
+                    <th onclick="sortTable(13)">Debunkering Start Date & Time</th>
+                    <th onclick="sortTable(14)">Debunkering Stop Date & Time</th>
+                    <th onclick="sortTable(15)">Sealing Valve Name</th>
+                    <th onclick="sortTable(16)">Sealing Valve No.</th>
+                    <th onclick="sortTable(17)">Sealing Associated Equipment</th>
+                    <th onclick="sortTable(18)">Sealing Seal No.</th>
+                    <th onclick="sortTable(19)">Breaking Valve Name</th>
+                    <th onclick="sortTable(20)">Breaking Valve No.</th>
+                    <th onclick="sortTable(21)">Breaking Associated Equipment</th>
+                    <th onclick="sortTable(22)">Breaking Reason for Breaking of Optional Seal</th>
+                    <th onclick="sortTable(23)">Breaking Seal No.</th>
+                    <th onclick="sortTable(24)">Status Name</th>
+                    <th onclick="sortTable(25)">Approved By</th>
+                    <th onclick="sortTable(26)">Comments</th>
                     @if (TempData["UserRoleName"]?.ToString() != "Admin")
                     {
                         <th>Actions</th>
@@ -100,6 +103,9 @@
                             <td>@item.UserId.Trim()</td>
                             <td>@item.EntryDate.ToShortDateString()</td>
                             <td>@item.SelectType</td>
+                            <td>@item.WeeklyInventoryTanks</td>
+                            <td>@item.WeeklyInventoryCapacity</td>
+                            <td>@item.WeeklyInventoryRetained</td>
                             <td>@item.DebunkeringQuantity</td>
                             <td>@item.DebunkeringGrade</td>
                             <td>@item.DebunkeringSulphurContent</td>
