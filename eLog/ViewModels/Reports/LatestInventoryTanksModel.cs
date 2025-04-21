@@ -1,6 +1,6 @@
 ﻿namespace eLog.ViewModels.Reports
 {
-    public class LatestInventoryTanks
+    public class LatestInventoryTanksModel
     {
         public int SNo { get; set; }
         public DateTime? EntryDate { get; set; }
