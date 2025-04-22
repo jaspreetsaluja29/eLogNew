@@ -1,0 +1,196 @@
+﻿@model IEnumerable<eLog.ViewModels.Reports.HistoryForTanksModel>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "History For Tanks Report";
+}
+<!-- Include CodeA.css -->
+<link href="~/css/ORB1/CodeA.css" rel="stylesheet" />
+<div style="text-align: center; margin-bottom: 20px;">
+    <h2 class="mb-4">History For Tanks</h2>
+</div>
+
+<!-- Filter Form -->
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Filter Options</h5>
+        </div>
+        <div class="card-body">
+            <form id="tankHistoryFilterForm" method="get" action="@Url.Action("HistoryForTanks", "Reports")">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="tankId" class="form-label">Select Tank</label>
+                        <select id="tankId" name="tankId" class="form-select">
+                            <option value="">All Tanks</option>
+                            @if (ViewBag.Tanks != null)
+                            {
+                                foreach (var tank in ViewBag.Tanks)
+                                {
+                                    if (ViewBag.SelectedTankId == tank.Value.ToString())
+                                    {
+                                        <option value="@tank.Value" selected>@tank.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@tank.Value">@tank.Text</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="dateRange" class="form-label">Date Range</label>
+                        <select id="dateRange" name="dateRange" class="form-select" onchange="toggleCustomDateRange()">
+                            @{
+                                var dateRanges = new[] {
+                            new { Value = "1month", Text = "Last 1 Month" },
+                            new { Value = "3months", Text = "Last 3 Months" },
+                            new { Value = "6months", Text = "Last 6 Months" },
+                            new { Value = "1year", Text = "Last 1 Year" },
+                            new { Value = "3years", Text = "Last 3 Years" },
+                            new { Value = "custom", Text = "Custom Date Range" }
+                            };
+
+                                foreach (var option in dateRanges)
+                                {
+                                    if (ViewBag.SelectedDateRange == option.Value)
+                                    {
+                                        <option value="@option.Value" selected>@option.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@option.Value">@option.Text</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    @{
+                        var customDisplay = ViewBag.SelectedDateRange == "custom" ? "block" : "none";
+                    }
+                    <div id="customDateContainer" class="col-md-4" style="display: @customDisplay;">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" id="startDate" name="startDate" class="form-control" value="@ViewBag.StartDate">
+                            </div>
+                            <div class="col-6">
+                                <label for="endDate" class="form-label">End Date</label>
+                                <input type="date" id="endDate" name="endDate" class="form-control" value="@ViewBag.EndDate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-end">
+                        <button type="submit" class="btn btn-primary">Get Data</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4 text-center">
+    <div class="row justify-content-between align-items-center mb-3">
+        <div class="col-auto">
+        </div>
+        <div class="col-auto">
+            <input type="text" id="searchInput" class="form-control" style="width: 200px;" placeholder="Search..." onkeyup="filterTable()" />
+        </div>
+    </div>
+    <!-- Row count display -->
+    <div class="record-controls d-flex justify-content-between align-items-center mb-3 p-2">
+        <div class="record-count">
+            <strong>Total Records:</strong> @ViewBag.TotalRecords
+        </div>
+        <div class="pagination-controls d-flex align-items-center gap-2">
+            <label for="pageSize" class="fw-semibold" style="white-space: nowrap;">Page Size:</label>
+            <select id="pageSize" class="form-select form-select-sm" onchange="changePage(0)">
+                @{
+                    var pageSizes = new[] { 10, 20, 50 };
+                    foreach (var size in pageSizes)
+                    {
+                        if (ViewBag.PageSize == size)
+                        {
+                            <option value="@size" selected>@size</option>
+                        }
+                        else
+                        {
+                            <option value="@size">@size</option>
+                        }
+                    }
+                }
+            </select>
+            @{
+                bool isPrevDisabled = ViewBag.PageNumber == 1;
+                bool isNextDisabled = ViewBag.PageNumber >= ViewBag.TotalPages;
+            }
+            <button class="btn btn-outline-primary btn-sm" id="prevPage" onclick="changePage(-1)"
+            @(isPrevDisabled ? "disabled" : "")>
+                Previous
+            </button>
+            <span id="currentPage" class="fw-bold">@ViewBag.PageNumber</span> /
+            <span id="totalPages">@ViewBag.TotalPages</span>
+            <button class="btn btn-outline-primary btn-sm" id="nextPage" onclick="changePage(1)"
+            @(isNextDisabled ? "disabled" : "")>
+                Next
+            </button>
+        </div>
+    </div>
+    <!-- Table container -->
+    <div class="table-container">
+        <table id="historyForTanksReportTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">S.No.</th>
+                    <th onclick="sortTable(1)">Entry Date</th>
+                    <th onclick="sortTable(2)">Identity of Tank</th>
+                    <th onclick="sortTable(3)">Retained Quantity (m³)</th>
+                    <th onclick="sortTable(4)">Modified/Approval/Rejected Date</th>
+                    <th onclick="sortTable(5)">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.SNo</td>
+                            <td>@item.EntryDate?.ToString("yyyy-MM-dd")</td>
+                            <td>@item.IdentityOfTanks</td>
+                            <td>@item.LastRetainedOnBoard</td>
+                            <td>@item.ModAppRejDate?.ToString("yyyy-MM-dd")</td>
+                            <td>@item.Status</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center">No records found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Reference to HistoryForTanks.js -->
+<script src="~/js/Reports/HistoryForTanks.js"></script>
+
+<script>
+    function toggleCustomDateRange() {
+        var dateRange = document.getElementById('dateRange').value;
+        var customDateContainer = document.getElementById('customDateContainer');
+
+        if (dateRange === 'custom') {
+            customDateContainer.style.display = 'block';
+        } else {
+            customDateContainer.style.display = 'none';
+        }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleCustomDateRange();
+    });
+</script>
