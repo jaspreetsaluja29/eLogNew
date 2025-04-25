@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Form submission handling
-    const loginForm = document.querySelector('form');
+    const loginForm = document.querySelector('#login-form');
     if (loginForm) {
         // We're removing the preventDefault() call to allow the form to submit naturally
         // This way the browser will handle the form submission to the server
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             if (!username || !password) {
-                alert('Please enter both username and password');
+                alert('Please enter both Username and Password');
                 event.preventDefault(); // Only prevent submission if validation fails
                 return false;
             }
@@ -35,20 +35,24 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Reset button handling
-    const resetButton = document.querySelector('button[type="reset"]');
+    const resetButton = document.getElementById('reset-button');
     if (resetButton) {
         resetButton.addEventListener('click', function (e) {
             e.preventDefault(); // Prevent the default form reset behavior
-
             // Clear the form fields manually
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
-
             // Clear any error messages if they exist
-            const errorElement = document.querySelector('[style="color: red;"]');
-            if (errorElement) {
-                errorElement.textContent = '';
+            const errorMessage = document.getElementById('error-message');
+            if (errorMessage) {
+                errorMessage.style.display = 'none';
             }
         });
+    }
+
+    // Check if OTP section needs to be displayed (for when success message exists)
+    const otpSection = document.getElementById('otp-section');
+    if (otpSection && document.querySelector('.success-message')) {
+        otpSection.style.display = 'block';
     }
 });

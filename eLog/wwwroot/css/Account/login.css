@@ -6,55 +6,28 @@
 }
 
 body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-image: url('/image/LoginBgImage.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-.navbar {
-    background-color: white;
-    display: flex;
-    padding: 15px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-    .navbar .brand {
-        font-size: 24px;
-        font-weight: bold;
-        color: #333;
-        margin-right: 40px;
-        text-decoration: none;
-    }
-
-    .navbar .nav-links {
-        display: flex;
-        gap: 25px;
-        align-items: center;
-    }
-
-        .navbar .nav-links a {
-            color: #555;
-            text-decoration: none;
-            font-size: 16px;
-            transition: color 0.2s;
-        }
-
-            .navbar .nav-links a:hover {
-                color: #667eea;
-            }
+/* Navbar styles removed - using the unified navbar from site.css */
 
 .login-container {
     max-width: 400px;
     width: 90%;
     background: white;
     margin: auto;
+    margin-top: 50px;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    z-index: 2;
 }
 
     .login-container h1 {
@@ -135,3 +108,5 @@ body {
     .btn-danger:hover {
         background-color: #c82333;
     }
+
+/* Removed the duplicate navbar-logo definition */
