@@ -338,30 +338,30 @@ namespace eLog.Controllers.ORB1
             }
         }
 
-        // Add this method to your existing CodeAController
         [HttpGet]
         [Route("ORB1/CodeA/Download")]
-        public async Task<IActionResult> Download(string format, string searchTerm = "", int pageSize = 0, int pageNumber = 1)
+        public async Task<IActionResult> Download(string format)
         {
             try
             {
-                // Get the data using the new method (pageSize = 0 to get all records)
-                var data = await GetCodeAForExport(searchTerm, pageNumber, pageSize);
+                // Fetch all data without filters or pagination
+                var data = await GetCodeAForExport("", 1, 0); // Assuming 0 returns all records
 
-                // Based on the format, call the appropriate export method
-                switch (format.ToLower())
+                if (format?.ToLower() == "excel")
                 {
-                    case "xlsx":
-                        return await ExportToExcel(data);
-                    //case "pdf":
-                    //    return ExportToPdf(data);
-                    default:
-                        return BadRequest("Unsupported format");
+                    return await ExportToExcel(data);
+                }
+                else if (format?.ToLower() == "pdf")
+                {
+                    return ExportToPdf(data); // Implement this method if not already
+                }
+                else
+                {
+                    return BadRequest("Invalid format specified.");
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -438,110 +438,97 @@ namespace eLog.Controllers.ORB1
             );
         }
 
-        //private FileContentResult ExportToPdf(IEnumerable<CodeAViewModel> data)
-        //{
-        //    // Create a memory stream for the PDF file
-        //    using var stream = new MemoryStream();
+        private FileContentResult ExportToPdf(IEnumerable<CodeAViewModel> data)
+        {
+            byte[] pdfBytes;
 
-        //    // Create a document with landscape orientation
-        //    var document = new Document(PageSize.A3.Rotate());
-        //    var writer = PdfWriter.GetInstance(document, stream);
+            using (var stream = new MemoryStream())
+            {
+                var document = new Document(PageSize.A2.Rotate(), 20f, 20f, 20f, 20f);
+                PdfWriter.GetInstance(document, stream);
 
-        //    document.Open();
+                document.Open();
 
-        //    // Add title
-        //    var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
-        //    var title = new Paragraph("Code A Records", titleFont)
-        //    {
-        //        Alignment = Element.ALIGN_CENTER
-        //    };
-        //    document.Add(title);
-        //    document.Add(new Paragraph(" ")); // Add space
+                // Title
+                var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+                var title = new Paragraph("Code A Records", titleFont)
+                {
+                    Alignment = Element.ALIGN_CENTER
+                };
+                document.Add(title);
+                document.Add(new Paragraph(" "));
 
-        //    // Create table
-        //    var table = new PdfPTable(25) // Number of columns
-        //    {
-        //        WidthPercentage = 100
-        //    };
+                // Table setup
+                var table = new PdfPTable(25)
+                {
+                    WidthPercentage = 100
+                };
+                float[] columnWidths = Enumerable.Repeat(4f, 25).ToArray();
+                table.SetWidths(columnWidths);
 
-        //    // Define headers
-        //    var headers = new List<string>
-        //    {
-        //        "Entered By", "Entry Date", "Ballasting/Cleaning", "Last Cleaning Date",
-        //        "Oil Commercial Name", "Density/Viscosity", "Identity of Tanks Ballasted",
-        //        "Cleaned Last Contained Oil", "Previous Oil Type", "Quantity Ballast",
-        //        "Start Cleaning Time", "Position Start", "Stop Cleaning Time", "Position Stop",
-        //        "Identify Tanks", "Method Cleaning", "Chemical Type", "Chemical Quantity",
-        //        "Start Ballasting Time", "Ballasting Position Start", "Completion Ballasting Time",
-        //        "Ballasting Position Completion", "Status Name", "Approved By", "Comments"
-        //    };
+                var headers = new[]
+                {
+            "Entered By", "Entry Date", "Ballasting/Cleaning", "Last Cleaning Date",
+            "Oil Commercial Name", "Density/Viscosity", "Identity of Tanks Ballasted",
+            "Cleaned Last Contained Oil", "Previous Oil Type", "Quantity Ballast",
+            "Start Cleaning Time", "Position Start", "Stop Cleaning Time", "Position Stop",
+            "Identify Tanks", "Method Cleaning", "Chemical Type", "Chemical Quantity",
+            "Start Ballasting Time", "Ballasting Position Start", "Completion Ballasting Time",
+            "Ballasting Position Completion", "Status Name", "Approved By", "Comments"
+        };
 
-        //    // Set column widths (adjust as needed)
-        //    float[] columnWidths = new float[25];
-        //    for (int i = 0; i < 25; i++)
-        //    {
-        //        columnWidths[i] = 4f;
-        //    }
-        //    table.SetWidths(columnWidths);
+                var headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
+                foreach (var header in headers)
+                {
+                    var cell = new PdfPCell(new Phrase(header, headerFont))
+                    {
+                        BackgroundColor = BaseColor.LIGHT_GRAY,
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        VerticalAlignment = Element.ALIGN_MIDDLE,
+                        Padding = 4
+                    };
+                    table.AddCell(cell);
+                }
 
-        //    // Add header cells
-        //    var headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
-        //    foreach (var header in headers)
-        //    {
-        //        var cell = new PdfPCell(new Phrase(header, headerFont))
-        //        {
-        //            BackgroundColor = BaseColor.LIGHT_GRAY,
-        //            HorizontalAlignment = Element.ALIGN_CENTER,
-        //            VerticalAlignment = Element.ALIGN_MIDDLE,
-        //            Padding = 5
-        //        };
-        //        table.AddCell(cell);
-        //    }
+                var dataFont = FontFactory.GetFont(FontFactory.HELVETICA, 7);
+                foreach (var item in data)
+                {
+                    AddCell(table, item.UserId ?? "", dataFont);
+                    AddCell(table, item.EntryDate.ToShortDateString(), dataFont);
+                    AddCell(table, item.BallastingOrCleaning ?? "", dataFont);
+                    AddCell(table, item.LastCleaningDate?.ToShortDateString() ?? "", dataFont);
+                    AddCell(table, item.OilCommercialName ?? "", dataFont);
+                    AddCell(table, item.DensityViscosity ?? "", dataFont);
+                    AddCell(table, item.IdentityOfTanksBallasted ?? "", dataFont);
+                    AddCell(table, item.CleanedLastContainedOil.HasValue ? (item.CleanedLastContainedOil.Value ? "Yes" : "No") : "", dataFont);
+                    AddCell(table, item.PreviousOilType ?? "", dataFont);
+                    AddCell(table, item.QuantityBallast?.ToString() ?? "", dataFont);
+                    AddCell(table, item.StartCleaningTime?.ToString(@"hh\:mm") ?? "", dataFont);
+                    AddCell(table, item.PositionStart ?? "", dataFont);
+                    AddCell(table, item.StopCleaningTime?.ToString(@"hh\:mm") ?? "", dataFont);
+                    AddCell(table, item.PositionStop ?? "", dataFont);
+                    AddCell(table, item.IdentifyTanks ?? "", dataFont);
+                    AddCell(table, item.MethodCleaning ?? "", dataFont);
+                    AddCell(table, item.ChemicalType ?? "", dataFont);
+                    AddCell(table, item.ChemicalQuantity?.ToString() ?? "", dataFont);
+                    AddCell(table, item.StartBallastingTime?.ToString(@"hh\:mm") ?? "", dataFont);
+                    AddCell(table, item.BallastingPositionStart ?? "", dataFont);
+                    AddCell(table, item.CompletionBallastingTime?.ToString(@"hh\:mm") ?? "", dataFont);
+                    AddCell(table, item.BallastingPositionCompletion ?? "", dataFont);
+                    AddCell(table, item.StatusName ?? "", dataFont);
+                    AddCell(table, item.ApprovedBy ?? "", dataFont);
+                    AddCell(table, item.Comments ?? "", dataFont);
+                }
 
-        //    // Add data cells
-        //    var dataFont = FontFactory.GetFont(FontFactory.HELVETICA, 7);
-        //    foreach (var item in data)
-        //    {
-        //        AddCell(table, item.UserId?.Trim() ?? string.Empty, dataFont);
-        //        AddCell(table, item.EntryDate.ToShortDateString(), dataFont);
-        //        AddCell(table, item.BallastingOrCleaning ?? string.Empty, dataFont);
-        //        AddCell(table, item.LastCleaningDate?.ToShortDateString() ?? string.Empty, dataFont);
-        //        AddCell(table, item.OilCommercialName ?? string.Empty, dataFont);
-        //        AddCell(table, item.DensityViscosity ?? string.Empty, dataFont);
-        //        AddCell(table, item.IdentityOfTanksBallasted ?? string.Empty, dataFont);
-        //        AddCell(table, item.CleanedLastContainedOil.HasValue ? (item.CleanedLastContainedOil.Value ? "Yes" : "No") : string.Empty, dataFont);
-        //        AddCell(table, item.PreviousOilType ?? string.Empty, dataFont);
-        //        AddCell(table, item.QuantityBallast?.ToString() ?? string.Empty, dataFont);
-        //        AddCell(table, item.StartCleaningTime?.ToString(@"hh\:mm") ?? string.Empty, dataFont);
-        //        AddCell(table, item.PositionStart ?? string.Empty, dataFont);
-        //        AddCell(table, item.StopCleaningTime?.ToString(@"hh\:mm") ?? string.Empty, dataFont);
-        //        AddCell(table, item.PositionStop ?? string.Empty, dataFont);
-        //        AddCell(table, item.IdentifyTanks ?? string.Empty, dataFont);
-        //        AddCell(table, item.MethodCleaning ?? string.Empty, dataFont);
-        //        AddCell(table, item.ChemicalType ?? string.Empty, dataFont);
-        //        AddCell(table, item.ChemicalQuantity?.ToString() ?? string.Empty, dataFont);
-        //        AddCell(table, item.StartBallastingTime?.ToString(@"hh\:mm") ?? string.Empty, dataFont);
-        //        AddCell(table, item.BallastingPositionStart ?? string.Empty, dataFont);
-        //        AddCell(table, item.CompletionBallastingTime?.ToString(@"hh\:mm") ?? string.Empty, dataFont);
-        //        AddCell(table, item.BallastingPositionCompletion ?? string.Empty, dataFont);
-        //        AddCell(table, item.StatusName ?? string.Empty, dataFont);
-        //        AddCell(table, item.ApprovedBy ?? string.Empty, dataFont);
-        //        AddCell(table, item.Comments ?? string.Empty, dataFont);
-        //    }
+                document.Add(table);
+                document.Close();
 
-        //    document.Add(table);
-        //    document.Close();
+                // ✅ Copy to byte array BEFORE stream is disposed
+                pdfBytes = stream.ToArray();
+            }
 
-        //    // Reset stream position
-        //    stream.Position = 0;
-
-        //    // Return the PDF file
-        //    return File(
-        //        stream.ToArray(),
-        //        "application/pdf",
-        //        $"CodeA_Records_{DateTime.Now:yyyyMMdd}.pdf"
-        //    );
-        //}
+            return File(pdfBytes, "application/pdf", $"CodeA_Records_{DateTime.Now:yyyyMMdd}.pdf");
+        }
 
         private void AddCell(PdfPTable table, string text, iTextSharp.text.Font font)
         {
@@ -614,7 +601,6 @@ namespace eLog.Controllers.ORB1
             {
                 return records.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
             }
-
             return records;
         }
     }
