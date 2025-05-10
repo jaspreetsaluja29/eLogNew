@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "_BlankLayout";
- }
+}
 @{
     ViewData["Title"] = "DataEntry_CodeA";
 }
@@ -19,123 +19,146 @@
 
     <form id="DataEntryCodeAForm" class="p-4 border rounded bg-light">
         <div class="mb-3">
-            <label for="EntryDate" class="form-label">Date (YYYY-MM-DD):</label>
+            <label for="EntryDate" class="form-label">Date (YYYY-MM-DD):<span class="text-danger">*</span></label>
             <input type="date" class="form-control" id="EntryDate" name="EntryDate" required>
+            <div class="invalid-feedback">Please enter a valid date.</div>
         </div>
 
         <div class="mb-3">
-            <label for="ballastingOrCleaning" class="form-label">Ballasting or Cleaning:</label>
+            <label for="ballastingOrCleaning" class="form-label">Ballasting or Cleaning:<span class="text-danger">*</span></label>
             <select class="form-select" id="ballastingOrCleaning" name="BallastingOrCleaning" required>
                 <option value="Select" selected>Select</option>
                 <option value="Ballasting">Ballasting</option>
                 <option value="Cleaning">Cleaning</option>
             </select>
+            <div class="invalid-feedback">Please select either Ballasting or Cleaning.</div>
         </div>
 
         <div id="cleaningFields" style="display:none;">
 
             <div class="mb-3">
-                <label for="wasCleaned" class="form-label">Whether cleaned since they last contained oil:</label>
+                <label for="wasCleaned" class="form-label">Whether cleaned since they last contained oil:<span class="text-danger">*</span></label>
                 <select class="form-select" id="wasCleaned" name="WasCleaned" required>
                     <option value="Select" selected></option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>
+                <div class="invalid-feedback">Please select Yes or No.</div>
             </div>
             <!-- Initially hidden -->
             <div id="wasCleanedFields" style="display: none;">
                 <div class="mb-3">
-                    <label for="dateLastCleaning" class="form-label">Date of Last Cleaning:</label>
+                    <label for="dateLastCleaning" class="form-label">Date of Last Cleaning:<span class="text-danger">*</span></label>
                     <input type="date" class="form-control" id="dateLastCleaning" name="DateLastCleaning" required>
+                    <div class="invalid-feedback">Please enter the date of last cleaning.</div>
                 </div>
                 <div class="mb-3">
-                    <label for="oilCommercialName" class="form-label">Oil Commercial Name:</label>
+                    <label for="oilCommercialName" class="form-label">Oil Commercial Name:<span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="oilCommercialName" name="OilCommercialName" required>
+                    <div class="invalid-feedback">Please enter the oil commercial name.</div>
                 </div>
                 <div class="mb-3">
-                    <label for="densityViscosity" class="form-label">Density and/or Viscosity:</label>
+                    <label for="densityViscosity" class="form-label">Density and/or Viscosity:<span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="densityViscosity" name="DensityViscosity" required>
+                    <div class="invalid-feedback">Please enter the density and/or viscosity.</div>
                 </div>
             </div>
             <div id="wasCleanedFieldsNo" style="display: none;">
                 <div class="mb-3">
-                    <label for="PreviousOilType" class="form-label">Type of oil previously carried:</label>
+                    <label for="PreviousOilType" class="form-label">Type of oil previously carried:<span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="PreviousOilType" name="PreviousOilType" required>
+                    <div class="invalid-feedback">Please enter the type of oil previously carried.</div>
                 </div>
             </div>
 
             <div class="mb-3">
-                <label for="StartCleaningTime" class="form-label">Start cleaning Time:</label>
+                <label for="StartCleaningTime" class="form-label">Start cleaning Time:<span class="text-danger">*</span></label>
                 <input type="time" class="form-control" id="StartCleaningTime" name="StartCleaningTime" required>
+                <div class="invalid-feedback">Please enter the start cleaning time.</div>
             </div>
             <div class="mb-3">
-                <label for="PositionStart" class="form-label">Position at Start:</label>
+                <label for="PositionStart" class="form-label">Position at Start:<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="PositionStart" name="PositionStart" required>
+                <div class="invalid-feedback">Please enter the position at start.</div>
             </div>
             <div class="mb-3">
-                <label for="StopCleaningTime" class="form-label">Stop cleaning Time:</label>
+                <label for="StopCleaningTime" class="form-label">Stop cleaning Time:<span class="text-danger">*</span></label>
                 <input type="time" class="form-control" id="StopCleaningTime" name="StopCleaningTime" required>
+                <div class="invalid-feedback">Please enter the stop cleaning time.</div>
             </div>
             <div class="mb-3">
-                <label for="PositionStop" class="form-label">Position at Stop:</label>
+                <label for="PositionStop" class="form-label">Position at Stop:<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="PositionStop" name="PositionStop" required>
+                <div class="invalid-feedback">Please enter the position at stop.</div>
             </div>
             <div class="mb-3">
-                <label for="IdentifyTanks" class="form-label">Identify tanks(s):</label>
+                <label for="IdentifyTanks" class="form-label">Identify tanks(s):<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="IdentifyTanks" name="IdentifyTanks" required>
+                <div class="invalid-feedback">Please identify the tanks.</div>
             </div>
             <div class="mb-3">
-                <label for="MethodCleaning" class="form-label">Method of cleaning:</label>
+                <label for="MethodCleaning" class="form-label">Method of cleaning:<span class="text-danger">*</span></label>
                 <select class="form-select" id="MethodCleaning" name="MethodCleaning" required>
                     <option value="Select" selected></option>
                     <option value="Rinsing">Rinsing</option>
                     <option value="Steaming">Steaming</option>
                     <option value="Chemicals">Chemicals</option>
                 </select>
+                <div class="invalid-feedback">Please select a cleaning method.</div>
             </div>
 
             <!-- Initially hidden -->
             <div id="ChemicalFields" style="display: none;">
                 <div class="mb-3">
-                    <label for="ChemicalType" class="form-label">Type of chemical:</label>
+                    <label for="ChemicalType" class="form-label">Type of chemical:<span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="ChemicalType" name="ChemicalType" required>
+                    <div class="invalid-feedback">Please enter the type of chemical.</div>
                 </div>
                 <div class="mb-3">
-                    <label for="ChemicalQuantity" class="form-label">Quantity of chemicals(m³):</label>
+                    <label for="ChemicalQuantity" class="form-label">Quantity of chemicals(m³):<span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="ChemicalQuantity" name="ChemicalQuantity" required>
+                    <div class="invalid-feedback">Please enter a valid quantity of chemicals.</div>
                 </div>
             </div>
         </div>
 
         <div id="ballastingFields" style="display: none;">
             <div class="mb-3">
-                <label for="QuantityBallast" class="form-label">Quantity of ballast (m³):</label>
+                <label for="QuantityBallast" class="form-label">Quantity of ballast (m³):<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="QuantityBallast" name="QuantityBallast" required>
+                <div class="invalid-feedback">Please enter a valid quantity of ballast.</div>
             </div>
             <div class="mb-3">
-                <label for="IdentityOfTanksBallasted" class="form-label">Identity of tank(s) ballasted:</label>
+                <label for="IdentityOfTanksBallasted" class="form-label">Identity of tank(s) ballasted:<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="IdentityOfTanksBallasted" name="IdentityOfTanksBallasted" required>
+                <div class="invalid-feedback">Please enter the identity of tank(s) ballasted.</div>
             </div>
             <div class="mb-3">
-                <label for="StartBallastingTime" class="form-label">Time at start of Ballasting:</label>
+                <label for="StartBallastingTime" class="form-label">Time at start of Ballasting:<span class="text-danger">*</span></label>
                 <input type="time" class="form-control" id="StartBallastingTime" name="StartBallastingTime" required>
+                <div class="invalid-feedback">Please enter the time at start of ballasting.</div>
             </div>
             <div class="mb-3">
-                <label for="BallastingPositionStart" class="form-label">Position of ship at start of Ballasting:</label>
-                <input type="text" class="form-control" id="BallastingPositionStart" name="BallastingPositionStart" required>
+                <label for="BallastingPositionStart" class="form-label">Position of ship at start of Ballasting:<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="BallastingPositionStart" name="BallastingPositionStart" value="XX° XX' N/S, XXX° XX' E/W" required>
+                <div class="invalid-feedback">Please enter a valid position (XX° XX' N/S, XX° XX' E/W).</div>
             </div>
             <div class="mb-3">
-                <label for="CompletionBallastingTime" class="form-label">Time on completion of Ballasting:</label>
+                <label for="CompletionBallastingTime" class="form-label">Time on completion of Ballasting:<span class="text-danger">*</span></label>
                 <input type="time" class="form-control" id="CompletionBallastingTime" name="CompletionBallastingTime" required>
+                <div class="invalid-feedback">Please enter the time on completion of ballasting.</div>
             </div>
             <div class="mb-3">
-                <label for="BallastingPositionCompletion" class="form-label">Position of ship on completion of Ballasting:</label>
-                <input type="text" class="form-control" id="BallastingPositionCompletion" name="BallastingPositionCompletion" required>
+                <label for="BallastingPositionCompletion" class="form-label">Position of ship on completion of Ballasting:<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="BallastingPositionCompletion" name="BallastingPositionCompletion" value="XX DEG XX MIN N/S, XX DEG XX MIN E/W" required>
+                <div class="invalid-feedback">Please enter a valid position (XX DEG XX MIN N/S, XX DEG XX MIN E/W).</div>
             </div>
         </div>
-        <button type="submit" id="saveButton" class="btn btn-primary">Save</button>
-        <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
-        <button type="button" id="cancelButton" class="btn btn-danger">Cancel</button>
+        <div class="mt-4">
+            <button type="submit" id="saveButton" class="btn btn-primary">Save</button>
+            <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
+            <button type="button" id="cancelButton" class="btn btn-danger">Cancel</button>
+        </div>
     </form>
 
     <p id="message" class="mt-3 text-center"></p>
