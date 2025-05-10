@@ -1,14 +1,26 @@
 ﻿@model eLog.Models.ORB1.FirstPageCapacityViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
 @{
     Layout = "_Layout";  // Use the layout file from /Views/Shared/_Layout.cshtml
     ViewData["Title"] = "Add Tank Capacity";
 }
 
+@{
+    var vesselName = Configuration["VesselName"];
+    var iMONo = Configuration["IMONo"];
+    var callSign = Configuration["CallSign"];
+}
+
 <link rel="stylesheet" href="~/css/ORB1/FirstPageCapacity.css" />
 
 <div class="page-title">
     <h2>Tank Capacity</h2>
+</div>
+<div style="display: flex; justify-content: space-between; margin: 20px 0;">
+    <h5><strong>Vessel Name:</strong> @vesselName</h5>
+    <h5><strong>IMO No.:</strong> @iMONo</h5>
+    <h5><strong>Call Sign:</strong> @callSign</h5>
 </div>
 
 <div class="form-container">
