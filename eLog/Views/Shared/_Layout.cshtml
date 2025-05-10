@@ -91,8 +91,6 @@
                                 <li><a class="dropdown-item" asp-controller="ORB1" asp-action="CodeI">Code I</a></li>
                             </ul>
                         </li>
-                        @if (TempData["UserRoleName"]?.ToString() == "Admin")
-                        {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark fw-bold" href="#" id="reportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Reports
@@ -103,7 +101,6 @@
                                     <li><a class="dropdown-item" asp-controller="Reports" asp-action="BunkeringData">Bunkering Data</a></li>
                                 </ul>
                             </li>
-                        }
                     </ul>
 
                     <!-- Notification Icon -->
