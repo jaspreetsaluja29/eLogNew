@@ -1,6 +1,9 @@
-﻿using eLog.Models;
+﻿using ClosedXML.Excel;
+using eLog.Models;
 using eLog.Models.ORB1;
 using eLog.ViewModels.ORB1;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -414,5 +417,307 @@ namespace eLog.Controllers.ORB1
             }
         }
 
+        [HttpGet]
+        [Route("ORB1/CodeI/Download")]
+        public async Task<IActionResult> Download(string format)
+        {
+            try
+            {
+                // Fetch all data without filters or pagination
+                var data = await GetCodeIForExport("", 1, 0); // Assuming 0 returns all records
+
+                if (format?.ToLower() == "excel")
+                {
+                    return await ExportToExcel(data);
+                }
+                else if (format?.ToLower() == "pdf")
+                {
+                    return ExportToPdf(data); // Implement this method if not already
+                }
+                else
+                {
+                    return BadRequest("Invalid format specified.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        private async Task<IActionResult> ExportToExcel(IEnumerable<CodeIViewModel> data)
+        {
+            using var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Code I Records");
+
+            // Define headers
+            var headers = new List<string>
+            {
+                "Entered By", "Entry Date", "Type",
+
+                "Weekly Inventory Tanks", "Weekly Inventory Capacity", "Weekly Inventory Retained",
+
+                "Debunkering Quantity", "Debunkering Grade", "Debunkering Sulphur Content",
+                "Debunkering From", "Debunkering Quantity Retained", "Debunkering To",
+                "Debunkering Port Facility", "Debunkering Start Date Time", "Debunkering Stop Date Time",
+
+                "Valve Name", "Valve No", "Valve Associated Equipment", "Valve Seal No",
+
+                "Breaking Valve Name", "Breaking Valve No", "Breaking Associated Equipment",
+                "Breaking Reason", "Breaking Seal No",
+
+                "Status Name", "Approved By", "Comments"
+            };
+
+            // Write headers
+            for (int i = 0; i < headers.Count; i++)
+            {
+                worksheet.Cell(1, i + 1).Value = headers[i];
+                worksheet.Cell(1, i + 1).Style.Font.Bold = true;
+            }
+
+            // Write data
+            int row = 2;
+            foreach (var item in data)
+            {
+                worksheet.Cell(row, 1).Value = item.UserId?.Trim() ?? string.Empty;
+                worksheet.Cell(row, 2).Value = item.EntryDate.ToShortDateString();
+                worksheet.Cell(row, 3).Value = item.SelectType ?? string.Empty;
+
+                worksheet.Cell(row, 4).Value = item.WeeklyInventoryTanks ?? string.Empty;
+                worksheet.Cell(row, 5).Value = item.WeeklyInventoryCapacity?.ToString() ?? string.Empty;
+                worksheet.Cell(row, 6).Value = item.WeeklyInventoryRetained?.ToString() ?? string.Empty;
+
+                worksheet.Cell(row, 7).Value = item.DebunkeringQuantity?.ToString() ?? string.Empty;
+                worksheet.Cell(row, 8).Value = item.DebunkeringGrade ?? string.Empty;
+                worksheet.Cell(row, 9).Value = item.DebunkeringSulphurContent ?? string.Empty;
+                worksheet.Cell(row, 10).Value = item.DebunkeringFrom ?? string.Empty;
+                worksheet.Cell(row, 11).Value = item.DebunkeringQuantityRetained?.ToString() ?? string.Empty;
+                worksheet.Cell(row, 12).Value = item.DebunkeringTo ?? string.Empty;
+                worksheet.Cell(row, 13).Value = item.DebunkeringPortFacility ?? string.Empty;
+                worksheet.Cell(row, 14).Value = item.DebunkeringStartDateTime?.ToString("g") ?? string.Empty;
+                worksheet.Cell(row, 15).Value = item.DebunkeringStopDateTime?.ToString("g") ?? string.Empty;
+
+                worksheet.Cell(row, 16).Value = item.ValveName ?? string.Empty;
+                worksheet.Cell(row, 17).Value = item.ValveNo ?? string.Empty;
+                worksheet.Cell(row, 18).Value = item.ValveAssociatedEquipment ?? string.Empty;
+                worksheet.Cell(row, 19).Value = item.ValveSealNo ?? string.Empty;
+
+                worksheet.Cell(row, 20).Value = item.BreakingValveName ?? string.Empty;
+                worksheet.Cell(row, 21).Value = item.BreakingValveNo ?? string.Empty;
+                worksheet.Cell(row, 22).Value = item.BreakingAssociatedEquipment ?? string.Empty;
+                worksheet.Cell(row, 23).Value = item.BreakingReason ?? string.Empty;
+                worksheet.Cell(row, 24).Value = item.BreakingSealNo ?? string.Empty;
+
+                worksheet.Cell(row, 25).Value = item.StatusName ?? string.Empty;
+                worksheet.Cell(row, 26).Value = item.ApprovedBy ?? string.Empty;
+                worksheet.Cell(row, 27).Value = item.Comments ?? string.Empty;
+
+                row++;
+            }
+
+
+            worksheet.Columns().AdjustToContents(); // Auto-fit columns
+
+            // Save to memory stream
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            stream.Position = 0;
+
+            // Set the correct headers to force download
+            var fileName = $"CodeI_Records_{DateTime.Now:yyyyMMdd}.xlsx";
+            return File(
+                stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                fileName
+            );
+        }
+
+        private FileContentResult ExportToPdf(IEnumerable<CodeIViewModel> data)
+        {
+            byte[] pdfBytes;
+
+            using (var stream = new MemoryStream())
+            {
+                var document = new Document(PageSize.A1.Rotate(), 20f, 20f, 20f, 20f);
+                PdfWriter.GetInstance(document, stream);
+
+                document.Open();
+
+                // Title
+                var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+                var title = new Paragraph("Code I Records", titleFont)
+                {
+                    Alignment = Element.ALIGN_CENTER
+                };
+                document.Add(title);
+                document.Add(new Paragraph(" "));
+
+                // Table setup
+                var table = new PdfPTable(27)
+                {
+                    WidthPercentage = 100
+                };
+                float[] columnWidths = Enumerable.Repeat(4f, 27).ToArray();
+                table.SetWidths(columnWidths);
+
+                var headers = new[]
+                {
+                    "Entered By", "Entry Date", "Type",
+
+                    "Weekly Inventory Tanks", "Weekly Inventory Capacity", "Weekly Inventory Retained",
+
+                    "Debunkering Quantity", "Debunkering Grade", "Debunkering Sulphur Content",
+                    "Debunkering From", "Debunkering Quantity Retained", "Debunkering To",
+                    "Debunkering Port Facility", "Debunkering Start Date Time", "Debunkering Stop Date Time",
+
+                    "Valve Name", "Valve No", "Valve Associated Equipment", "Valve Seal No",
+
+                    "Breaking Valve Name", "Breaking Valve No", "Breaking Associated Equipment",
+                    "Breaking Reason", "Breaking Seal No",
+
+                    "Status Name", "Approved By", "Comments"
+                };
+
+                var headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
+                foreach (var header in headers)
+                {
+                    var cell = new PdfPCell(new Phrase(header, headerFont))
+                    {
+                        BackgroundColor = BaseColor.LIGHT_GRAY,
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        VerticalAlignment = Element.ALIGN_MIDDLE,
+                        Padding = 4
+                    };
+                    table.AddCell(cell);
+                }
+
+                var dataFont = FontFactory.GetFont(FontFactory.HELVETICA, 7);
+                foreach (var item in data)
+                {
+                    AddCell(table, item.UserId ?? "", dataFont);
+                    AddCell(table, item.EntryDate.ToShortDateString(), dataFont);
+                    AddCell(table, item.SelectType ?? "", dataFont);
+
+                    AddCell(table, item.WeeklyInventoryTanks ?? "", dataFont);
+                    AddCell(table, item.WeeklyInventoryCapacity?.ToString() ?? "", dataFont);
+                    AddCell(table, item.WeeklyInventoryRetained?.ToString() ?? "", dataFont);
+
+                    AddCell(table, item.DebunkeringQuantity?.ToString() ?? "", dataFont);
+                    AddCell(table, item.DebunkeringGrade ?? "", dataFont);
+                    AddCell(table, item.DebunkeringSulphurContent ?? "", dataFont);
+                    AddCell(table, item.DebunkeringFrom ?? "", dataFont);
+                    AddCell(table, item.DebunkeringQuantityRetained?.ToString() ?? "", dataFont);
+                    AddCell(table, item.DebunkeringTo ?? "", dataFont);
+                    AddCell(table, item.DebunkeringPortFacility ?? "", dataFont);
+                    AddCell(table, item.DebunkeringStartDateTime?.ToString("g") ?? "", dataFont);
+                    AddCell(table, item.DebunkeringStopDateTime?.ToString("g") ?? "", dataFont);
+
+                    AddCell(table, item.ValveName ?? "", dataFont);
+                    AddCell(table, item.ValveNo ?? "", dataFont);
+                    AddCell(table, item.ValveAssociatedEquipment ?? "", dataFont);
+                    AddCell(table, item.ValveSealNo ?? "", dataFont);
+
+                    AddCell(table, item.BreakingValveName ?? "", dataFont);
+                    AddCell(table, item.BreakingValveNo ?? "", dataFont);
+                    AddCell(table, item.BreakingAssociatedEquipment ?? "", dataFont);
+                    AddCell(table, item.BreakingReason ?? "", dataFont);
+                    AddCell(table, item.BreakingSealNo ?? "", dataFont);
+
+                    AddCell(table, item.StatusName ?? "", dataFont);
+                    AddCell(table, item.ApprovedBy ?? "", dataFont);
+                    AddCell(table, item.Comments ?? "", dataFont);
+                }
+
+                document.Add(table);
+                document.Close();
+
+                // ✅ Copy to byte array BEFORE stream is disposed
+                pdfBytes = stream.ToArray();
+            }
+
+            return File(pdfBytes, "application/pdf", $"CodeI_Records_{DateTime.Now:yyyyMMdd}.pdf");
+        }
+
+        private void AddCell(PdfPTable table, string text, iTextSharp.text.Font font)
+        {
+            var cell = new PdfPCell(new Phrase(text, font))
+            {
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                VerticalAlignment = Element.ALIGN_MIDDLE,
+                Padding = 3
+            };
+            table.AddCell(cell);
+        }
+
+        public async Task<List<CodeIViewModel>> GetCodeIForExport(string searchTerm = "", int pageNumber = 1, int pageSize = 10)
+        {
+            List<CodeIViewModel> records = new List<CodeIViewModel>();
+
+            using (SqlConnection connection = _db.CreateConnection())
+            {
+                await connection.OpenAsync();
+                using (var command = new SqlCommand("proc_GetORB1_CodeI", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Add search parameter if provided
+                    if (!string.IsNullOrEmpty(searchTerm))
+                    {
+                        command.Parameters.AddWithValue("@SearchTerm", searchTerm);
+                    }
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            records.Add(new CodeIViewModel
+                            {
+                                Id = reader.GetInt32(0),
+                                UserId = reader.IsDBNull(1) ? null : reader.GetString(1),
+                                EntryDate = reader.GetDateTime(2),
+                                SelectType = reader.IsDBNull(3) ? null : reader.GetString(3),
+
+                                WeeklyInventoryTanks = reader.IsDBNull(4) ? null : reader.GetString(4),
+                                WeeklyInventoryCapacity = reader.IsDBNull(5) ? null : reader.GetDecimal(5),
+                                WeeklyInventoryRetained = reader.IsDBNull(6) ? null : reader.GetDecimal(6),
+
+                                DebunkeringQuantity = reader.IsDBNull(7) ? null : reader.GetDecimal(7),
+                                DebunkeringGrade = reader.IsDBNull(8) ? null : reader.GetString(8),
+                                DebunkeringSulphurContent = reader.IsDBNull(9) ? null : reader.GetString(9),
+                                DebunkeringFrom = reader.IsDBNull(10) ? null : reader.GetString(10),
+                                DebunkeringQuantityRetained = reader.IsDBNull(11) ? null : reader.GetDecimal(11),
+                                DebunkeringTo = reader.IsDBNull(12) ? null : reader.GetString(12),
+                                DebunkeringPortFacility = reader.IsDBNull(13) ? null : reader.GetString(13),
+                                DebunkeringStartDateTime = reader.IsDBNull(14) ? (DateTime?)null : reader.GetDateTime(14),
+                                DebunkeringStopDateTime = reader.IsDBNull(15) ? (DateTime?)null : reader.GetDateTime(15),
+
+                                ValveName = reader.IsDBNull(16) ? null : reader.GetString(16),
+                                ValveNo = reader.IsDBNull(17) ? null : reader.GetString(17),
+                                ValveAssociatedEquipment = reader.IsDBNull(18) ? null : reader.GetString(18),
+                                ValveSealNo = reader.IsDBNull(19) ? null : reader.GetString(19),
+
+                                BreakingValveName = reader.IsDBNull(20) ? null : reader.GetString(20),
+                                BreakingValveNo = reader.IsDBNull(21) ? null : reader.GetString(21),
+                                BreakingAssociatedEquipment = reader.IsDBNull(22) ? null : reader.GetString(22),
+                                BreakingReason = reader.IsDBNull(23) ? null : reader.GetString(23),
+                                BreakingSealNo = reader.IsDBNull(24) ? null : reader.GetString(24),
+
+                                StatusName = reader.IsDBNull(25) ? null : reader.GetString(25),
+                                ApprovedBy = reader.IsDBNull(26) ? null : reader.GetString(26),
+                                Comments = reader.IsDBNull(27) ? null : reader.GetString(27)
+                            });
+                        }
+                    }
+                }
+            }
+
+            // Apply pagination if needed - for exports, you might want all data
+            if (pageSize > 0)
+            {
+                return records.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            }
+            return records;
+        }
     }
 }

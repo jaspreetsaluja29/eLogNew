@@ -19,7 +19,26 @@
                 <button class="btn btn-primary" onclick="openAddWindow()">Add</button>
             }
         </div>
-        <div class="col-auto">
+        <div class="d-flex justify-content-end align-items-center gap-3 mb-3">
+            @if (TempData["UserRoleName"]?.ToString() == "Admin")
+            {
+                <form method="get" id="downloadForm" action="@Url.Action("Download", "CodeB")" class="m-0">
+                    <div class="dropdown">
+                        <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Download
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <button class="dropdown-item" type="submit" name="format" value="excel">As Excel</button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" type="submit" name="format" value="pdf">As PDF</button>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            }
+
             <input type="text" id="searchInput" class="form-control" style="width: 200px;" placeholder="Search..." onkeyup="filterTable()" />
         </div>
     </div>
