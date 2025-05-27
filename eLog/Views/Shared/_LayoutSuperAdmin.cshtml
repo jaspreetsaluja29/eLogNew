@@ -14,6 +14,7 @@
         TempData.Keep("UserID");
         TempData.Keep("UserName");
         TempData.Keep("UserRoleName");
+        TempData.Keep("JobRank");
     }
 
     <base href="@basePath">
@@ -61,6 +62,7 @@
     <input type="hidden" id="hiddenUserId" value="@TempData.Peek("UserID")" />
     <input type="hidden" id="hiddenUserName" value="@TempData.Peek("UserName")" />
     <input type="hidden" id="hiddenUserRole" value="@TempData.Peek("UserRoleName")" />
+    <input type="hidden" id="hiddenJobRank" value="@TempData.Peek("JobRank")" />
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -89,7 +91,7 @@
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark fw-bold" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    👤 @TempData["UserName"] (@TempData["UserRoleName"])
+                                    👤 @TempData["UserName"]-@TempData["JobRank"] (@TempData["UserRoleName"])
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                                     <li><a class="dropdown-item" asp-controller="Account" asp-action="Reset">Logout</a></li>
@@ -130,6 +132,7 @@
         var userId = document.getElementById('hiddenUserId')?.value || '0';
         var userName = document.getElementById('hiddenUserName')?.value || 'Guest';
         var userRoleName = document.getElementById('hiddenUserRole')?.value || 'Anonymous';
+        var jobRank = document.getElementById('hiddenJobRank')?.value || '';
         var basePath = document.querySelector('base')?.getAttribute('href') || '/';
     </script>
 </body>

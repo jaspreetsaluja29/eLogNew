@@ -22,5 +22,7 @@ namespace eLog.Models
 
         // Navigation property to related UserRole (if needed)
         public virtual UserRole UserRole { get; set; }
+
+        public string? JobRank { get; set; }
     }
 }

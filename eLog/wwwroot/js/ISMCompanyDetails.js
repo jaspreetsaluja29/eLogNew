@@ -6,9 +6,10 @@ function openAddWindow() {
     var userId = document.getElementById('hiddenUserId')?.value || '';
     var userName = document.getElementById('hiddenUserName')?.value || '';
     var userRoleName = document.getElementById('hiddenUserRole')?.value || '';
+    var jobRank = document.getElementById('hiddenJobRank')?.value || '';
 
     // Encode the values to handle spaces and special characters
-    var url = `${basePath}/ISMCompanyDetails/DataEntry_ISMCompanyDetails?userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}`;
+    var url = `${basePath}/ISMCompanyDetails/DataEntry_ISMCompanyDetails?userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}&jobRank=${encodeURIComponent(jobRank)}`;
 
     window.open(url, 'AddRecord');
 }
@@ -83,9 +84,10 @@ function editRecord(CompanyId) {
     var userId = document.getElementById('hiddenUserId')?.value || '';
     var userName = document.getElementById('hiddenUserName')?.value || '';
     var userRoleName = document.getElementById('hiddenUserRole')?.value || '';
+    var jobRank = document.getElementById('hiddenJobRank')?.value || '';
 
     // Encode the values to handle spaces and special characters
-    var url = `${basePath}/ISMCompanyDetails/Edit?CompanyId=${CompanyId}&userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}`;
+    var url = `${basePath}/ISMCompanyDetails/Edit?CompanyId=${CompanyId}&userId=${encodeURIComponent(userId)}&userName=${encodeURIComponent(userName)}&userRoleName=${encodeURIComponent(userRoleName)}&jobRank=${encodeURIComponent(jobRank)}`;
     window.open(url, 'EditRecord'); // Open in new window/tab
 }
 

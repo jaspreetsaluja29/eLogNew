@@ -62,11 +62,12 @@ namespace eLog.Controllers
         }
 
         // Data Entry Page
-        public IActionResult DataEntry_ISMCompanyDetails(string userId, string userName, string userRoleName)
+        public IActionResult DataEntry_ISMCompanyDetails(string userId, string userName, string userRoleName, string jobRank)
         {
             ViewBag.UserID = userId;
             ViewBag.UserName = userName;
             ViewBag.UserRoleName = userRoleName;
+            ViewBag.JobRank = jobRank;
             return View("~/Views/SuperAdmin/DataEntry_ISMCompanyDetails.cshtml", new CodeAModel());
         }
 
@@ -119,12 +120,13 @@ namespace eLog.Controllers
             }
         }
 
-        public async Task<IActionResult> Edit(int CompanyId, string userId, string userName, string userRoleName)
+        public async Task<IActionResult> Edit(int CompanyId, string userId, string userName, string userRoleName, string jobRank)
         {
             // Store user details in ViewBag (so they can be used in the view)
             ViewBag.UserID = userId;
             ViewBag.UserName = userName;
             ViewBag.UserRoleName = userRoleName;
+            ViewBag.JobRank = jobRank;
 
             ISMCompanyDetails recordToEdit = null;
 

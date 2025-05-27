@@ -3,6 +3,7 @@
     $('#userId').val(localStorage.getItem('userId'));
     $('#userName').val(localStorage.getItem('userName'));
     $('#userRoleName').val(localStorage.getItem('userRoleName'));
+    $('#jobRank').val(localStorage.getItem('jobRank'));
     setupEventListeners();
 });
 
@@ -55,6 +56,7 @@ function submitForm() {
         UserId: $('#userId').val() || localStorage.getItem('userId'),
         UserName: $('#userName').val() || localStorage.getItem('userName'),
         UserRoleName: $('#userRoleName').val() || localStorage.getItem('userRoleName')
+        JobRank: $('#jobRank').val() || localStorage.getItem('jobRank')
     };
 
     // Debug information

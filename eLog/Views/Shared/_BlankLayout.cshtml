@@ -15,6 +15,7 @@
     <input type="hidden" id="hiddenUserId" value="@ViewBag.UserID" />
     <input type="hidden" id="hiddenUserName" value="@ViewBag.UserName" />
     <input type="hidden" id="hiddenUserRole" value="@ViewBag.UserRoleName" />
+    <input type="hidden" id="hiddenJobRank" value="@ViewBag.JobRank" />
     <div>
         @RenderBody()
     </div>
@@ -22,6 +23,7 @@
         var userId = document.getElementById('hiddenUserId')?.value || '0';
         var userName = document.getElementById('hiddenUserName')?.value || 'Guest';
         var userRoleName = document.getElementById('hiddenUserRole')?.value || 'Anonymous';
+        var jobRank = document.getElementById('hiddenJobRank')?.value || '';
     </script>
 </body>
 </html>

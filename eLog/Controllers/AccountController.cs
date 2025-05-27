@@ -25,8 +25,9 @@ namespace eLog.Controllers
             var userId = HttpContext.Session.GetInt32("UserID");
             var userName = HttpContext.Session.GetString("UserName");
             var userRoleName = HttpContext.Session.GetString("UserRoleName");
+            var jobRank = HttpContext.Session.GetString("JobRank");
 
-            return Content($"UserID: {userId}, UserName: {userName}, UserRoleName: {userRoleName}");
+            return Content($"UserID: {userId}, UserName: {userName}, UserRoleName: {userRoleName}, JobRank: {jobRank}");
         }
 
         public IActionResult Login()
@@ -56,16 +57,19 @@ namespace eLog.Controllers
             // Fetch UserID and Role Name
             int userId = Convert.ToInt32(dt.Rows[0]["UserID"]);
             string userRoleName = dt.Rows[0]["UserRoleName"]?.ToString() ?? string.Empty;
+            string jobRank = dt.Rows[0]["JobRank"]?.ToString() ?? string.Empty;
 
             // Set session values
             HttpContext.Session.SetInt32("UserID", userId);
             HttpContext.Session.SetString("UserName", username);
             HttpContext.Session.SetString("UserRoleName", userRoleName);
+            HttpContext.Session.SetString("JobRank", jobRank);
 
             // Store TempData for OTP verification
             TempData["UserID"] = userId;
             TempData["UserName"] = username;
             TempData["UserRoleName"] = userRoleName;
+            TempData["JobRank"] = jobRank;
 
             // Check if OTP is enabled
             bool isOtpEnabled = Convert.ToBoolean(_configuration["EnableOTP"]);

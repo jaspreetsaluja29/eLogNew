@@ -73,20 +73,21 @@ namespace eLog.Controllers.ORB1
 
 
         // Data Entry Page
-        public IActionResult DataEntry_CodeE(string userId, string userName, string userRoleName)
+        public IActionResult DataEntry_CodeE(string userId, string userName, string userRoleName, string jobRank)
         {
             ViewBag.UserID = userId;
             ViewBag.UserName = userName;
             ViewBag.UserRoleName = userRoleName;
+            ViewBag.JobRank = jobRank;
             return View("~/Views/ORB1/DataEntry_CodeE.cshtml", new CodeEModel());
         }
 
-        public async Task<IActionResult> Edit(int id, string userId, string userName, string userRoleName)
+        public async Task<IActionResult> Edit(int id, string userId, string userName, string userRoleName, string jobRank)
         {
-            // Store user details in ViewBag (so they can be used in the view)
             ViewBag.UserID = userId;
             ViewBag.UserName = userName;
             ViewBag.UserRoleName = userRoleName;
+            ViewBag.JobRank = jobRank;
             CodeEViewModel recordToEdit = null;
             using (SqlConnection connection = _db.CreateConnection())
             {
