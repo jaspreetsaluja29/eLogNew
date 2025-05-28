@@ -603,242 +603,242 @@ namespace eLog.Controllers.ORB1
             return records;
         }
 
-        [HttpGet]
-        [Route("ORB1/CodeH/DownloadReportCodeH")]
-        public async Task<IActionResult> DownloadReportCodeH()
-        {
-            try
-            {
-                // Fetch all data for the report
-                var data = await GetCodeHForExport("", 1, 0); // Get all records
-                return ExportToPdfReport(data);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+        //[HttpGet]
+        //[Route("ORB1/CodeH/DownloadReportCodeH")]
+        //public async Task<IActionResult> DownloadReportCodeH()
+        //{
+        //    try
+        //    {
+        //        // Fetch all data for the report
+        //        var data = await GetCodeHForExport("", 1, 0); // Get all records
+        //        return ExportToPdfReport(data);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
 
-        private FileContentResult ExportToPdfReport(IEnumerable<CodeHViewModel> data)
-        {
-            byte[] pdfBytes;
+        //private FileContentResult ExportToPdfReport(IEnumerable<CodeHViewModel> data)
+        //{
+        //    byte[] pdfBytes;
 
-            using (var stream = new MemoryStream())
-            {
-                var document = new Document(PageSize.A4, 40f, 40f, 40f, 40f);
-                PdfWriter.GetInstance(document, stream);
+        //    using (var stream = new MemoryStream())
+        //    {
+        //        var document = new Document(PageSize.A4, 40f, 40f, 40f, 40f);
+        //        PdfWriter.GetInstance(document, stream);
 
-                document.Open();
+        //        document.Open();
 
-                // Title
-                var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
-                var title = new Paragraph("4.1 Bunkering of fuel", titleFont);
-                document.Add(title);
-                document.Add(new Paragraph(" ")); // Add space
+        //        // Title
+        //        var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+        //        var title = new Paragraph("4.1 Bunkering of fuel", titleFont);
+        //        document.Add(title);
+        //        document.Add(new Paragraph(" ")); // Add space
 
-                // Group data by date for better organization
-                var groupedData = data.GroupBy(x => x.EntryDate.Date).OrderBy(g => g.Key);
+        //        // Group data by date for better organization
+        //        var groupedData = data.GroupBy(x => x.EntryDate.Date).OrderBy(g => g.Key);
 
-                foreach (var dateGroup in groupedData)
-                {
-                    // Create table with 4 columns: Date, Code, Item No., Record of operations/signature of officer in charge
-                    var table = new PdfPTable(4);
-                    table.WidthPercentage = 100;
+        //        foreach (var dateGroup in groupedData)
+        //        {
+        //            // Create table with 4 columns: Date, Code, Item No., Record of operations/signature of officer in charge
+        //            var table = new PdfPTable(4);
+        //            table.WidthPercentage = 100;
 
-                    // Set column widths: Date (15%), Code (10%), Item No. (10%), Record (65%)
-                    float[] columnWidths = { 15f, 10f, 10f, 65f };
-                    table.SetWidths(columnWidths);
+        //            // Set column widths: Date (15%), Code (10%), Item No. (10%), Record (65%)
+        //            float[] columnWidths = { 15f, 10f, 10f, 65f };
+        //            table.SetWidths(columnWidths);
 
-                    // Header row
-                    var headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
-                    var cellFont = FontFactory.GetFont(FontFactory.HELVETICA, 9);
+        //            // Header row
+        //            var headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+        //            var cellFont = FontFactory.GetFont(FontFactory.HELVETICA, 9);
 
-                    // Add headers
-                    AddReportCell(table, "Date", headerFont, true, Element.ALIGN_CENTER);
-                    AddReportCell(table, "Code", headerFont, true, Element.ALIGN_CENTER);
-                    AddReportCell(table, "Item No.", headerFont, true, Element.ALIGN_CENTER);
-                    AddReportCell(table, "Record of operations/signature of officer in charge", headerFont, true, Element.ALIGN_CENTER);
+        //            // Add headers
+        //            AddReportCell(table, "Date", headerFont, true, Element.ALIGN_CENTER);
+        //            AddReportCell(table, "Code", headerFont, true, Element.ALIGN_CENTER);
+        //            AddReportCell(table, "Item No.", headerFont, true, Element.ALIGN_CENTER);
+        //            AddReportCell(table, "Record of operations/signature of officer in charge", headerFont, true, Element.ALIGN_CENTER);
 
-                    var records = dateGroup.OrderBy(x => x.StartDateTime).ToList();
+        //            var records = dateGroup.OrderBy(x => x.StartDateTime).ToList();
 
-                    for (int i = 0; i < records.Count; i++)
-                    {
-                        var record = records[i];
+        //            for (int i = 0; i < records.Count; i++)
+        //            {
+        //                var record = records[i];
 
-                        // Date cell (only show date for first record of each date group)
-                        if (i == 0)
-                        {
-                            AddReportCell(table, record.EntryDate.ToString("dd-MMM-yyyy").ToUpper(), cellFont, true, Element.ALIGN_CENTER);
-                        }
-                        else
-                        {
-                            AddReportCell(table, "", cellFont, true, Element.ALIGN_CENTER);
-                        }
+        //                // Date cell (only show date for first record of each date group)
+        //                if (i == 0)
+        //                {
+        //                    AddReportCell(table, record.EntryDate.ToString("dd-MMM-yyyy").ToUpper(), cellFont, true, Element.ALIGN_CENTER);
+        //                }
+        //                else
+        //                {
+        //                    AddReportCell(table, "", cellFont, true, Element.ALIGN_CENTER);
+        //                }
 
-                        // Code cell
-                        AddReportCell(table, "H", cellFont, true, Element.ALIGN_CENTER);
+        //                // Code cell
+        //                AddReportCell(table, "H", cellFont, true, Element.ALIGN_CENTER);
 
-                        // Item number cell
-                        AddReportCell(table, $"26.{i + 1}", cellFont, true, Element.ALIGN_CENTER);
+        //                // Item number cell
+        //                AddReportCell(table, $"26.{i + 1}", cellFont, true, Element.ALIGN_CENTER);
 
-                        // Record of operations cell - split into multiple rows
-                        var operationLines = BuildOperationRecordLines(record);
+        //                // Record of operations cell - split into multiple rows
+        //                var operationLines = BuildOperationRecordLines(record);
 
-                        // Add first line
-                        if (operationLines.Count > 0)
-                        {
-                            AddReportCell(table, operationLines[0], cellFont, true, Element.ALIGN_LEFT);
-                        }
-                        else
-                        {
-                            AddReportCell(table, "", cellFont, true, Element.ALIGN_LEFT);
-                        }
+        //                // Add first line
+        //                if (operationLines.Count > 0)
+        //                {
+        //                    AddReportCell(table, operationLines[0], cellFont, true, Element.ALIGN_LEFT);
+        //                }
+        //                else
+        //                {
+        //                    AddReportCell(table, "", cellFont, true, Element.ALIGN_LEFT);
+        //                }
 
-                        // Add remaining lines as separate rows
-                        for (int j = 1; j < operationLines.Count; j++)
-                        {
-                            // Empty cells for Date, Code, Item No.
-                            AddReportCell(table, "", cellFont, true, Element.ALIGN_CENTER);
-                            AddReportCell(table, "", cellFont, true, Element.ALIGN_CENTER);
-                            AddReportCell(table, "", cellFont, true, Element.ALIGN_CENTER);
-                            // Operation detail
-                            AddReportCell(table, operationLines[j], cellFont, true, Element.ALIGN_LEFT);
-                        }
-                    }
+        //                // Add remaining lines as separate rows
+        //                for (int j = 1; j < operationLines.Count; j++)
+        //                {
+        //                    // Empty cells for Date, Code, Item No.
+        //                    AddReportCell(table, "", cellFont, true, Element.ALIGN_CENTER);
+        //                    AddReportCell(table, "", cellFont, true, Element.ALIGN_CENTER);
+        //                    AddReportCell(table, "", cellFont, true, Element.ALIGN_CENTER);
+        //                    // Operation detail
+        //                    AddReportCell(table, operationLines[j], cellFont, true, Element.ALIGN_LEFT);
+        //                }
+        //            }
 
-                    document.Add(table);
-                    document.Add(new Paragraph(" ")); // Add space between date groups
-                }
+        //            document.Add(table);
+        //            document.Add(new Paragraph(" ")); // Add space between date groups
+        //        }
 
-                document.Close();
-                pdfBytes = stream.ToArray();
-            }
+        //        document.Close();
+        //        pdfBytes = stream.ToArray();
+        //    }
 
-            return File(pdfBytes, "application/pdf", $"CodeH_Report_{DateTime.Now:yyyyMMdd}.pdf");
-        }
+        //    return File(pdfBytes, "application/pdf", $"CodeH_Report_{DateTime.Now:yyyyMMdd}.pdf");
+        //}
 
-        private List<string> BuildOperationRecordLines(CodeHViewModel record)
-        {
-            var lines = new List<string>();
+        //private List<string> BuildOperationRecordLines(CodeHViewModel record)
+        //{
+        //    var lines = new List<string>();
 
-            // Location/Port information
-            if (!string.IsNullOrEmpty(record.Port))
-            {
-                lines.Add($"{record.Port.ToUpper()}");
-            }
+        //    // Location/Port information
+        //    if (!string.IsNullOrEmpty(record.Port))
+        //    {
+        //        lines.Add($"{record.Port.ToUpper()}");
+        //    }
 
-            // Operation time details
-            if (record.StartDateTime != default && record.StopDateTime != default)
-            {
-                lines.Add($"START: {record.StartDateTime:dd-MMM-yyyy} - {record.StartDateTime:HH:mm} HRS STOP: {record.StopDateTime:dd-MMM-yyyy} - {record.StopDateTime:HH:mm} HRS");
-            }
+        //    // Operation time details
+        //    if (record.StartDateTime != default && record.StopDateTime != default)
+        //    {
+        //        lines.Add($"START: {record.StartDateTime:dd-MMM-yyyy} - {record.StartDateTime:HH:mm} HRS STOP: {record.StopDateTime:dd-MMM-yyyy} - {record.StopDateTime:HH:mm} HRS");
+        //    }
 
-            // Quantity and fuel details
-            if (record.Quantity > 0)
-            {
-                var quantityText = $"{record.Quantity:F0} MT";
-                if (!string.IsNullOrEmpty(record.Grade))
-                {
-                    quantityText += $" OF {record.Grade}";
-                }
-                if (!string.IsNullOrEmpty(record.SulphurContent))
-                {
-                    quantityText += $" {record.SulphurContent}";
-                }
-                quantityText += " BUNKERED IN TANKS";
-                lines.Add(quantityText);
-            }
+        //    // Quantity and fuel details
+        //    if (record.Quantity > 0)
+        //    {
+        //        var quantityText = $"{record.Quantity:F0} MT";
+        //        if (!string.IsNullOrEmpty(record.Grade))
+        //        {
+        //            quantityText += $" OF {record.Grade}";
+        //        }
+        //        if (!string.IsNullOrEmpty(record.SulphurContent))
+        //        {
+        //            quantityText += $" {record.SulphurContent}";
+        //        }
+        //        quantityText += " BUNKERED IN TANKS";
+        //        lines.Add(quantityText);
+        //    }
 
-            // Tank loading details - each tank on separate line
-            if (!string.IsNullOrEmpty(record.TankLoaded1))
-            {
-                var tankInfo = $"{GetTankQuantity(record.TankLoaded1)} MT ADDED TO {record.TankLoaded1}";
-                if (!string.IsNullOrEmpty(record.TankRetained1))
-                {
-                    tankInfo += $" NOW CONTAINING {record.TankRetained1} MT";
-                }
-                lines.Add(tankInfo);
-            }
+        //    // Tank loading details - each tank on separate line
+        //    if (!string.IsNullOrEmpty(record.TankLoaded1))
+        //    {
+        //        var tankInfo = $"{GetTankQuantity(record.TankLoaded1)} MT ADDED TO {record.TankLoaded1}";
+        //        if (!string.IsNullOrEmpty(record.TankRetained1))
+        //        {
+        //            tankInfo += $" NOW CONTAINING {record.TankRetained1} MT";
+        //        }
+        //        lines.Add(tankInfo);
+        //    }
 
-            if (!string.IsNullOrEmpty(record.TankLoaded2))
-            {
-                var tankInfo = $"{GetTankQuantity(record.TankLoaded2)} MT ADDED TO {record.TankLoaded2}";
-                if (!string.IsNullOrEmpty(record.TankRetained2))
-                {
-                    tankInfo += $" NOW CONTAINING {record.TankRetained2} MT";
-                }
-                lines.Add(tankInfo);
-            }
+        //    if (!string.IsNullOrEmpty(record.TankLoaded2))
+        //    {
+        //        var tankInfo = $"{GetTankQuantity(record.TankLoaded2)} MT ADDED TO {record.TankLoaded2}";
+        //        if (!string.IsNullOrEmpty(record.TankRetained2))
+        //        {
+        //            tankInfo += $" NOW CONTAINING {record.TankRetained2} MT";
+        //        }
+        //        lines.Add(tankInfo);
+        //    }
 
-            if (!string.IsNullOrEmpty(record.TankLoaded3))
-            {
-                var tankInfo = $"{GetTankQuantity(record.TankLoaded3)} MT ADDED TO {record.TankLoaded3}";
-                if (!string.IsNullOrEmpty(record.TankRetained3))
-                {
-                    tankInfo += $" NOW CONTAINING {record.TankRetained3} MT";
-                }
-                lines.Add(tankInfo);
-            }
+        //    if (!string.IsNullOrEmpty(record.TankLoaded3))
+        //    {
+        //        var tankInfo = $"{GetTankQuantity(record.TankLoaded3)} MT ADDED TO {record.TankLoaded3}";
+        //        if (!string.IsNullOrEmpty(record.TankRetained3))
+        //        {
+        //            tankInfo += $" NOW CONTAINING {record.TankRetained3} MT";
+        //        }
+        //        lines.Add(tankInfo);
+        //    }
 
-            if (!string.IsNullOrEmpty(record.TankLoaded4))
-            {
-                var tankInfo = $"{GetTankQuantity(record.TankLoaded4)} MT ADDED TO {record.TankLoaded4}";
-                if (!string.IsNullOrEmpty(record.TankRetained4))
-                {
-                    tankInfo += $" NOW CONTAINING {record.TankRetained4} MT";
-                }
-                lines.Add(tankInfo);
-            }
+        //    if (!string.IsNullOrEmpty(record.TankLoaded4))
+        //    {
+        //        var tankInfo = $"{GetTankQuantity(record.TankLoaded4)} MT ADDED TO {record.TankLoaded4}";
+        //        if (!string.IsNullOrEmpty(record.TankRetained4))
+        //        {
+        //            tankInfo += $" NOW CONTAINING {record.TankRetained4} MT";
+        //        }
+        //        lines.Add(tankInfo);
+        //    }
 
-            // Signature line
-            if (!string.IsNullOrEmpty(record.ApprovedBy))
-            {
-                lines.Add($"SIGNED: (OFFICER-IN-CHARGE, {record.ApprovedBy.ToUpper()}) {record.EntryDate:dd-MMM-yyyy}");
-            }
-            else
-            {
-                lines.Add($"SIGNED: (OFFICER-IN-CHARGE, NAME & RANK) {record.EntryDate:dd-MMM-yyyy}");
-            }
+        //    // Signature line
+        //    if (!string.IsNullOrEmpty(record.ApprovedBy))
+        //    {
+        //        lines.Add($"SIGNED: (OFFICER-IN-CHARGE, {record.ApprovedBy.ToUpper()}) {record.EntryDate:dd-MMM-yyyy}");
+        //    }
+        //    else
+        //    {
+        //        lines.Add($"SIGNED: (OFFICER-IN-CHARGE, NAME & RANK) {record.EntryDate:dd-MMM-yyyy}");
+        //    }
 
-            return lines;
-        }
+        //    return lines;
+        //}
 
-        private string GetTankQuantity(string tankInfo)
-        {
-            // Extract quantity from tank information if it contains quantity data
-            // This is a simplified version - you may need to adjust based on your data format
-            if (string.IsNullOrEmpty(tankInfo))
-                return "0";
+        //private string GetTankQuantity(string tankInfo)
+        //{
+        //    // Extract quantity from tank information if it contains quantity data
+        //    // This is a simplified version - you may need to adjust based on your data format
+        //    if (string.IsNullOrEmpty(tankInfo))
+        //        return "0";
 
-            // If tank info contains quantity, extract it, otherwise use a default
-            // You might need to modify this logic based on how tank quantities are stored
-            var parts = tankInfo.Split(' ');
-            foreach (var part in parts)
-            {
-                if (decimal.TryParse(part, out decimal qty))
-                {
-                    return qty.ToString("F0");
-                }
-            }
+        //    // If tank info contains quantity, extract it, otherwise use a default
+        //    // You might need to modify this logic based on how tank quantities are stored
+        //    var parts = tankInfo.Split(' ');
+        //    foreach (var part in parts)
+        //    {
+        //        if (decimal.TryParse(part, out decimal qty))
+        //        {
+        //            return qty.ToString("F0");
+        //        }
+        //    }
 
-            // Default quantities based on typical bunkering operations
-            return "900"; // You may want to calculate this based on actual data
-        }
+        //    // Default quantities based on typical bunkering operations
+        //    return "900"; // You may want to calculate this based on actual data
+        //}
 
-        private void AddReportCell(PdfPTable table, string text, iTextSharp.text.Font font, bool hasBorder = true, int alignment = Element.ALIGN_LEFT)
-        {
-            var cell = new PdfPCell(new Phrase(text, font))
-            {
-                HorizontalAlignment = alignment,
-                VerticalAlignment = Element.ALIGN_TOP,
-                Padding = 5,
-                MinimumHeight = 20f,
-                Border = Rectangle.BOX,
-                BorderWidth = 1f,
-                BorderColor = BaseColor.BLACK
-            };
+        //private void AddReportCell(PdfPTable table, string text, iTextSharp.text.Font font, bool hasBorder = true, int alignment = Element.ALIGN_LEFT)
+        //{
+        //    var cell = new PdfPCell(new Phrase(text, font))
+        //    {
+        //        HorizontalAlignment = alignment,
+        //        VerticalAlignment = Element.ALIGN_TOP,
+        //        Padding = 5,
+        //        MinimumHeight = 20f,
+        //        Border = Rectangle.BOX,
+        //        BorderWidth = 1f,
+        //        BorderColor = BaseColor.BLACK
+        //    };
 
-            table.AddCell(cell);
-        }
+        //    table.AddCell(cell);
+        //}
     }
 }
